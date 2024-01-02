@@ -4,12 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -20,6 +24,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 public class MenuScreen implements Screen {
 
     private final Stage stage;
+    private final Texture mazeBackground;
 
     /**
      * Constructor for MenuScreen. Sets up the camera, viewport, stage, and UI elements.
@@ -33,15 +38,30 @@ public class MenuScreen implements Screen {
         Viewport viewport = new ScreenViewport(camera); // Create a viewport with the camera
         stage = new Stage(viewport, game.getSpriteBatch()); // Create a stage for UI elements
 
+        // Load the maze background texture
+        mazeBackground = new Texture(Gdx.files.internal("assets/craft/Maze Background.png"));
+
+        // Create a drawable from the texture
+        TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(new TextureRegion(mazeBackground));
+
         Table table = new Table(); // Create a table for layout
+
+        // Set the background
+        backgroundDrawable.setMinWidth(stage.getWidth());
+        backgroundDrawable.setMinHeight(stage.getHeight());
+        table.setBackground(backgroundDrawable);
+
         table.setFillParent(true); // Make the table fill the stage
         stage.addActor(table); // Add the table to the stage
 
         // Add a label as a title
-        table.add(new Label("Harry Potter and the Final ITP Exam", game.getSkin(), "title")).padBottom(80).row();
+        Label titleLabel = new Label("Harry Potter\nand the\nFinal ITP Exam", game.getSkin(), "title");
+        titleLabel.setAlignment(Align.center);
+        table.add(titleLabel).padBottom(80).row();
 
         // Create and add a button to go to the game screen
         TextButton goToGameButton = new TextButton("Go To Game", game.getSkin());
+        goToGameButton.setColor(0.0f, 0.5f, 0.0f, 1.0f);
         table.add(goToGameButton).width(300).row();
         goToGameButton.addListener(new ChangeListener() {
             @Override
@@ -67,6 +87,8 @@ public class MenuScreen implements Screen {
     public void dispose() {
         // Dispose of the stage when screen is disposed
         stage.dispose();
+        // Dispose of the maze background texture
+        mazeBackground.dispose();
     }
 
     @Override
