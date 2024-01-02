@@ -2,10 +2,13 @@ package de.tum.cit.ase.maze;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -39,7 +42,16 @@ public class MenuScreen implements Screen {
         stage = new Stage(viewport, game.getSpriteBatch()); // Create a stage for UI elements
 
         // Load the maze background texture
-        mazeBackground = new Texture(Gdx.files.internal("assets/craft/Maze Background.png"));
+        mazeBackground = new Texture(Gdx.files.internal("assets/Maze Background.png"));
+
+        // Load the TTF file for the new font
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/craft/Magical Font.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 120; // Set the font size as needed
+
+        // Create a BitmapFont from the TTF file for the title
+        BitmapFont magicalFontTitle = generator.generateFont(parameter);
+        generator.dispose(); // Dispose of the generator when done
 
         // Create a drawable from the texture
         TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(new TextureRegion(mazeBackground));
@@ -54,20 +66,36 @@ public class MenuScreen implements Screen {
         table.setFillParent(true); // Make the table fill the stage
         stage.addActor(table); // Add the table to the stage
 
-        // Add a label as a title
-        Label titleLabel = new Label("Harry Potter\nand the\nFinal ITP Exam", game.getSkin(), "title");
+        // Add a label as a title with the title font
+        Label titleLabel = new Label("Harry Potter and the\nFinal ITP Exam", new Label.LabelStyle(magicalFontTitle, Color.GOLD));
         titleLabel.setAlignment(Align.center);
         table.add(titleLabel).padBottom(80).row();
 
+        // Create a new FreeTypeFontGenerator for the button font
+        FreeTypeFontGenerator buttonFontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("assets/craft/Magical Font.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter buttonParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        buttonParameter.size = 40; // Set the font size for the TextButton
+
+        // Create a BitmapFont for the TextButton with the new parameter
+        BitmapFont magicalFontButton = buttonFontGenerator.generateFont(buttonParameter);
+
+        // Create a TextButtonStyle with the magical font for the TextButton
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.font = magicalFontButton;
+        textButtonStyle.fontColor = Color.GOLD;
+
         // Create and add a button to go to the game screen
-        TextButton goToGameButton = new TextButton("Go To Game", game.getSkin());
-        table.add(goToGameButton).width(300).row();
+        TextButton goToGameButton = new TextButton("Go To Game", textButtonStyle);
+        table.add(goToGameButton).width(300).height(80).row();
         goToGameButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.goToGame(); // Change to the game screen when button is pressed
             }
         });
+
+    // Dispose of the button font generator
+        buttonFontGenerator.dispose();
     }
 
     @Override
