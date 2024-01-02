@@ -5,6 +5,7 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 /**
@@ -19,6 +20,8 @@ public class GameScreen implements Screen {
 
     private float sinusInput = 0f;
 
+    private final Character character;
+
     /**
      * Constructor for GameScreen. Sets up the camera and font.
      *
@@ -26,16 +29,20 @@ public class GameScreen implements Screen {
      */
     public GameScreen(MazeRunnerGame game) {
         this.game = game;
+        this.character = new Character();
 
         // Create and configure the camera for the game view
         camera = new OrthographicCamera();
         camera.setToOrtho(false);
         camera.zoom = 0.75f;
 
-        // Get the font from the game's skin
-        font = game.getSkin().getFont("font");
+        // Load the new font from the TTF file
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/craft/Magical Font.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 40; // Set the desired font size
+        font = generator.generateFont(parameter);
+        generator.dispose(); // Important to dispose of the generator after creating the font
     }
-
 
     // Screen interface methods with necessary functionality
     @Override
@@ -60,16 +67,10 @@ public class GameScreen implements Screen {
         game.getSpriteBatch().begin(); // Important to call this before drawing anything
 
         // Render the text
-        font.draw(game.getSpriteBatch(), "Press ESC to go to menu", textX, textY);
+        font.draw(game.getSpriteBatch(), "Press ESC to back to the Menu", textX, textY);
 
-        // Draw the character next to the text :) / We can reuse sinusInput here
-        game.getSpriteBatch().draw(
-                game.getCharacterDownAnimation().getKeyFrame(sinusInput, true),
-                textX - 96,
-                textY - 64,
-                64,
-                128
-        );
+        // Render the character
+        this.character.render(delta, game.getSpriteBatch());
 
         game.getSpriteBatch().end(); // Important to call this after drawing everything
     }
