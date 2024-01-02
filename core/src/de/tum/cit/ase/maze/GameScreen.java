@@ -102,5 +102,4 @@ public class GameScreen implements Screen {
     }
 
     // Additional methods and logic can be added as needed for the game screen
-
 }
