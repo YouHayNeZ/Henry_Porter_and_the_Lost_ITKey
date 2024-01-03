@@ -15,6 +15,9 @@ import games.spooky.gdx.nativefilechooser.NativeFileChooserCallback;
 import games.spooky.gdx.nativefilechooser.NativeFileChooserConfiguration;
 import games.spooky.gdx.nativefilechooser.NativeFileChooserIntent;
 
+import java.io.IOException;
+import java.util.Properties;
+
 /**
  * The MazeRunnerGame class represents the core of the Maze Runner game.
  * It manages the screens and global resources like SpriteBatch and Skin.
@@ -84,10 +87,8 @@ public class MazeRunnerGame extends Game {
         fileChooser.chooseFile(fileChooserConfig, new NativeFileChooserCallback() {
             @Override
             public void onFileChosen(FileHandle fileHandle) {
-                // Do something with the chosen maze file, for example, load the maze
-                // You may want to pass the fileHandle to the appropriate part of your game logic
-                // For now, let's print the path to the console
-                System.out.println("Chosen maze file: " + fileHandle.path());
+                // Pass the game instance and the selected file handle to the loadMaze method
+                loadMaze(MazeRunnerGame.this, fileHandle);
             }
 
             @Override
@@ -101,6 +102,37 @@ public class MazeRunnerGame extends Game {
             }
         });
     }
+
+    /**
+     * Load a maze from a properties file.
+     *
+     * @param game       The MazeRunnerGame instance.
+     * @param fileHandle The handle to the maze file.
+     */
+    public void loadMaze(MazeRunnerGame game, FileHandle fileHandle) {
+        Properties properties = new Properties();
+        try {
+            properties.load(fileHandle.reader());
+        } catch (IOException e) {
+            System.err.println("Error loading maze file: " + e.getMessage());
+            return;
+        }
+
+        // Now, you can process the properties and create your maze based on the key-value pairs.
+        // For simplicity, let's print the coordinates and types for now.
+
+        properties.forEach((key, value) -> {
+            String[] coordinates = key.toString().split(",");
+            int x = Integer.parseInt(coordinates[0]);
+            int y = Integer.parseInt(coordinates[1]);
+            int type = Integer.parseInt(value.toString());
+
+            System.out.println("Coordinate: (" + x + ", " + y + "), Type: " + type);
+        });
+
+        // TODO: Implement logic to create the actual maze based on the loaded data.
+    }
+
 
     /**
      * Switches to the game screen.
