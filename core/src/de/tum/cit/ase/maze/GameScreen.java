@@ -20,6 +20,8 @@ public class GameScreen implements Screen {
 
     private float sinusInput = 0f;
 
+    private Hud hud;
+
     private final Character character;
 
     /**
@@ -30,6 +32,7 @@ public class GameScreen implements Screen {
     public GameScreen(MazeRunnerGame game) {
         this.game = game;
         this.character = new Character();
+        hud = new Hud(game.getSpriteBatch());
 
         // Create and configure the camera for the game view
         camera = new OrthographicCamera();
@@ -64,16 +67,19 @@ public class GameScreen implements Screen {
 
         // Set up and begin drawing with the sprite batch
         game.getSpriteBatch().setProjectionMatrix(camera.combined);
-
         game.getSpriteBatch().begin(); // Important to call this before drawing anything
 
         // Render the text
-        font.draw(game.getSpriteBatch(), "Press ESC to back to the Menu", textX, textY);
+        font.draw(game.getSpriteBatch(), "Press ESC to go back to the Menu", textX, textY);
 
         // Render the character
         this.character.render(delta, game.getSpriteBatch());
-
         game.getSpriteBatch().end(); // Important to call this after drawing everything
+
+        // Set up and begin drawing with the HUD stage
+        game.getSpriteBatch().setProjectionMatrix(hud.stage.getCamera().combined);
+        hud.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f)); // Added stage act method
+        hud.stage.draw();
     }
 
     @Override

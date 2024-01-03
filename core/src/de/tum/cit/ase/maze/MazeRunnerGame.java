@@ -118,7 +118,7 @@ public class MazeRunnerGame extends Game {
             return;
         }
 
-        // Example method to print the loaded data (other processing possible)
+        // Example method to print the loaded data (other processing in TODO)
 
         properties.forEach((key, value) -> {
             String[] coordinates = key.toString().split(",");
