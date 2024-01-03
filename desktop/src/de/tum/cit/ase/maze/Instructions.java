@@ -124,7 +124,7 @@ Static traps and dynamically moving enemies are obstacles. On contact with any o
 Scroll Mechanism: If the character walks towards the edge of the window, the displayed segment of the maze must change so that the character is in the center of the screen again.
 HUD: Display the amount of lives left and key collection status at all times.
 Game Menu: Available on startup and through the Esc button; must allow to continue playing, choosing a new map, or exiting.
-Victory and Game over: Your game must display that the player has won or lost, stop the gameplay and allow to return to the main menu afterwards.
+Victory and Game over: Your game must display that the player has won or lost, stop the gameplay and allow to return to the main menu afterward.
 Render the game using libGDX as a 2D game with a top-down view using simple 2D assets.
 Support different screen sizes.
 Play background music during gameplay and in the menu
@@ -144,7 +144,7 @@ Enemies move intelligently towards the main character using a path-finding algor
 Point systems: Can players get a score in the end, e.g., based on time?
 Collectable lives.
 More types of obstacles.
-Further abilites for the main character other than walking, such as
+Further abilities for the main character other than walking, such as
 combat with enemies
 collectable power ups (faster running, shield, …)
 Fog of War.
@@ -153,12 +153,12 @@ Multiple kinds of things other than a key to exit (remember, having to collect a
 …
 Unleash Your Creativity! Treat this project as your experimental playground, a space where you can try out innovative ideas, apply your acquired knowledge, and continuously learn along the way. We're excited to see the remarkable game you'll create and be impressed by your ingenuity!
 
-The general theme should be Harry Potter. Thus, call smart enemies "Dementors" or "Death Eaters", have the character fly over walls using brooms or implement collectible items like "love potion" or "potion of despair" to gain or lose lives would be cool.
+The general theme should be Harry Potter. Thus, call smart enemies "Dementors" or "Death Eaters", have the character fly over walls using brooms or implement collectable items like "love potion" or "potion of despair" to gain or lose lives would be cool.
 
 
 
 Organizational considerations
 Third party libraries
-Third party code libraries that can be installed through Gradle are in general not allowed. We want you to implement things yourself and avoid relying on third party features. You are free to use all the various functionality built into libGDX. However, this covers only the base framework; not all libGDX extensions are allowed. The following libGDX extensions are approved to use: Box2D, Bullet, FreeTypeFont, Controllers, Tools, Box2DLights. Explicitly not allowed are: Ashley, AI.
+Third party code libraries that can be installed through Gradle are in general not allowed. We want you to implement things yourself and avoid relying on third party features. You are free to use all the various functionality built into libGDX. However, this covers only the base framework; not all libGDX extensions are allowed. The following libGDX extensions are approved to use: Box2D, Bullet, FreeTypeFont, Controllers, Tools, Box2DLights. Explicitly not allowed to are: Ashley, AI.
      */
 }

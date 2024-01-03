@@ -20,6 +20,8 @@ public class GameScreen implements Screen {
 
     private float sinusInput = 0f;
 
+    private final Character character;
+
     /**
      * Constructor for GameScreen. Sets up the camera and font.
      *
@@ -27,6 +29,7 @@ public class GameScreen implements Screen {
      */
     public GameScreen(MazeRunnerGame game) {
         this.game = game;
+        this.character = new Character();
 
         // Create and configure the camera for the game view
         camera = new OrthographicCamera();
@@ -67,14 +70,8 @@ public class GameScreen implements Screen {
         // Render the text
         font.draw(game.getSpriteBatch(), "Press ESC to back to the Menu", textX, textY);
 
-        // Draw the character next to the text :) / We can reuse sinusInput here
-        game.getSpriteBatch().draw(
-                game.getCharacterDownAnimation().getKeyFrame(sinusInput, true),
-                textX - 96,
-                textY - 64,
-                64,
-                128
-        );
+        // Render the character
+        this.character.render(delta, game.getSpriteBatch());
 
         game.getSpriteBatch().end(); // Important to call this after drawing everything
     }
