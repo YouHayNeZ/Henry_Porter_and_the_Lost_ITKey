@@ -67,7 +67,7 @@ public class MenuScreen implements Screen {
         stage.addActor(table); // Add the table to the stage
 
         // Add a label as a title with the title font
-        Label titleLabel = new Label("Harry Potter and the\nFinal ITP Exam", new Label.LabelStyle(magicalFontTitle, Color.GOLD));
+        Label titleLabel = new Label("Henry Porter and the\nLost ITKey", new Label.LabelStyle(magicalFontTitle, Color.GOLD));
         titleLabel.setAlignment(Align.center);
         table.add(titleLabel).padBottom(80).row();
 
