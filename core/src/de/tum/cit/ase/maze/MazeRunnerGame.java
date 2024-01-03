@@ -118,8 +118,7 @@ public class MazeRunnerGame extends Game {
             return;
         }
 
-        // Now, you can process the properties and create your maze based on the key-value pairs.
-        // For simplicity, let's print the coordinates and types for now.
+        // Example method to print the loaded data (other processing possible)
 
         properties.forEach((key, value) -> {
             String[] coordinates = key.toString().split(",");
