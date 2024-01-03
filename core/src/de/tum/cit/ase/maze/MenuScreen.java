@@ -94,6 +94,16 @@ public class MenuScreen implements Screen {
             }
         });
 
+        // Create and add a button to choose a maze file
+        TextButton chooseMazeButton = new TextButton("Choose Maze", textButtonStyle);
+        table.add(chooseMazeButton).width(300).height(80).row();
+        chooseMazeButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.chooseMazeFile(); // Open the file chooser to choose a maze file
+            }
+        });
+
         // Dispose of the button font generator
         buttonFontGenerator.dispose();
     }
