@@ -9,10 +9,21 @@ public class GameObject {
     private int type;
     private Texture texture;
 
-    public GameObject(Vector2 position, int type, Texture texture) {
+    public GameObject(Vector2 position, int type) {
         this.position = position;
         this.type = type;
-        this.texture = texture;
+        this.texture = switch (type) {
+            case 0 -> new Texture("Wall.png");
+
+            //paths to be adjusted
+            case 1 -> new Texture("floor.png");
+            case 2 -> new Texture("door.png");
+            case 3 -> new Texture("key.png");
+            case 4 -> new Texture("chest.png");
+            case 5 -> new Texture("enemy.png");
+            case 6 -> new Texture("exit.png");
+            default -> throw new IllegalStateException("Unexpected value: " + type);
+        };
     }
 
     public void render(SpriteBatch batch) {
