@@ -8,13 +8,17 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
-import com.badlogic.gdx.utils.viewport.FitViewport;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 public class Hud {
@@ -27,9 +31,8 @@ public class Hud {
     private final Animation<TextureRegion> heartAnimation;
     private float stateTime;
 
-
     public Hud(SpriteBatch batch) {
-        viewport = new FitViewport(800, 480, new OrthographicCamera());
+        viewport = new ScreenViewport(new OrthographicCamera());
         stage = new Stage(viewport, batch);
         heartAnimation = loadHeartAnimation();
 
@@ -38,7 +41,7 @@ public class Hud {
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 40; // Set the desired font size
         BitmapFont font = generator.generateFont(parameter);
-        generator.dispose(); // Don't forget to dispose the generator
+        generator.dispose(); // Dispose the generator
 
         Table table = new Table();
         table.top(); // Put the table at the top of the stage
@@ -50,7 +53,19 @@ public class Hud {
         countdownLabel = new Label(String.valueOf(worldTimer), labelStyle);
         countdownLabel.setAlignment(Align.center); // Align the label in the center
 
-        table.add(countdownLabel).expandX().padTop(10); // Add the countdown label to the table
+        // Add the countdown label to the table
+        table.add(countdownLabel).expandX().padTop(10);
+
+        for (int i = 0; i < 5; i++) {
+            HeartActor heartActor = new HeartActor(heartAnimation);
+            table.add(heartActor).width(50).height(50).pad(5);
+        }
+
+        //Animate the hearts
+        for (Actor actor : table.getChildren()) {
+            actor.addAction(Actions.forever(Actions.sequence(Actions.scaleTo(1.2f, 1.2f, 0.5f), Actions.scaleTo(1f, 1f, 0.5f))));
+        }
+
         stage.addActor(table); // Add the table to the stage
     }
 
@@ -65,7 +80,7 @@ public class Hud {
         Array<TextureRegion> heartSpin = new Array<>(TextureRegion.class);
 
         // Add all frames to the animation
-        for (int col = 0; col < animationFrames; col ++) {
+        for (int col = 0; col < animationFrames; col++) {
             heartSpin.add(new TextureRegion(walkSheet, col * frameWidth, 3 * frameHeight, frameWidth, frameHeight));
         }
 
@@ -80,11 +95,6 @@ public class Hud {
 
     public void render(SpriteBatch batch) {
         update();
-        stateTime += Gdx.graphics.getDeltaTime(); // Accumulate elapsed animation time
-
-        batch.draw(heartAnimation.getKeyFrame(stateTime, true), 300, 550, 50, 50);
-        batch.draw(heartAnimation.getKeyFrame(stateTime, true), 360, 550, 50, 50);
-        batch.draw(heartAnimation.getKeyFrame(stateTime, true), 420, 550, 50, 50);
     }
 
     public Stage getStage() {
