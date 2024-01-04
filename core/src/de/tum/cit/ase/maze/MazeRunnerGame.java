@@ -80,7 +80,7 @@ public class MazeRunnerGame extends Game {
     public void chooseMazeFile() {
         var fileChooserConfig = new NativeFileChooserConfiguration();
         fileChooserConfig.title = "Pick a maze file"; // Title of the window that will be opened
-        fileChooserConfig.intent = NativeFileChooserIntent.OPEN; // We want to open a file
+        fileChooserConfig.intent = NativeFileChooserIntent.OPEN; // Open a file
         fileChooserConfig.nameFilter = (file, name) -> name.endsWith("properties"); // Only accept .properties files
         fileChooserConfig.directory = Gdx.files.internal("maps"); // Open at the user's home directory
 
