@@ -11,10 +11,8 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -25,6 +23,7 @@ public class Hud {
     private Stage stage;
     private long worldTimer;
     private long timeCount;
+    private long initialWorldTimer = 600; // Initial countdown time in seconds
 
     private Viewport viewport;
     private Label countdownLabel;
@@ -61,7 +60,7 @@ public class Hud {
             table.add(heartActor).width(50).height(50).pad(5);
         }
 
-        //Animate the hearts
+        // Animate the hearts
         for (Actor actor : table.getChildren()) {
             actor.addAction(Actions.forever(Actions.sequence(Actions.scaleTo(1.2f, 1.2f, 0.5f), Actions.scaleTo(1f, 1f, 0.5f))));
         }
@@ -88,8 +87,14 @@ public class Hud {
     }
 
     public void update() {
-        timeCount += TimeUtils.millis();
-        worldTimer = (long) (timeCount / 100_000_000_000_000f);
+        timeCount += Gdx.graphics.getDeltaTime() * 1000; // Convert elapsed time to milliseconds
+        long elapsedTime = (long) timeCount;
+        worldTimer = initialWorldTimer - elapsedTime / 1000; // Calculate remaining time
+
+        if (worldTimer < 0) {
+            worldTimer = 0; // Ensure the timer doesn't go below 0
+        }
+
         countdownLabel.setText(String.format("%02d:%02d", worldTimer / 60, worldTimer % 60));
     }
 
