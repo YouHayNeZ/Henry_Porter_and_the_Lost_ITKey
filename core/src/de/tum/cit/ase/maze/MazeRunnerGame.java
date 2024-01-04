@@ -34,7 +34,7 @@ public class MazeRunnerGame extends Game {
     private Skin skin;
 
     //Native file chooser
-    private NativeFileChooser fileChooser;
+    private final NativeFileChooser fileChooser;
 
     /**
      * Constructor for MazeRunnerGame.
@@ -82,7 +82,7 @@ public class MazeRunnerGame extends Game {
         fileChooserConfig.title = "Pick a maze file"; // Title of the window that will be opened
         fileChooserConfig.intent = NativeFileChooserIntent.OPEN; // We want to open a file
         fileChooserConfig.nameFilter = (file, name) -> name.endsWith("properties"); // Only accept .properties files
-        fileChooserConfig.directory = Gdx.files.absolute(System.getProperty("user.home")); // Open at the user's home directory
+        fileChooserConfig.directory = Gdx.files.internal("maps"); // Open at the user's home directory
 
         fileChooser.chooseFile(fileChooserConfig, new NativeFileChooserCallback() {
             @Override
@@ -120,6 +120,14 @@ public class MazeRunnerGame extends Game {
 
         // Example method to print the loaded data (other processing in TODO)
 
+        String fileContent = fileHandle.readString();
+        String[] lines = fileContent.split("\\r?\\n");
+
+        int width = Integer.parseInt(lines[0]);
+        int height = Integer.parseInt(lines[1]);
+
+//        Maze maze = new Maze(width, height);
+
         properties.forEach((key, value) -> {
             String[] coordinates = key.toString().split(",");
             int x = Integer.parseInt(coordinates[0]);
@@ -131,7 +139,6 @@ public class MazeRunnerGame extends Game {
 
         // TODO: Implement logic to create the actual maze based on the loaded data.
     }
-
 
     /**
      * Switches to the game screen.

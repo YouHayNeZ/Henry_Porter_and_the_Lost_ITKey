@@ -59,6 +59,13 @@ public class Character {
         return new Animation<>(0.1f, walkFrames);
     }
 
+    private void renderAnimation(SpriteBatch batch, Animation<TextureRegion> animation) {
+        batch.draw(animation.getKeyFrame(animationTime, true), character.x, character.y, character.width, character.height);
+    }
+
+    /**
+     * Renders the character animation.
+     */
     public void render(float delta, SpriteBatch batch) {
         animationTime += delta;
 
@@ -78,7 +85,8 @@ public class Character {
             }
 
             if (attackAnimation != null) {
-                batch.draw(attackAnimation.getKeyFrame(animationTime, true), character.x, character.y, character.width, character.height);
+                // render attack animation
+                renderAnimation(batch, attackAnimation);
                 return; // Skip normal movement rendering when attacking
             }
         }
@@ -86,19 +94,19 @@ public class Character {
         if (Gdx.input.isKeyPressed(Keys.DOWN)) {
             character.y -= speed;
             // render move down animation
-            batch.draw(characterDownAnimation.getKeyFrame(animationTime, true), character.x, character.y, character.width, character.height);
+            renderAnimation(batch, characterDownAnimation);
         } else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
             character.x += speed;
             // render move right animation
-            batch.draw(characterRightAnimation.getKeyFrame(animationTime, true), character.x, character.y, character.width, character.height);
+            renderAnimation(batch, characterRightAnimation);
         } else if (Gdx.input.isKeyPressed(Keys.UP)) {
             character.y += speed;
             // render move up animation
-            batch.draw(characterUpAnimation.getKeyFrame(animationTime, true), character.x, character.y, character.width, character.height);
+            renderAnimation(batch, characterUpAnimation);
         } else if (Gdx.input.isKeyPressed(Keys.LEFT)) {
             character.x -= speed;
             // render move left animation
-            batch.draw(characterLeftAnimation.getKeyFrame(animationTime, true), character.x, character.y, character.width, character.height);
+            renderAnimation(batch, characterLeftAnimation);
         } else {
             // render standing animation
             batch.draw(characterDownAnimation.getKeyFrame(1, true), character.x, character.y, character.width, character.height);

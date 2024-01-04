@@ -20,7 +20,7 @@ public class GameScreen implements Screen {
 
     private float sinusInput = 0f;
 
-    private Hud hud;
+    private final Hud hud;
 
     private final Character character;
 
@@ -40,13 +40,12 @@ public class GameScreen implements Screen {
         camera.zoom = 0.75f;
 
         // Load the new font from the TTF file
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("assets/craft/Magical Font.ttf"));
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("craft/Magical Font.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = 40; // Set the desired font size
         font = generator.generateFont(parameter);
         generator.dispose(); // Important to dispose of the generator after creating the font
     }
-
 
     // Screen interface methods with necessary functionality
     @Override
@@ -62,8 +61,8 @@ public class GameScreen implements Screen {
 
         // Move text in a circular path to have an example of a moving object
         sinusInput += delta;
-        float textX = (float) (camera.position.x + Math.sin(sinusInput) * 100);
-        float textY = (float) (camera.position.y + Math.cos(sinusInput) * 100);
+        float textX = (float) (camera.position.x);
+        float textY = (float) (camera.position.y);
 
         // Set up and begin drawing with the sprite batch
         game.getSpriteBatch().setProjectionMatrix(camera.combined);
@@ -74,12 +73,14 @@ public class GameScreen implements Screen {
 
         // Render the character
         this.character.render(delta, game.getSpriteBatch());
+        this.hud.render(game.getSpriteBatch());
+
         game.getSpriteBatch().end(); // Important to call this after drawing everything
 
         // Set up and begin drawing with the HUD stage
-        game.getSpriteBatch().setProjectionMatrix(hud.stage.getCamera().combined);
-        hud.stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f)); // Added stage act method
-        hud.stage.draw();
+        game.getSpriteBatch().setProjectionMatrix(hud.getStage().getCamera().combined);
+        hud.getStage().act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
+        hud.getStage().draw();
     }
 
     @Override
