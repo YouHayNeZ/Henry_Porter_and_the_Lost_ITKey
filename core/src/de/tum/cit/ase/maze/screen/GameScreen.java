@@ -1,4 +1,4 @@
-package de.tum.cit.ase.maze;
+package de.tum.cit.ase.maze.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -7,6 +7,9 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.ScreenUtils;
+import de.tum.cit.ase.maze.Hud;
+import de.tum.cit.ase.maze.MazeRunnerGame;
+import de.tum.cit.ase.maze.entity.Character;
 
 /**
  * The GameScreen class is responsible for rendering the gameplay screen.

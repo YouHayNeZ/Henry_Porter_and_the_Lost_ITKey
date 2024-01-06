@@ -1,4 +1,4 @@
-package de.tum.cit.ase.maze;
+package de.tum.cit.ase.maze.screen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
@@ -19,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import de.tum.cit.ase.maze.MazeRunnerGame;
 
 /**
  * The MenuScreen class is responsible for displaying the main menu of the game.
