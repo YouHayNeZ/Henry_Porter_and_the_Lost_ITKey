@@ -8,25 +8,53 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 
-public class Character {
-    private float animationTime;
-    private final Animation<TextureRegion> characterDownAnimation;
-    private final Animation<TextureRegion> characterRightAnimation;
-    private final Animation<TextureRegion> characterUpAnimation;
-    private final Animation<TextureRegion> characterLeftAnimation;
-    private final Animation<TextureRegion> characterAttackDownAnimation;
-    private final Animation<TextureRegion> characterAttackUpAnimation;
-    private final Animation<TextureRegion> characterAttackRightAnimation;
-    private final Animation<TextureRegion> characterAttackLeftAnimation;
+public class Character{
 
-    private final Rectangle character;
+    public World world;
+    public Body b2body;
+
+    private float animationTime;
+    private Animation<TextureRegion> characterDownAnimation;
+    private Animation<TextureRegion> characterRightAnimation;
+    private Animation<TextureRegion> characterUpAnimation;
+    private Animation<TextureRegion> characterLeftAnimation;
+    private Animation<TextureRegion> characterAttackDownAnimation;
+    private Animation<TextureRegion> characterAttackUpAnimation;
+    private Animation<TextureRegion> characterAttackRightAnimation;
+    private Animation<TextureRegion> characterAttackLeftAnimation;
+
+    private Rectangle character;
 
     int frameWidth = 16;
     int frameHeight = 32;
 
-    public Character() {
+    public Character(World world) {
+        this.world = world;
+        defineCharacter();
+    }
+
+    private void defineCharacter() {
+        BodyDef bdef = new BodyDef();
+        bdef.position.set(32,32);
+        bdef.type = BodyDef.BodyType.DynamicBody;
+        b2body = world.createBody(bdef);
+
+        FixtureDef fdef = new FixtureDef();
+        CircleShape shape = new CircleShape();
+        shape.setRadius(5);
+
+        fdef.shape = shape;
+        b2body.createFixture(fdef);
+
+
+        // Create a Rectangle to logically represent the character
+        character = new Rectangle(600, 300, 32, 64);
+
+
         characterDownAnimation = loadCharacterAnimation(0,0, 1);
         characterRightAnimation = loadCharacterAnimation(0, frameHeight, 1);
         characterUpAnimation = loadCharacterAnimation(0, 2 * frameHeight, 1);
@@ -36,8 +64,6 @@ public class Character {
         characterAttackRightAnimation = loadCharacterAnimation(7, 6 * frameHeight, 2);
         characterAttackLeftAnimation = loadCharacterAnimation(7, 7 * frameHeight, 2);
 
-        // Create a Rectangle to logically represent the character
-        character = new Rectangle(600, 300, 32, 64);
     }
 
     /**
@@ -91,20 +117,20 @@ public class Character {
             }
         }
 
-        if (Gdx.input.isKeyPressed(Keys.DOWN)) {
-            character.y -= speed;
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            b2body.applyLinearImpulse(new Vector2(0, -speed), b2body.getWorldCenter(), true);
             // render move down animation
             renderAnimation(batch, characterDownAnimation);
         } else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-            character.x += speed;
+            b2body.applyLinearImpulse(new Vector2(speed, 0), b2body.getWorldCenter(), true);
             // render move right animation
             renderAnimation(batch, characterRightAnimation);
         } else if (Gdx.input.isKeyPressed(Keys.UP)) {
-            character.y += speed;
+            b2body.applyLinearImpulse(new Vector2(0, speed), b2body.getWorldCenter(), true);
             // render move up animation
             renderAnimation(batch, characterUpAnimation);
         } else if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-            character.x -= speed;
+            b2body.applyLinearImpulse(new Vector2(-speed, 0), b2body.getWorldCenter(), true);
             // render move left animation
             renderAnimation(batch, characterLeftAnimation);
         } else {

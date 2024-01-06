@@ -15,11 +15,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
+import com.badlogic.gdx.utils.Disposable;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
-public class Hud {
+public class Hud implements Disposable {
     private Stage stage;
     private long worldTimer;
     private long timeCount;
@@ -104,5 +105,10 @@ public class Hud {
 
     public Stage getStage() {
         return stage;
+    }
+
+    @Override
+    public void dispose() {
+        stage.dispose();
     }
 }

@@ -6,6 +6,8 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.ScreenUtils;
 
 /**
@@ -24,6 +26,10 @@ public class GameScreen implements Screen {
 
     private final Character character;
 
+    //Box2D stuff
+    private World world;
+    private Box2DDebugRenderer b2dr;
+
     /**
      * Constructor for GameScreen. Sets up the camera and font.
      *
@@ -31,8 +37,6 @@ public class GameScreen implements Screen {
      */
     public GameScreen(MazeRunnerGame game) {
         this.game = game;
-        this.character = new Character();
-        hud = new Hud(game.getSpriteBatch());
 
         // Create and configure the camera for the game view
         camera = new OrthographicCamera();
@@ -45,6 +49,23 @@ public class GameScreen implements Screen {
         parameter.size = 40; // Set the desired font size
         font = generator.generateFont(parameter);
         generator.dispose(); // Important to dispose of the generator after creating the font
+
+        //Box2D stuff
+        world = new World(new Vector2(0,0), true);
+        b2dr = new Box2DDebugRenderer();
+
+        BodyDef bdef = new BodyDef();
+        bdef.type = BodyDef.BodyType.StaticBody;
+        bdef.position.set(0,0);
+        Body groundBody = world.createBody(bdef);
+
+        PolygonShape ground = new PolygonShape();
+        ground.setAsBox(camera.viewportWidth, camera.viewportHeight);
+        groundBody.createFixture(ground, 0.0f);
+        ground.dispose();
+
+        this.character = new Character(world);
+        hud = new Hud(game.getSpriteBatch());
     }
 
     // Screen interface methods with necessary functionality
@@ -81,6 +102,13 @@ public class GameScreen implements Screen {
         game.getSpriteBatch().setProjectionMatrix(hud.getStage().getCamera().combined);
         hud.getStage().act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
         hud.getStage().draw();
+
+        //Box2D stuff
+        // Update the Box2D world
+        world.step(1/60f, 6, 2);
+
+        // Render the Box2D debug lines
+        b2dr.render(world, camera.combined);
     }
 
     @Override
@@ -107,6 +135,10 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+        font.dispose();
+        hud.dispose();
+        world.dispose();
+        b2dr.dispose();
     }
 
     // Additional methods and logic can be added as needed for the game screen
