@@ -34,7 +34,7 @@ public class GameScreen implements Screen {
      */
     public GameScreen(MazeRunnerGame game) {
         this.game = game;
-        this.character = new Character();
+        this.character = new Character(game);
         hud = new Hud(game.getSpriteBatch());
 
         // Create and configure the camera for the game view
