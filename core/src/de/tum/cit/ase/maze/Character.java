@@ -1,60 +1,31 @@
 package de.tum.cit.ase.maze;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.Array;
 
-public class Character{
-
-    public World world;
-    public Body b2body;
-
+public class Character {
     private float animationTime;
-    private Animation<TextureRegion> characterDownAnimation;
-    private Animation<TextureRegion> characterRightAnimation;
-    private Animation<TextureRegion> characterUpAnimation;
-    private Animation<TextureRegion> characterLeftAnimation;
-    private Animation<TextureRegion> characterAttackDownAnimation;
-    private Animation<TextureRegion> characterAttackUpAnimation;
-    private Animation<TextureRegion> characterAttackRightAnimation;
-    private Animation<TextureRegion> characterAttackLeftAnimation;
+    private final Animation<TextureRegion> characterDownAnimation;
+    private final Animation<TextureRegion> characterRightAnimation;
+    private final Animation<TextureRegion> characterUpAnimation;
+    private final Animation<TextureRegion> characterLeftAnimation;
+    private final Animation<TextureRegion> characterAttackDownAnimation;
+    private final Animation<TextureRegion> characterAttackUpAnimation;
+    private final Animation<TextureRegion> characterAttackRightAnimation;
+    private final Animation<TextureRegion> characterAttackLeftAnimation;
 
-    private Rectangle character;
+    private final Rectangle character;
 
     int frameWidth = 16;
     int frameHeight = 32;
 
-    public Character(World world) {
-        this.world = world;
-        defineCharacter();
-    }
-
-    private void defineCharacter() {
-        BodyDef bdef = new BodyDef();
-        bdef.position.set(32,32);
-        bdef.type = BodyDef.BodyType.DynamicBody;
-        b2body = world.createBody(bdef);
-
-        FixtureDef fdef = new FixtureDef();
-        CircleShape shape = new CircleShape();
-        shape.setRadius(5);
-
-        fdef.shape = shape;
-        b2body.createFixture(fdef);
-
-
-        // Create a Rectangle to logically represent the character
-        character = new Rectangle(600, 300, 32, 64);
-
-
+    public Character() {
         characterDownAnimation = loadCharacterAnimation(0,0, 1);
         characterRightAnimation = loadCharacterAnimation(0, frameHeight, 1);
         characterUpAnimation = loadCharacterAnimation(0, 2 * frameHeight, 1);
@@ -64,6 +35,8 @@ public class Character{
         characterAttackRightAnimation = loadCharacterAnimation(7, 6 * frameHeight, 2);
         characterAttackLeftAnimation = loadCharacterAnimation(7, 7 * frameHeight, 2);
 
+        // Create a Rectangle to logically represent the character
+        character = new Rectangle(600, 300, 32, 64);
     }
 
     /**
@@ -117,20 +90,20 @@ public class Character{
             }
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            b2body.applyLinearImpulse(new Vector2(0, -speed), b2body.getWorldCenter(), true);
+        if (Gdx.input.isKeyPressed(Keys.DOWN)) {
+            character.y -= speed;
             // render move down animation
             renderAnimation(batch, characterDownAnimation);
         } else if (Gdx.input.isKeyPressed(Keys.RIGHT)) {
-            b2body.applyLinearImpulse(new Vector2(speed, 0), b2body.getWorldCenter(), true);
+            character.x += speed;
             // render move right animation
             renderAnimation(batch, characterRightAnimation);
         } else if (Gdx.input.isKeyPressed(Keys.UP)) {
-            b2body.applyLinearImpulse(new Vector2(0, speed), b2body.getWorldCenter(), true);
+            character.y += speed;
             // render move up animation
             renderAnimation(batch, characterUpAnimation);
         } else if (Gdx.input.isKeyPressed(Keys.LEFT)) {
-            b2body.applyLinearImpulse(new Vector2(-speed, 0), b2body.getWorldCenter(), true);
+            character.x -= speed;
             // render move left animation
             renderAnimation(batch, characterLeftAnimation);
         } else {
