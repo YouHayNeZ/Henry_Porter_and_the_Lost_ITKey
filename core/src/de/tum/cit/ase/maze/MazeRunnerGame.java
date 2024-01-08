@@ -3,13 +3,17 @@ package de.tum.cit.ase.maze;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
+
+import com.badlogic.gdx.utils.Disposable;
 import de.tum.cit.ase.maze.screen.GameScreen;
 import de.tum.cit.ase.maze.screen.MenuScreen;
 import games.spooky.gdx.nativefilechooser.NativeFileChooser;
@@ -25,18 +29,33 @@ import java.util.Properties;
  * It manages the screens and global resources like SpriteBatch and Skin.
  */
 public class MazeRunnerGame extends Game {
+
+    // World cell width size
+    private static final int CELL_WIDTH = 16;
+
+    // World cell height size
+    private static final int CELL_HEIGHT = 16;
+
+    private static final String LEVEL_MAP_FORMAT = "maps/level-%d.properties";
+
+    private static final int DEFAULT_LEVEL_INDEX = 1;
+    private static final int MAX_LEVEL_INDEX = 5;
+    private int levelIndex = DEFAULT_LEVEL_INDEX;
+
+
+    //Native file chooser
+    private final NativeFileChooser fileChooser;
+
     // Screens
     private MenuScreen menuScreen;
     private GameScreen gameScreen;
 
     // Sprite Batch for rendering
     private SpriteBatch spriteBatch;
+    private ShapeRenderer shapeRenderer;
 
     // UI Skin
     private Skin skin;
-
-    //Native file chooser
-    private final NativeFileChooser fileChooser;
 
     //Textures
     Texture basictilesTexture;
@@ -44,13 +63,12 @@ public class MazeRunnerGame extends Game {
     Texture objectsTexture;
     Texture mobsTexture;
     Texture thingsTexture;
+    Texture keyTexture;
 
     //TextureRegions
     TextureRegion floorTextureRegion;
-    TextureRegion doorTextureRegion;
 
     Array<TextureRegion> wallTextureRegionArray;
-    Array<TextureRegion> switchTextureRegionArray;
     Array<TextureRegion> healthTextureRegionArray;
 
     //Animations
@@ -58,8 +76,17 @@ public class MazeRunnerGame extends Game {
     Animation<TextureRegion> characterRightAnimation;
     Animation<TextureRegion> characterUpAnimation;
     Animation<TextureRegion> characterLeftAnimation;
-    Animation<TextureRegion> flameAnimation;
     Animation<TextureRegion> enemyDownAnimation;
+    Animation<TextureRegion> enemyLeftAnimation;
+    Animation<TextureRegion> enemyRightAnimation;
+    Animation<TextureRegion> enemyUpAnimation;
+    Animation<TextureRegion> flameAnimation;
+    Animation<TextureRegion> keyAnimation;
+    Animation<TextureRegion> doorAnimation;
+
+    Array<Sound> hurtSoundArray;
+
+    Sound keySound;
 
     /**
      * Constructor for MazeRunnerGame.
@@ -77,6 +104,10 @@ public class MazeRunnerGame extends Game {
     @Override
     public void create() {
         spriteBatch = new SpriteBatch(); // Create SpriteBatch
+
+        shapeRenderer = new ShapeRenderer();
+        shapeRenderer.setAutoShapeType(true);
+
         skin = new Skin(Gdx.files.internal("craft/craftacular-ui.json")); // Load UI skin
 
         // Load textures
@@ -85,18 +116,15 @@ public class MazeRunnerGame extends Game {
         objectsTexture = new Texture(Gdx.files.internal("objects.png"));
         mobsTexture = new Texture(Gdx.files.internal("mobs.png"));
         thingsTexture = new Texture(Gdx.files.internal("things.png"));
+        keyTexture = new Texture(Gdx.files.internal("key.png"));
 
         // Load texture regions
         floorTextureRegion = new TextureRegion(basictilesTexture, 16, 16 * 9, 16, 16);
-        doorTextureRegion = new TextureRegion(basictilesTexture, 16, 16 * 6, 16, 16);
 
-        // Load texture region arrays
-        wallTextureRegionArray = loadTextureRegionArray(basictilesTexture, 16, 16,
-                4, 0, 0);
-        switchTextureRegionArray = loadTextureRegionArray(thingsTexture, 16, 16,
-                3, 16 * 3, 16 * 4);
-        healthTextureRegionArray = loadTextureRegionArray(objectsTexture, 16, 16,
-                5, 16 * 4, 0);
+        wallTextureRegionArray = loadTextureRegionArray(basictilesTexture,
+                16, 16, 4, 0, 0);
+        healthTextureRegionArray = loadTextureRegionArray(objectsTexture,
+                16, 16, 5, 16 * 4, 0);
 
         // Load character animations
         characterDownAnimation = loadAnimation(characterTexture,
@@ -108,64 +136,140 @@ public class MazeRunnerGame extends Game {
         characterLeftAnimation = loadAnimation(characterTexture,
                 16, 32, 4, 0.1f, 0, 96);
 
-        // Load the flame animation
-        flameAnimation = loadAnimation(objectsTexture,
-                16, 16, 7, 0.1f,
-                4 * 16, 3 * 16);
-
         // Load the enemy animation
         enemyDownAnimation = loadAnimation(mobsTexture,
-                16, 16, 3, 0.1f,
-                6 * 16, 4 * 16);
+                16, 16, 3, 0.2f, 6 * CELL_WIDTH, 4 * CELL_HEIGHT);
+        enemyLeftAnimation = loadAnimation(mobsTexture,
+                16, 16, 3, 0.2f, 6 * CELL_WIDTH, 5 * CELL_HEIGHT);
+        enemyRightAnimation = loadAnimation(mobsTexture,
+                16, 16, 3, 0.2f, 6 * CELL_WIDTH, 6 * CELL_HEIGHT);
+        enemyUpAnimation = loadAnimation(mobsTexture,
+                16, 16, 3, 0.2f, 6 * CELL_WIDTH, 7 * CELL_HEIGHT);
+
+        // Load the flame animation
+        flameAnimation = loadAnimation(objectsTexture,
+                16, 16, 7, 0.1f, 4 * 16, 3 * 16);
+
+        // Load the key animation
+        keyAnimation = loadAnimation(keyTexture,
+                16, 16, 24, 0.05f, 0, 0);
+
+        // Load the door animation
+        doorAnimation = loadAnimation(thingsTexture,
+                16, 16, 1, 4, 0.1f, 16 * 3, 0);
 
         // Play some background music
-        // Background sound
-        Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("Harry Potter - Main Theme.mp3"));
+        Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/Harry Potter - Main Theme.mp3"));
         backgroundMusic.setLooping(true);
         backgroundMusic.play();
+
+        // Hurt sound
+        hurtSoundArray = new Array<>();
+        for (int i = 1; i <= 3; i++) {
+            hurtSoundArray.add(Gdx.audio.newSound(Gdx.files.internal(String.format("sound/hurt/hurt_%d.mp3", i))));
+        }
+
+        // Key sound
+        keySound = Gdx.audio.newSound(Gdx.files.internal("sound/ring_inventory.wav"));
+
+        // Initialize the screens
+        menuScreen = new MenuScreen(this);
+        gameScreen = new GameScreen(this);
 
         goToMenu(); // Navigate to the menu screen
     }
 
     /**
-     * Load an array of texture regions from a texture.
-     * @param texture
-     * @param frameWidth
-     * @param frameHeight
-     * @param frameCount
-     * @param x
-     * @param y
+     * Switches to the menu screen.
+     */
+    public void goToMenu() {
+        this.setScreen(new MenuScreen(this)); // Set the current screen to MenuScreen
+        if (gameScreen != null) {
+            gameScreen.dispose(); // Dispose the game screen if it exists
+            gameScreen = null;
+        }
+    }
+
+    /**
+     * Switches to the game screen.
+     */
+    public void goToGame() {
+        this.setScreen(new GameScreen(this)); // Set the current screen to GameScreen
+        if (menuScreen != null) {
+            menuScreen.dispose(); // Dispose the menu screen if it exists
+            menuScreen = null;
+        }
+    }
+
+    /**
+     * Load texture region array of images from texture that stands in one row
+     * @param texture the texture
+     * @param frameWidth the frame width
+     * @param frameHeight the frame height
+     * @param count the count of frames
+     * @param x the start x position
+     * @param y the start y position
+     * @return array of texture regions
      */
     private Array<TextureRegion> loadTextureRegionArray(Texture texture, int frameWidth, int frameHeight,
-                                                        int frameCount, int x, int y) {
+                                                        int count, int x, int y) {
+        return loadTextureRegionArray(texture, frameWidth, frameHeight, count, 1, x, y);
+    }
 
-        // libGDX internal Array instead of ArrayList because of performance
+    /**
+     * Load texture region array from texture
+     * @param texture the texture
+     * @param frameWidth the frame width
+     * @param frameHeight the frame height
+     * @param cols the number of columns
+     * @param rows the number of rows
+     * @param x the start x position
+     * @param y the start y position
+     * @return array of texture regions
+     */
+    private Array<TextureRegion> loadTextureRegionArray(Texture texture, int frameWidth, int frameHeight,
+                                                        int cols, int rows, int x, int y) {
         Array<TextureRegion> array = new Array<>(TextureRegion.class);
-
-        // Add all frames to the array
-        for (int col = 0; col < frameCount; col++) {
-            array.add(new TextureRegion(texture, col * frameWidth + x, y, frameWidth, frameHeight));
+        for (int col = 0; col < cols; col++) {
+            for (int row = 0; row < rows; row++) {
+                array.add(new TextureRegion(texture, col * frameWidth + x, row * frameHeight + y, frameWidth, frameHeight));
+            }
         }
-
         return array;
     }
 
     /**
-     * Load an animation from a texture.
-     * @param texture
-     * @param frameWidth
-     * @param frameHeight
-     * @param animationFrames
-     * @param frameDuration
-     * @param x
-     * @param y
+     * Load animation from texture
+     * @param texture the texture
+     * @param frameWidth the frame width
+     * @param frameHeight the frame height
+     * @param cols the number of columns
+     * @param rows the number of rows
+     * @param frameDuration the animation frame duration in milliseconds
+     * @param x the start x position
+     * @param y the start y position
+     * @return animation of texture region
      */
-    private Animation<TextureRegion> loadAnimation(Texture texture, int frameWidth, int frameHeight, int animationFrames, float frameDuration, int x, int y) {
+    private Animation<TextureRegion> loadAnimation(Texture texture, int frameWidth, int frameHeight,
+                                                   int cols, int rows, float frameDuration, int x, int y) {
+        Array<TextureRegion> frames = loadTextureRegionArray(texture, frameWidth, frameHeight, cols, rows, x, y);
+        return new Animation<>(frameDuration, frames);
+    }
 
-        // Load the texture regions from the loadTextureRegionArray method
-        Array<TextureRegion> frames = loadTextureRegionArray(texture, frameWidth, frameHeight,
-                animationFrames, x, y);
-
+    /**
+     * Load animation from texture that stands in on row
+     * @param texture the texture
+     * @param frameWidth the frame width
+     * @param frameHeight the frame height
+     * @param animationFrames the count of animation frames
+     * @param frameDuration the frame duration in milliseconds
+     * @param x the start x position
+     * @param y the start y position
+     * @return the animation of texture regions
+     */
+    private Animation<TextureRegion> loadAnimation(Texture texture, int frameWidth, int frameHeight,
+                                                   int animationFrames, float frameDuration, int x, int y) {
+        Array<TextureRegion> frames = loadTextureRegionArray(texture, frameWidth, frameHeight, animationFrames, x, y);
         return new Animation<>(frameDuration, frames);
     }
 
@@ -213,8 +317,7 @@ public class MazeRunnerGame extends Game {
             return;
         }
 
-        // Example method to print the loaded data (other processing in TODO)
-
+        // Example method to print the loaded data
         String fileContent = fileHandle.readString();
         String[] lines = fileContent.split("\\r?\\n");
 
@@ -231,30 +334,6 @@ public class MazeRunnerGame extends Game {
 
             System.out.println("Coordinate: (" + x + ", " + y + "), Type: " + type);
         });
-
-        // TODO: Implement logic to create the actual maze based on the loaded data.
-    }
-
-    /**
-     * Switches to the menu screen.
-     */
-    public void goToMenu() {
-        this.setScreen(new MenuScreen(this)); // Set the current screen to MenuScreen
-        if (gameScreen != null) {
-            gameScreen.dispose(); // Dispose the game screen if it exists
-            gameScreen = null;
-        }
-    }
-
-    /**
-     * Switches to the game screen.
-     */
-    public void goToGame() {
-        this.setScreen(new GameScreen(this)); // Set the current screen to GameScreen
-        if (menuScreen != null) {
-            menuScreen.dispose(); // Dispose the menu screen if it exists
-            menuScreen = null;
-        }
     }
 
     /**
@@ -263,62 +342,218 @@ public class MazeRunnerGame extends Game {
     @Override
     public void dispose() {
         getScreen().hide(); // Hide the current screen
-        getScreen().dispose(); // Dispose the current screen
+
+        // Dispose the current screens
+        if (menuScreen != null) menuScreen.dispose();
+        if (gameScreen != null) gameScreen.dispose();
+
         spriteBatch.dispose(); // Dispose the spriteBatch
+        shapeRenderer.dispose(); // Dispose the shapeRenderer
         skin.dispose(); // Dispose the skin
+
+        //Dispose textures
+        basictilesTexture.dispose();
+        characterTexture.dispose();
+        objectsTexture.dispose();
+        mobsTexture.dispose();
+        thingsTexture.dispose();
+        keyTexture.dispose();
+
+        disposeArray(hurtSoundArray);
+
+        keySound.dispose();
+    }
+
+    /**
+     * Dispose array
+     * @param array the array of disposable
+     */
+    private void disposeArray(Array<? extends Disposable> array) {
+        for (Disposable d: array) {
+            d.dispose();
+        }
+    }
+
+    /**
+     * Increment level index
+     */
+    public void incrementLevel() {
+        if (++levelIndex > MAX_LEVEL_INDEX) levelIndex = DEFAULT_LEVEL_INDEX;
+    }
+
+    /**
+     * Set current level index
+     * @param index the current level index
+     */
+    public void setLevelIndex(int index) {
+        levelIndex = index;
     }
 
     // Getter methods
+    /**
+     * Get ui skin
+     * @return the ui skin
+     */
     public Skin getSkin() {
         return skin;
     }
 
+    /**
+     * Get floor texture region
+     * @return the floor texture region
+     */
     public TextureRegion getFloorTextureRegion() {
         return floorTextureRegion;
     }
 
-    public TextureRegion getDoorTextureRegion() {
-        return doorTextureRegion;
-    }
-
+    /**
+     * Gew wall texture region array
+     * @return the array of wall texture region
+     */
     public Array<TextureRegion> getWallTextureRegionArray() {
         return wallTextureRegionArray;
     }
 
-    public Array<TextureRegion> getSwitchTextureRegionArray() {
-        return switchTextureRegionArray;
-    }
-
+    /**
+     * Get health texture region array
+     * @return the array of health texture region
+     */
     public Array<TextureRegion> getHealthTextureRegionArray() {
         return healthTextureRegionArray;
     }
 
+    /**
+     * Get character down animation
+     * @return the animation of character down movement
+     */
     public Animation<TextureRegion> getCharacterDownAnimation() {
         return characterDownAnimation;
     }
 
+    /**
+     * Get character right animation
+     * @return the animation of character right movement
+     */
     public Animation<TextureRegion> getCharacterRightAnimation() {
         return characterRightAnimation;
     }
 
+    /**
+     * Get character up animation
+     * @return the animation of character up movement
+     */
     public Animation<TextureRegion> getCharacterUpAnimation() {
         return characterUpAnimation;
     }
 
+    /**
+     * Get character left animation
+     * @return the animation of character left movement
+     */
     public Animation<TextureRegion> getCharacterLeftAnimation() {
         return characterLeftAnimation;
     }
 
+    /**
+     * Get flame animation
+     * @return the animation of flame
+     */
     public Animation<TextureRegion> getFlameAnimation() {
         return flameAnimation;
     }
 
+    /**
+     * Get enemy down animation
+     * @return the animation of enemy down movement
+     */
     public Animation<TextureRegion> getEnemyDownAnimation() {
         return enemyDownAnimation;
     }
 
+    /**
+     * Get enemy left animation
+     * @return the animation of enemy left movement
+     */
+    public Animation<TextureRegion> getEnemyLeftAnimation() {
+        return enemyLeftAnimation;
+    }
+
+    /**
+     * Get enemy right animation
+     * @return the animation of enemy right movement
+     */
+    public Animation<TextureRegion> getEnemyRightAnimation() {
+        return enemyRightAnimation;
+    }
+
+    /**
+     * Get enemy up animation
+     * @return the animation of enemy up movement
+     */
+    public Animation<TextureRegion> getEnemyUpAnimation() {
+        return enemyUpAnimation;
+    }
+
+    /**
+     * Get key animation
+     * @return the animation of key rotating
+     */
+    public Animation<TextureRegion> getKeyAnimation() {
+        return keyAnimation;
+    }
+
+    /**
+     * Get door animation
+     * @return the animation of door opening
+     */
+    public Animation<TextureRegion> getDoorAnimation() {
+        return doorAnimation;
+    }
+
+    /**
+     * Get hurt sound array
+     * @return the array of hurt sounds
+     */
+    public Array<Sound> getHurtSoundArray() {
+        return hurtSoundArray;
+    }
+
+    /**
+     * Get key sound
+     * @return the sound of picking key
+     */
+    public Sound getKeySound() {
+        return keySound;
+    }
+
+    /**
+     * Get sprite batch
+     * @return the sprite batch
+     */
     public SpriteBatch getSpriteBatch() {
         return spriteBatch;
     }
 
-}
+    /**
+     * Get shape renderer
+     * @return the shape renderer
+     */
+    public ShapeRenderer getShapeRenderer() {
+        return shapeRenderer;
+    }
+
+    /**
+     * Get file chooser
+     * @return the native file chooser
+     */
+    public NativeFileChooser getFileChooser() {
+        return fileChooser;
+    }
+
+    /**
+     * Get game screen
+     * @return the game screen
+     */
+    public GameScreen getGameScreen() {
+        return gameScreen;
+    }}
