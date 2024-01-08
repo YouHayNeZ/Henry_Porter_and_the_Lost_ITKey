@@ -6,15 +6,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import de.tum.cit.ase.maze.MazeRunnerGame;
 
-import static de.tum.cit.ase.maze.MazeRunnerGame.CELL_HEIGHT;
-import static de.tum.cit.ase.maze.MazeRunnerGame.CELL_WIDTH;
-
 /**
  * Entity class is a parent for all game objects.
  * This contains common object elements that are necessary for simple texture drawing on the screen
  */
 public class Entity {
 
+    private static final int CELL_WIDTH = 16;
+    private static final int CELL_HEIGHT = 16;
     private static final float DEFAULT_PADDING = -1;
 
     MazeRunnerGame game;
