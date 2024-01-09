@@ -10,24 +10,38 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import de.tum.cit.ase.maze.Hud;
+import de.tum.cit.ase.maze.LevelMap;
 import de.tum.cit.ase.maze.MazeRunnerGame;
 import de.tum.cit.ase.maze.entity.Entity;
+import de.tum.cit.ase.maze.entity.EntryPoint;
 import de.tum.cit.ase.maze.entity.Player;
+
+import static de.tum.cit.ase.maze.MazeRunnerGame.CELL_HEIGHT;
+import static de.tum.cit.ase.maze.MazeRunnerGame.CELL_WIDTH;
 
 /**
  * The GameScreen class is responsible for rendering the gameplay screen.
  * It handles the game logic and rendering of the game elements.
  */
 public class GameScreen implements Screen {
+    private static final float WIDTH = 1100f;
+    private static final float HEIGHT = 600f;
+    private static final int CELL_WIDTH = 16;
+    private static final int CELL_HEIGHT = 16;
 
     private final MazeRunnerGame game;
     private final OrthographicCamera camera;
+
     private final BitmapFont font;
 
-    private final Hud hud;
+    private LevelMap levelMap;
+    private Hud hud;
 
     private Array<Entity> floor;
-    private final Player player;
+    private Player player;
+
+    private float mapWidth;
+    private float mapHeight;
 
     /**
      * Constructor for GameScreen. Sets up the camera and font.
@@ -52,6 +66,42 @@ public class GameScreen implements Screen {
         //Generate player
         player = new Player(game);
     }
+
+    /**
+     * Init level using map
+     */
+    public void initLevel() {
+        levelMap = game.getLevelMap();
+
+        mapWidth = (int) levelMap.getMapWidth();
+        mapHeight = (int) levelMap.getMapHeight();
+
+        //Generate floor
+        int columns = Math.floorDiv((int) mapWidth, CELL_WIDTH);
+        int rows = Math.floorDiv((int) mapHeight, CELL_HEIGHT);
+
+        floor = new Array<>();
+        for (int i = 0; i < columns; i++) {
+            for (int j = 0; j < rows; j++) {
+                Entity entity = new Entity(game);
+                entity.setTextureRegion(game.getFloorTextureRegion());
+                entity.setX(i * CELL_WIDTH);
+                entity.setY(j * CELL_HEIGHT);
+                floor.add(entity);
+            }
+        }
+
+        //Generate player
+        EntryPoint entryPoint = levelMap.findEntryPoint();
+
+        float mapCenterX = mapWidth / 2;
+        float mapCenterY = mapHeight / 2;
+
+        player = new Player(game);
+        player.setX(entryPoint != null ? entryPoint.getX() + CELL_WIDTH / 2f : mapCenterX);
+        player.setY(entryPoint != null ? entryPoint.getY() + CELL_HEIGHT / 2f : mapCenterY);
+    }
+
 
     // Screen interface methods with necessary functionality
     @Override

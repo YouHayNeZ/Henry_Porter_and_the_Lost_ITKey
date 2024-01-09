@@ -4,7 +4,6 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -14,15 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 
 import com.badlogic.gdx.utils.Disposable;
+import de.tum.cit.ase.maze.screen.ChooseLevelScreen;
 import de.tum.cit.ase.maze.screen.GameScreen;
 import de.tum.cit.ase.maze.screen.MenuScreen;
 import games.spooky.gdx.nativefilechooser.NativeFileChooser;
-import games.spooky.gdx.nativefilechooser.NativeFileChooserCallback;
-import games.spooky.gdx.nativefilechooser.NativeFileChooserConfiguration;
-import games.spooky.gdx.nativefilechooser.NativeFileChooserIntent;
 
 import java.io.IOException;
-import java.util.Properties;
 
 /**
  * The MazeRunnerGame class represents the core of the Maze Runner game.
@@ -31,10 +27,10 @@ import java.util.Properties;
 public class MazeRunnerGame extends Game {
 
     // World cell width size
-    private static final int CELL_WIDTH = 16;
+    public static final int CELL_WIDTH = 16;
 
     // World cell height size
-    private static final int CELL_HEIGHT = 16;
+    public static final int CELL_HEIGHT = 16;
 
     private static final String LEVEL_MAP_FORMAT = "maps/level-%d.properties";
 
@@ -48,6 +44,7 @@ public class MazeRunnerGame extends Game {
 
     // Screens
     private MenuScreen menuScreen;
+    private ChooseLevelScreen chooseLevelScreen;
     private GameScreen gameScreen;
 
     // Sprite Batch for rendering
@@ -87,6 +84,7 @@ public class MazeRunnerGame extends Game {
     Array<Sound> hurtSoundArray;
 
     Sound keySound;
+    LevelMap levelMap;
 
     /**
      * Constructor for MazeRunnerGame.
@@ -172,8 +170,10 @@ public class MazeRunnerGame extends Game {
         // Key sound
         keySound = Gdx.audio.newSound(Gdx.files.internal("sound/ring_inventory.wav"));
 
-        // Initialize the screens
+        levelMap = new LevelMap(this);
+
         menuScreen = new MenuScreen(this);
+        chooseLevelScreen = new ChooseLevelScreen(this);
         gameScreen = new GameScreen(this);
 
         goToMenu(); // Navigate to the menu screen
@@ -183,21 +183,34 @@ public class MazeRunnerGame extends Game {
      * Switches to the menu screen.
      */
     public void goToMenu() {
-        this.setScreen(new MenuScreen(this)); // Set the current screen to MenuScreen
-        if (gameScreen != null) {
-            gameScreen.dispose(); // Dispose the game screen if it exists
-            gameScreen = null;
-        }
+        setScreen(menuScreen);
+    }
+
+    /**
+     * Switches to choose level screen.
+     */
+    public void goToChooseLevel() {
+        setScreen(chooseLevelScreen);
     }
 
     /**
      * Switches to the game screen.
      */
     public void goToGame() {
-        this.setScreen(new GameScreen(this)); // Set the current screen to GameScreen
-        if (menuScreen != null) {
-            menuScreen.dispose(); // Dispose the menu screen if it exists
-            menuScreen = null;
+        setScreen(gameScreen);
+    }
+
+    /**
+     * Switches to the game screen with current level index
+     */
+    public void goToCurrentLevelIndexGame() {
+        try {
+            levelMap.load(String.format(LEVEL_MAP_FORMAT, levelIndex));
+            gameScreen.initLevel();
+            setScreen(gameScreen); // Set the current screen to GameScreen
+        }
+        catch (IOException e) {
+            Gdx.app.log("ERROR", "Failed to load level index: " + levelIndex, e);
         }
     }
 
@@ -271,69 +284,6 @@ public class MazeRunnerGame extends Game {
                                                    int animationFrames, float frameDuration, int x, int y) {
         Array<TextureRegion> frames = loadTextureRegionArray(texture, frameWidth, frameHeight, animationFrames, x, y);
         return new Animation<>(frameDuration, frames);
-    }
-
-    /**
-     * Open the file chooser to allow the user to pick a maze file.
-     */
-    public void chooseMazeFile() {
-        var fileChooserConfig = new NativeFileChooserConfiguration();
-        fileChooserConfig.title = "Pick a maze file"; // Title of the window that will be opened
-        fileChooserConfig.intent = NativeFileChooserIntent.OPEN; // Open a file
-        fileChooserConfig.nameFilter = (file, name) -> name.endsWith("properties"); // Only accept .properties files
-        fileChooserConfig.directory = Gdx.files.internal("maps"); // Open at the user's home directory
-
-        fileChooser.chooseFile(fileChooserConfig, new NativeFileChooserCallback() {
-            @Override
-            public void onFileChosen(FileHandle fileHandle) {
-                // Pass the game instance and the selected file handle to the loadMaze method
-                loadMaze(MazeRunnerGame.this, fileHandle);
-            }
-
-            @Override
-            public void onCancellation() {
-                // User closed the window, don't need to do anything
-            }
-
-            @Override
-            public void onError(Exception exception) {
-                System.err.println("Error picking maze file: " + exception.getMessage());
-            }
-        });
-    }
-
-    /**
-     * Load a maze from a properties file.
-     *
-     * @param game       The MazeRunnerGame instance.
-     * @param fileHandle The handle to the maze file.
-     */
-    public void loadMaze(MazeRunnerGame game, FileHandle fileHandle) {
-        Properties properties = new Properties();
-        try {
-            properties.load(fileHandle.reader());
-        } catch (IOException e) {
-            System.err.println("Error loading maze file: " + e.getMessage());
-            return;
-        }
-
-        // Example method to print the loaded data
-        String fileContent = fileHandle.readString();
-        String[] lines = fileContent.split("\\r?\\n");
-
-        int width = Integer.parseInt(lines[0]);
-        int height = Integer.parseInt(lines[1]);
-
-//        Maze maze = new Maze(width, height);
-
-        properties.forEach((key, value) -> {
-            String[] coordinates = key.toString().split(",");
-            int x = Integer.parseInt(coordinates[0]);
-            int y = Integer.parseInt(coordinates[1]);
-            int type = Integer.parseInt(value.toString());
-
-            System.out.println("Coordinate: (" + x + ", " + y + "), Type: " + type);
-        });
     }
 
     /**
@@ -535,11 +485,11 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get shape renderer
-     * @return the shape renderer
+     * Get level map
+     * @return the level map
      */
-    public ShapeRenderer getShapeRenderer() {
-        return shapeRenderer;
+    public LevelMap getLevelMap() {
+        return levelMap;
     }
 
     /**
@@ -556,4 +506,5 @@ public class MazeRunnerGame extends Game {
      */
     public GameScreen getGameScreen() {
         return gameScreen;
-    }}
+    }
+}

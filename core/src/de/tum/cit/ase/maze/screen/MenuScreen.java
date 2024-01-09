@@ -37,7 +37,7 @@ public class MenuScreen implements Screen {
      */
     public MenuScreen(MazeRunnerGame game) {
         var camera = new OrthographicCamera();
-        camera.zoom = 1.5f; // Set camera zoom for a closer view
+        camera.zoom = 1f;
 
         Viewport viewport = new ScreenViewport(camera); // Create a viewport with the camera
         stage = new Stage(viewport, game.getSpriteBatch()); // Create a stage for UI elements
@@ -68,7 +68,7 @@ public class MenuScreen implements Screen {
         stage.addActor(table); // Add the table to the stage
 
         // Add a label as a title with the title font
-        Label titleLabel = new Label("Henry Porter and the\nLost ITKey", new Label.LabelStyle(magicalFontTitle, Color.GOLD));
+        Label titleLabel = new Label("Henry Porter and the\n ITKey Torture Chamber", new Label.LabelStyle(magicalFontTitle, Color.GOLD));
         titleLabel.setAlignment(Align.center);
         table.add(titleLabel).padBottom(80).row();
 
@@ -87,23 +87,24 @@ public class MenuScreen implements Screen {
 
         // Create and add a button to go to the game screen
         TextButton goToGameButton = new TextButton("Go To Game", textButtonStyle);
-        table.add(goToGameButton).width(300).height(80).row();
         goToGameButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.goToGame(); // Change to the game screen when button is pressed
+                game.goToCurrentLevelIndexGame(); // Change to the game screen when button is pressed
             }
         });
+        table.add(goToGameButton).width(300).height(80).row();
+
 
         // Create and add a button to choose a maze file
-        TextButton chooseMazeButton = new TextButton("Choose Maze", textButtonStyle);
-        table.add(chooseMazeButton).width(300).height(80).row();
-        chooseMazeButton.addListener(new ChangeListener() {
+        TextButton goToChooseLevelButton = new TextButton("Choose Level Map", textButtonStyle);
+        goToChooseLevelButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.chooseMazeFile(); // Open the file chooser to choose a maze file
+                game.goToChooseLevel(); // Change to choose level screen when button is pressed
             }
         });
+        table.add(goToChooseLevelButton).width(300).height(80).row();
 
         // Dispose of the button font generator
         buttonFontGenerator.dispose();
@@ -146,5 +147,6 @@ public class MenuScreen implements Screen {
 
     @Override
     public void hide() {
+        Gdx.input.setInputProcessor(null);
     }
 }
