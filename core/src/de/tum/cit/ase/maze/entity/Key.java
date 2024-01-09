@@ -10,7 +10,6 @@ public class Key extends Entity {
     private Array<TextureRegion> switchTextureRegionArray;
     public Key(MazeRunnerGame game) {
         super(game);
-        switchTextureRegionArray = game.getSwitchTextureRegionArray();
         setTextureRegion(switchTextureRegionArray.get(0));
     }
 }

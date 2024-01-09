@@ -6,10 +6,13 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import de.tum.cit.ase.maze.Hud;
 import de.tum.cit.ase.maze.MazeRunnerGame;
-import de.tum.cit.ase.maze.entity.Character;
+import de.tum.cit.ase.maze.entity.Entity;
+import de.tum.cit.ase.maze.entity.Player;
 
 /**
  * The GameScreen class is responsible for rendering the gameplay screen.
@@ -21,20 +24,17 @@ public class GameScreen implements Screen {
     private final OrthographicCamera camera;
     private final BitmapFont font;
 
-    private float sinusInput = 0f;
-
     private final Hud hud;
 
-    private final Character character;
+    private Array<Entity> floor;
+    private final Player player;
 
     /**
      * Constructor for GameScreen. Sets up the camera and font.
-     *
      * @param game The main game class, used to access global resources and methods.
      */
     public GameScreen(MazeRunnerGame game) {
         this.game = game;
-        this.character = new Character(game);
         hud = new Hud(game.getSpriteBatch());
 
         // Create and configure the camera for the game view
@@ -48,11 +48,16 @@ public class GameScreen implements Screen {
         parameter.size = 40; // Set the desired font size
         font = generator.generateFont(parameter);
         generator.dispose(); // Important to dispose of the generator after creating the font
+
+        //Generate player
+        player = new Player(game);
     }
 
     // Screen interface methods with necessary functionality
     @Override
     public void render(float delta) {
+        delta = Math.min(delta, 1 / 60f);
+
         // Check for escape key press to go back to the menu
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             game.goToMenu();
@@ -63,9 +68,8 @@ public class GameScreen implements Screen {
         camera.update(); // Update the camera
 
         // Move text in a circular path to have an example of a moving object
-        sinusInput += delta;
-        float textX = (float) (camera.position.x);
-        float textY = (float) (camera.position.y);
+        float textX = (camera.position.x);
+        float textY = (camera.position.y);
 
         // Set up and begin drawing with the sprite batch
         game.getSpriteBatch().setProjectionMatrix(camera.combined);
@@ -75,7 +79,7 @@ public class GameScreen implements Screen {
         font.draw(game.getSpriteBatch(), "Press ESC to go back to the Menu", textX, textY);
 
         // Render the character
-        this.character.render(delta, game.getSpriteBatch());
+        this.player.render(delta, game.getSpriteBatch());
         this.hud.render(game.getSpriteBatch());
 
         game.getSpriteBatch().end(); // Important to call this after drawing everything
@@ -101,7 +105,6 @@ public class GameScreen implements Screen {
 
     @Override
     public void show() {
-
     }
 
     @Override
@@ -111,6 +114,4 @@ public class GameScreen implements Screen {
     @Override
     public void dispose() {
     }
-
-    // Additional methods and logic can be added as needed for the game screen
 }

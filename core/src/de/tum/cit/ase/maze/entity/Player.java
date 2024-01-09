@@ -1,7 +1,6 @@
 package de.tum.cit.ase.maze.entity;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Input.Keys;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -15,7 +14,7 @@ import com.badlogic.gdx.utils.Array;
 import de.tum.cit.ase.maze.MazeRunnerGame;
 
 
-public class Character extends UpdatableEntity {
+public class Player extends UpdatableEntity {
 
     private final float speed = 64f;
     private final float health = 5f;
@@ -36,7 +35,7 @@ public class Character extends UpdatableEntity {
     int frameHeight = 32;
     float animationTime = 0;
 
-    public Character(MazeRunnerGame game) {
+    public Player(MazeRunnerGame game) {
         super(game);
         characterDownAnimation = game.getCharacterDownAnimation();
         characterRightAnimation = game.getCharacterRightAnimation();
