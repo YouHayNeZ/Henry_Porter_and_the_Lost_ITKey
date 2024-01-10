@@ -4,12 +4,17 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Array;
 
 import com.badlogic.gdx.utils.Disposable;
@@ -27,10 +32,10 @@ import java.io.IOException;
 public class MazeRunnerGame extends Game {
 
     // World cell width size
-    public static final int CELL_WIDTH = 16;
+    private static final int CELL_WIDTH = 16;
 
     // World cell height size
-    public static final int CELL_HEIGHT = 16;
+    private static final int CELL_HEIGHT = 16;
 
     private static final String LEVEL_MAP_FORMAT = "maps/level-%d.properties";
 
@@ -54,6 +59,10 @@ public class MazeRunnerGame extends Game {
     // UI Skin
     private Skin skin;
 
+    // Font styles
+    private Label.LabelStyle labelStyle;
+    private TextButton.TextButtonStyle textButtonStyle;
+
     //Textures
     Texture basictilesTexture;
     Texture characterTexture;
@@ -61,6 +70,7 @@ public class MazeRunnerGame extends Game {
     Texture mobsTexture;
     Texture thingsTexture;
     Texture keyTexture;
+    Texture mazeBackground;
 
     //TextureRegions
     TextureRegion floorTextureRegion;
@@ -108,6 +118,30 @@ public class MazeRunnerGame extends Game {
 
         skin = new Skin(Gdx.files.internal("craft/craftacular-ui.json")); // Load UI skin
 
+        // Load the TTF file for the new font
+        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("craft/Magical Font.ttf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        parameter.size = 120; // Set the font size as needed
+
+        // Create a BitmapFont from the TTF file for the title
+        BitmapFont magicalFontTitle = generator.generateFont(parameter);
+
+        // Create a BitmapFont for the TextButton with the new size parameter
+        parameter.size = 40; // Set the font size as needed
+        BitmapFont magicalFontButton = generator.generateFont(parameter);
+
+        generator.dispose(); // Dispose of the generator when done
+
+        // Create a TextButtonStyle with the magical font for the TextButton
+        labelStyle = new Label.LabelStyle();
+        labelStyle.font = magicalFontTitle;
+        labelStyle.fontColor = Color.GOLD;
+
+        // Create a TextButtonStyle with the magical font for the TextButton
+        textButtonStyle = new TextButton.TextButtonStyle();
+        textButtonStyle.font = magicalFontButton;
+        textButtonStyle.fontColor = Color.GOLD;
+
         // Load textures
         basictilesTexture = new Texture(Gdx.files.internal("basictiles.png"));
         characterTexture = new Texture(Gdx.files.internal("character.png"));
@@ -115,6 +149,7 @@ public class MazeRunnerGame extends Game {
         mobsTexture = new Texture(Gdx.files.internal("mobs.png"));
         thingsTexture = new Texture(Gdx.files.internal("things.png"));
         keyTexture = new Texture(Gdx.files.internal("key.png"));
+        mazeBackground = new Texture(Gdx.files.internal("Maze Background.png"));
 
         // Load texture regions
         floorTextureRegion = new TextureRegion(basictilesTexture, 16, 16 * 9, 16, 16);
@@ -308,6 +343,7 @@ public class MazeRunnerGame extends Game {
         mobsTexture.dispose();
         thingsTexture.dispose();
         keyTexture.dispose();
+        mazeBackground.dispose();
 
         disposeArray(hurtSoundArray);
 
@@ -346,6 +382,14 @@ public class MazeRunnerGame extends Game {
      */
     public Skin getSkin() {
         return skin;
+    }
+
+    /**
+     * Get maze background texture
+     * @return the maze background texture
+     */
+    public Texture getMazeBackground() {
+        return mazeBackground;
     }
 
     /**
@@ -506,5 +550,21 @@ public class MazeRunnerGame extends Game {
      */
     public GameScreen getGameScreen() {
         return gameScreen;
+    }
+
+    /**
+     * Get label style
+     * @return the label style
+     */
+    public Label.LabelStyle getLabelStyle() {
+        return labelStyle;
+    }
+
+    /**
+     * Get text button style
+     * @return the text button style
+     */
+    public TextButton.TextButtonStyle getTextButtonStyle() {
+        return textButtonStyle;
     }
 }

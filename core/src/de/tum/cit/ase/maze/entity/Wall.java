@@ -14,7 +14,7 @@ public class Wall extends Entity {
         LOWER_WITH_UPPER(2),
         UPPER(3);
 
-        int imageIndex;
+        final int imageIndex;
 
         RepresentationType(int imageIndex) {
             this.imageIndex = imageIndex;

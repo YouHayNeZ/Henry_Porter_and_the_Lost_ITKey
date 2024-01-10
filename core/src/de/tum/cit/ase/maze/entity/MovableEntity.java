@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
+import de.tum.cit.ase.maze.LevelMap;
 import de.tum.cit.ase.maze.MazeRunnerGame;
 
 import java.lang.reflect.Field;
@@ -13,6 +14,12 @@ import java.util.function.Function;
  * MovableEntity allow your entities to move in 4 directions, but need to implement animation for each direction
  */
 public abstract class MovableEntity extends UpdatableEntity {
+
+    // World cell width size
+    private static final int CELL_WIDTH = 16;
+
+    // World cell height size
+    private static final int CELL_HEIGHT = 16;
 
     private static final float DEFAULT_SPEED = 50f;
 
@@ -98,9 +105,9 @@ public abstract class MovableEntity extends UpdatableEntity {
     private boolean checkBordersWallAndExitCollision() {
         Rectangle rectangle = getEntityRectangle();
 
-//        LevelMap levelMap = getGame().getLevelMap();
-//        if (rectangle.x < 0 || rectangle.x + rectangle.width > levelMap.getMapWidth() ||
-//                rectangle.y < 0 || rectangle.y + rectangle.height > levelMap.getMapHeight()) return true;
+        LevelMap levelMap = getGame().getLevelMap();
+        if (rectangle.x < 0 || rectangle.x + rectangle.width > levelMap.getMapWidth() ||
+                rectangle.y < 0 || rectangle.y + rectangle.height > levelMap.getMapHeight()) return true;
 //
 //        Rectangle entityRectangle;
 //        int size = getGame().getLevelMap().getEntities().size;

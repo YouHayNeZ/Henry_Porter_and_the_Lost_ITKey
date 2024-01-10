@@ -7,7 +7,13 @@ import de.tum.cit.ase.maze.MazeRunnerGame;
 
 public class Enemy extends UpdatableEntity {
 
-    private Animation<TextureRegion> enemyDownAnimation;
+    // World cell width size
+    private static final int CELL_WIDTH = 16;
+
+    // World cell height size
+    private static final int CELL_HEIGHT = 16;
+
+    private final Animation<TextureRegion> enemyDownAnimation;
 
     public Enemy(MazeRunnerGame game) {
         super(game);

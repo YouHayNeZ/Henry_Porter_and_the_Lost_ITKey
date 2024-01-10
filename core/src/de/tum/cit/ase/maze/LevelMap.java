@@ -1,8 +1,5 @@
 package de.tum.cit.ase.maze;
 
-import static de.tum.cit.ase.maze.MazeRunnerGame.CELL_WIDTH;
-import static de.tum.cit.ase.maze.MazeRunnerGame.CELL_HEIGHT;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.utils.Array;
@@ -40,7 +37,7 @@ public class LevelMap {
         ENEMY(4, Enemy.class),
         KEY(5, Key.class);
 
-        int value;
+        final int value;
         Class clazz;
 
         Type(int value, Class clazz) {
@@ -63,6 +60,12 @@ public class LevelMap {
             return clazz;
         }
     }
+
+    // World cell width size
+    private static final int CELL_WIDTH = 16;
+
+    // World cell height size
+    private static final int CELL_HEIGHT = 16;
 
     private Array<Entity> entities;
 

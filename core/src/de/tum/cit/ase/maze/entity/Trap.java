@@ -7,7 +7,7 @@ import de.tum.cit.ase.maze.MazeRunnerGame;
 
 public class Trap extends UpdatableEntity {
 
-    private Animation<TextureRegion> flameAnimation;
+    private final Animation<TextureRegion> flameAnimation;
     public Trap(MazeRunnerGame game) {
         super(game);
         flameAnimation = game.getFlameAnimation();
