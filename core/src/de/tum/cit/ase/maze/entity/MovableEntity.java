@@ -17,7 +17,6 @@ public abstract class MovableEntity extends UpdatableEntity {
 
     // World cell width size
     private static final int CELL_WIDTH = 16;
-
     // World cell height size
     private static final int CELL_HEIGHT = 16;
 

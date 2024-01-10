@@ -33,7 +33,6 @@ public class MazeRunnerGame extends Game {
 
     // World cell width size
     private static final int CELL_WIDTH = 16;
-
     // World cell height size
     private static final int CELL_HEIGHT = 16;
 
@@ -83,6 +82,10 @@ public class MazeRunnerGame extends Game {
     Animation<TextureRegion> characterRightAnimation;
     Animation<TextureRegion> characterUpAnimation;
     Animation<TextureRegion> characterLeftAnimation;
+    Animation<TextureRegion> characterAttackDownAnimation;
+    Animation<TextureRegion> characterAttackRightAnimation;
+    Animation<TextureRegion> characterAttackUpAnimation;
+    Animation<TextureRegion> characterAttackLeftAnimation;
     Animation<TextureRegion> enemyDownAnimation;
     Animation<TextureRegion> enemyLeftAnimation;
     Animation<TextureRegion> enemyRightAnimation;
@@ -168,6 +171,14 @@ public class MazeRunnerGame extends Game {
                 16, 32, 4, 0.1f, 0, 64);
         characterLeftAnimation = loadAnimation(characterTexture,
                 16, 32, 4, 0.1f, 0, 96);
+        characterAttackDownAnimation = loadAnimation(characterTexture,
+                16, 32, 4, 0.1f, 7, 128);
+        characterAttackRightAnimation = loadAnimation(characterTexture,
+                16, 32, 4, 0.1f, 7, 160);
+        characterAttackUpAnimation = loadAnimation(characterTexture,
+                16, 32, 4, 0.1f, 7, 192);
+        characterAttackLeftAnimation = loadAnimation(characterTexture,
+                16, 32, 4, 0.1f, 7, 224);
 
         // Load the enemy animation
         enemyDownAnimation = loadAnimation(mobsTexture,
@@ -192,7 +203,7 @@ public class MazeRunnerGame extends Game {
                 16, 16, 1, 4, 0.1f, 16 * 3, 0);
 
         // Play some background music
-        Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("sound/Harry Potter - Main Theme.mp3"));
+        Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("music/Harry Potter - Main Theme.mp3"));
         backgroundMusic.setLooping(true);
         backgroundMusic.play();
 
@@ -446,6 +457,38 @@ public class MazeRunnerGame extends Game {
      */
     public Animation<TextureRegion> getCharacterLeftAnimation() {
         return characterLeftAnimation;
+    }
+
+    /**
+     * Get character attack down animation
+     * @return the animation of character attack down movement
+     */
+    public Animation<TextureRegion> getCharacterAttackDownAnimation() {
+        return characterAttackDownAnimation;
+    }
+
+    /**
+     * Get character attack right animation
+     * @return the animation of character attack right movement
+     */
+    public Animation<TextureRegion> getCharacterAttackRightAnimation() {
+        return characterAttackRightAnimation;
+    }
+
+    /**
+     * Get character attack up animation
+     * @return the animation of character attack up movement
+     */
+    public Animation<TextureRegion> getCharacterAttackUpAnimation() {
+        return characterAttackUpAnimation;
+    }
+
+    /**
+     * Get character attack left animation
+     * @return the animation of character attack left movement
+     */
+    public Animation<TextureRegion> getCharacterAttackLeftAnimation() {
+        return characterAttackLeftAnimation;
     }
 
     /**

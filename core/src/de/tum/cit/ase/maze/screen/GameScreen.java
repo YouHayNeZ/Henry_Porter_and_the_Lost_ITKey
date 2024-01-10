@@ -16,9 +16,6 @@ import de.tum.cit.ase.maze.entity.Entity;
 import de.tum.cit.ase.maze.entity.EntryPoint;
 import de.tum.cit.ase.maze.entity.Player;
 
-import static de.tum.cit.ase.maze.MazeRunnerGame.CELL_HEIGHT;
-import static de.tum.cit.ase.maze.MazeRunnerGame.CELL_WIDTH;
-
 /**
  * The GameScreen class is responsible for rendering the gameplay screen.
  * It handles the game logic and rendering of the game elements.
@@ -35,7 +32,7 @@ public class GameScreen implements Screen {
     private final BitmapFont font;
 
     private LevelMap levelMap;
-    private Hud hud;
+    private final Hud hud;
 
     private Array<Entity> floor;
     private Player player;

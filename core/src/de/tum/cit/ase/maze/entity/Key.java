@@ -5,7 +5,7 @@ import com.badlogic.gdx.utils.Array;
 
 import de.tum.cit.ase.maze.MazeRunnerGame;
 
-public class Key extends Entity {
+public class Key extends UpdatableEntity {
 
     private Array<TextureRegion> switchTextureRegionArray;
     public Key(MazeRunnerGame game) {
