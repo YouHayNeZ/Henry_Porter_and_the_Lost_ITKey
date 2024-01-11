@@ -340,8 +340,15 @@ public class MazeRunnerGame extends Game {
         getScreen().hide(); // Hide the current screen
 
         // Dispose the current screens
-        if (menuScreen != null) menuScreen.dispose();
-        if (gameScreen != null) gameScreen.dispose();
+        if (menuScreen != null) {
+            menuScreen.dispose();
+        }
+        if (gameScreen != null) {
+            gameScreen.dispose();
+        }
+        if (chooseLevelScreen != null) {
+            chooseLevelScreen.dispose();
+        }
 
         spriteBatch.dispose(); // Dispose the spriteBatch
         shapeRenderer.dispose(); // Dispose the shapeRenderer

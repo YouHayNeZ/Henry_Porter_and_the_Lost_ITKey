@@ -32,7 +32,6 @@ public class GameScreen implements Screen {
     private final BitmapFont font;
 
     private LevelMap levelMap;
-    private final Hud hud;
 
     private Array<Entity> floor;
     private Player player;
@@ -46,12 +45,11 @@ public class GameScreen implements Screen {
      */
     public GameScreen(MazeRunnerGame game) {
         this.game = game;
-        hud = new Hud(game.getSpriteBatch());
 
         // Create and configure the camera for the game view
         camera = new OrthographicCamera();
         camera.setToOrtho(false);
-        camera.zoom = 0.75f;
+        camera.zoom = 0.5f;
 
         // Load the new font from the TTF file
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("craft/Magical Font.ttf"));
@@ -60,8 +58,7 @@ public class GameScreen implements Screen {
         font = generator.generateFont(parameter);
         generator.dispose(); // Important to dispose of the generator after creating the font
 
-        //Generate player
-        player = new Player(game);
+        initLevel();
     }
 
     /**
@@ -112,34 +109,65 @@ public class GameScreen implements Screen {
 
         ScreenUtils.clear(0, 0, 0, 1); // Clear the screen
 
-        camera.update(); // Update the camera
-
-        // Move text in a circular path to have an example of a moving object
-        float textX = (camera.position.x);
-        float textY = (camera.position.y);
-
         // Set up and begin drawing with the sprite batch
         game.getSpriteBatch().setProjectionMatrix(camera.combined);
-        game.getSpriteBatch().begin(); // Important to call this before drawing anything
 
-        // Render the text
-        font.draw(game.getSpriteBatch(), "Press ESC to go back to the Menu", textX, textY);
+        //Draw floor
+        game.getSpriteBatch().begin();
+        game.getSpriteBatch().setColor(1, 1, 1, 0.5f);
+        for (Entity entity: floor) entity.draw(game.getSpriteBatch());
 
-        // Render the character
-        this.player.render(delta, game.getSpriteBatch());
-        this.hud.render(game.getSpriteBatch());
+        //Draw entities that upper or on same level than player
+        game.getSpriteBatch().setColor(1, 1, 1, 1);
+        float playerLowerYPosition = player.getY() - CELL_HEIGHT;
+        levelMap.getEntities().forEach(e -> {
+            if (e.getY() >= playerLowerYPosition) e.draw(game.getSpriteBatch());
+        });
 
-        game.getSpriteBatch().end(); // Important to call this after drawing everything
+        //Draw the player
+        player.draw(game.getSpriteBatch());
 
-        // Set up and begin drawing with the HUD stage
-        game.getSpriteBatch().setProjectionMatrix(hud.getStage().getCamera().combined);
-        hud.getStage().act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f));
-        hud.getStage().draw();
+        //Draw entities that lower than player
+        levelMap.getEntities().forEach(e -> {
+            if (e.getY() < playerLowerYPosition) e.draw(game.getSpriteBatch());
+        });
+
+        //Draw health
+        float maxHealth = Player.DEFAULT_HEALTH;
+        float health = player.getHealth();
+        for (int i = 0; i < maxHealth; i++) {
+            int imageIndex = getImageIndex(i, health, maxHealth);
+            game.getSpriteBatch().draw(game.getHealthTextureRegionArray().get(imageIndex),
+                    camera.position.x - maxHealth * CELL_WIDTH + i * CELL_WIDTH * 2,
+                    camera.position.y + camera.viewportHeight * camera.zoom / 2 - CELL_WIDTH * 2,
+                    CELL_WIDTH * 2, CELL_WIDTH * 2);
+        }
+
+        //Draw key if player have it
+        if (player.isHasKey()) {
+            game.getSpriteBatch().draw(game.getKeyAnimation().getKeyFrames()[0],
+                    camera.position.x - camera.viewportWidth * camera.zoom / 2,
+                    camera.position.y + camera.viewportHeight * camera.zoom / 2 - CELL_HEIGHT,
+                    CELL_WIDTH, CELL_HEIGHT);
+        }
+
+        //Draw debug
+        //defaultFont.draw(game.getSpriteBatch(), "Game over: " + gameOver, 0, 0);
+        game.getSpriteBatch().end();
+
+        //drawDebugActionRectangles();
+    }
+
+    private int getImageIndex(int healthIndex, float health, float maxHealth) {
+        return health - healthIndex >= 1 ? 0 : (health - healthIndex) < 0 ? 4 : (int) maxHealth - 1 -
+                Math.floorDiv((int) ((health - healthIndex) * 100), Math.floorDiv(100, (int) maxHealth));
     }
 
     @Override
     public void resize(int width, int height) {
         camera.setToOrtho(false);
+        camera.viewportWidth = width;
+        camera.viewportHeight = height;
     }
 
     @Override

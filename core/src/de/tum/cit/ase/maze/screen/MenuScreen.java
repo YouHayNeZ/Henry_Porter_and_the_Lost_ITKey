@@ -22,6 +22,7 @@ import de.tum.cit.ase.maze.MazeRunnerGame;
  * It extends the LibGDX Screen class and sets up the UI components for the menu.
  */
 public class MenuScreen implements Screen {
+    private final MazeRunnerGame game;
 
     private final Stage stage;
     /**
@@ -30,6 +31,8 @@ public class MenuScreen implements Screen {
      * @param game The main game class, used to access global resources and methods.
      */
     public MenuScreen(MazeRunnerGame game) {
+        this.game = game;
+
         var camera = new OrthographicCamera();
         camera.zoom = 1f;
 
