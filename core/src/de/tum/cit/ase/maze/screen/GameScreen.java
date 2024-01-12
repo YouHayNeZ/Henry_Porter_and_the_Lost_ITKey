@@ -5,8 +5,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import de.tum.cit.ase.maze.Hud;
@@ -29,9 +27,10 @@ public class GameScreen implements Screen {
     private final MazeRunnerGame game;
     private final OrthographicCamera camera;
 
-    private final BitmapFont font;
+    private BitmapFont font;
 
     private LevelMap levelMap;
+    private Hud hud;
 
     private Array<Entity> floor;
     private Player player;
@@ -45,18 +44,12 @@ public class GameScreen implements Screen {
      */
     public GameScreen(MazeRunnerGame game) {
         this.game = game;
+//        hud = new Hud(game.getSpriteBatch());
 
         // Create and configure the camera for the game view
         camera = new OrthographicCamera();
         camera.setToOrtho(false);
-        camera.zoom = 0.5f;
-
-        // Load the new font from the TTF file
-        FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("craft/Magical Font.ttf"));
-        FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 40; // Set the desired font size
-        font = generator.generateFont(parameter);
-        generator.dispose(); // Important to dispose of the generator after creating the font
+        camera.zoom = 0.50f;
 
         initLevel();
     }
@@ -96,7 +89,6 @@ public class GameScreen implements Screen {
         player.setY(entryPoint != null ? entryPoint.getY() + CELL_HEIGHT / 2f : mapCenterY);
     }
 
-
     // Screen interface methods with necessary functionality
     @Override
     public void render(float delta) {
@@ -112,27 +104,33 @@ public class GameScreen implements Screen {
         // Set up and begin drawing with the sprite batch
         game.getSpriteBatch().setProjectionMatrix(camera.combined);
 
-        //Draw floor
+        // Draw floor
         game.getSpriteBatch().begin();
         game.getSpriteBatch().setColor(1, 1, 1, 0.5f);
-        for (Entity entity: floor) entity.draw(game.getSpriteBatch());
+        for (Entity entity: floor) {
+            entity.draw(game.getSpriteBatch());
+        }
 
-        //Draw entities that upper or on same level than player
+        // Draw entities that upper or on same level as player
         game.getSpriteBatch().setColor(1, 1, 1, 1);
         float playerLowerYPosition = player.getY() - CELL_HEIGHT;
-        levelMap.getEntities().forEach(e -> {
-            if (e.getY() >= playerLowerYPosition) e.draw(game.getSpriteBatch());
+        levelMap.getEntities().forEach(entity -> {
+            if (entity.getY() >= playerLowerYPosition) {
+                entity.draw(game.getSpriteBatch());
+            }
         });
 
-        //Draw the player
+        // Draw the player
         player.draw(game.getSpriteBatch());
 
-        //Draw entities that lower than player
-        levelMap.getEntities().forEach(e -> {
-            if (e.getY() < playerLowerYPosition) e.draw(game.getSpriteBatch());
+        // Draw entities that lower than player
+        levelMap.getEntities().forEach(entity -> {
+            if (entity.getY() < playerLowerYPosition) {
+                entity.draw(game.getSpriteBatch());
+            }
         });
 
-        //Draw health
+        // Draw health
         float maxHealth = Player.DEFAULT_HEALTH;
         float health = player.getHealth();
         for (int i = 0; i < maxHealth; i++) {
@@ -143,7 +141,7 @@ public class GameScreen implements Screen {
                     CELL_WIDTH * 2, CELL_WIDTH * 2);
         }
 
-        //Draw key if player have it
+        // Draw key if player has it
         if (player.isHasKey()) {
             game.getSpriteBatch().draw(game.getKeyAnimation().getKeyFrames()[0],
                     camera.position.x - camera.viewportWidth * camera.zoom / 2,
@@ -151,11 +149,11 @@ public class GameScreen implements Screen {
                     CELL_WIDTH, CELL_HEIGHT);
         }
 
-        //Draw debug
-        //defaultFont.draw(game.getSpriteBatch(), "Game over: " + gameOver, 0, 0);
+        // Draw debug
+        // defaultFont.draw(game.getSpriteBatch(), "Game over: " + gameOver, 0, 0);
         game.getSpriteBatch().end();
 
-        //drawDebugActionRectangles();
+        // drawDebugActionRectangles();
     }
 
     private int getImageIndex(int healthIndex, float health, float maxHealth) {

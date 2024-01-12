@@ -11,7 +11,7 @@ import java.lang.reflect.Field;
 import java.util.function.Function;
 
 /**
- * MovableEntity allow your entities to move in 4 directions, but need to implement animation for each direction
+ * MovableEntity allow the entities to move in 4 directions, but need to implement animation for each direction
  */
 public abstract class MovableEntity extends UpdatableEntity {
 
@@ -106,22 +106,27 @@ public abstract class MovableEntity extends UpdatableEntity {
 
         LevelMap levelMap = getGame().getLevelMap();
         if (rectangle.x < 0 || rectangle.x + rectangle.width > levelMap.getMapWidth() ||
-                rectangle.y < 0 || rectangle.y + rectangle.height > levelMap.getMapHeight()) return true;
-//
-//        Rectangle entityRectangle;
-//        int size = getGame().getLevelMap().getEntities().size;
-//        for (int i = 0; i < size; i++) {
-//            Entity e = getGame().getLevelMap().getEntities().get(i);
-//            if (e instanceof Wall wall) {
-//                entityRectangle = new Rectangle(wall.getX(), wall.getY(), CELL_WIDTH, CELL_HEIGHT);
-//                if (Intersector.overlaps(rectangle, entityRectangle)) return true;
-//            }
-//            if (e instanceof Exit exit) {
-//                entityRectangle = exit.getEntityRectangle();
-//                if (!exit.isOpen() && Intersector.overlaps(rectangle, entityRectangle)) return true;
-//            }
-//        }
+                rectangle.y < 0 || rectangle.y + rectangle.height > levelMap.getMapHeight()) {
+            return true;
+        }
 
+        Rectangle entityRectangle;
+        int size = getGame().getLevelMap().getEntities().size;
+        for (int i = 0; i < size; i++) {
+            Entity e = getGame().getLevelMap().getEntities().get(i);
+            if (e instanceof Wall wall) {
+                entityRectangle = new Rectangle(wall.getX(), wall.getY(), CELL_WIDTH, CELL_HEIGHT);
+                if (Intersector.overlaps(rectangle, entityRectangle)) {
+                    return true;
+                }
+            }
+            if (e instanceof Exit exit) {
+                entityRectangle = exit.getEntityRectangle();
+                if (!exit.isOpen() && Intersector.overlaps(rectangle, entityRectangle)) {
+                    return true;
+                }
+            }
+        }
         return false;
     }
 

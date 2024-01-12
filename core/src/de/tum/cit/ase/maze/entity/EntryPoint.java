@@ -1,5 +1,6 @@
 package de.tum.cit.ase.maze.entity;
 
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.tum.cit.ase.maze.MazeRunnerGame;
 
 /**
@@ -7,11 +8,15 @@ import de.tum.cit.ase.maze.MazeRunnerGame;
  */
 public class EntryPoint extends Entity {
 
+    TextureRegion textureRegionArray;
+
     /**
      * Creates new EntryPoint
      * @param game the main game
      */
     public EntryPoint(MazeRunnerGame game) {
         super(game);
+        textureRegionArray = game.getLadderTextureRegion();
+        setTextureRegion(textureRegionArray);
     }
 }

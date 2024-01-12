@@ -26,7 +26,7 @@ public class Entity {
 
     /**
      * Creates one entity.
-     * If you want to create entity by this way - you need to declare textureRegion and position for this entity
+     * If we want to create entity by this way - we need to declare textureRegion and position for this entity
      * @param game the main game
      */
     public Entity(MazeRunnerGame game) {

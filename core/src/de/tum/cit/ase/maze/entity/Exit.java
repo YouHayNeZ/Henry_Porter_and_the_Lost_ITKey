@@ -14,7 +14,7 @@ public class Exit extends UpdatableEntity {
     private static final float ACTION_PADDING = 4f;
     private static final float EXIT_PADDING = -7f;
 
-    private Animation<TextureRegion> animation;
+    private final Animation<TextureRegion> animation;
     private boolean isOpening;
 
     /**
@@ -39,7 +39,7 @@ public class Exit extends UpdatableEntity {
     /**
      * Get rectangle for action.
      * Used when Player has a key and it near.
-     * Bigger than default entity rectangle
+     * Bigger than default entity rectangle.
      * @return Rectangle that represents action rectangle
      */
     public Rectangle getActionRectangle() {
@@ -49,7 +49,7 @@ public class Exit extends UpdatableEntity {
     /**
      * Get rectangle for exit.
      * Used when Player is near and exit is open.
-     * Smaller than default entity rectangle
+     * Smaller than default entity rectangle.
      * @return Rectangle that represents exit rectangle
      */
     public Rectangle getExitRectangle() {
@@ -57,7 +57,7 @@ public class Exit extends UpdatableEntity {
     }
 
     /**
-     * Check is open door for exit
+     * Check is open door for exit.
      * @return true if exit is open
      */
     public boolean isOpen() {
@@ -67,7 +67,7 @@ public class Exit extends UpdatableEntity {
 
     /**
      * Open a door.
-     * Start an animation timer that opening the door
+     * Start an animation timer that's opening the door.
      */
     public void open() {
         isOpening = true;

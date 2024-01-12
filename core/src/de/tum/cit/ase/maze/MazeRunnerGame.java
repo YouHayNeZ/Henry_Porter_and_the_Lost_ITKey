@@ -73,6 +73,7 @@ public class MazeRunnerGame extends Game {
 
     //TextureRegions
     TextureRegion floorTextureRegion;
+    TextureRegion ladderTextureRegion;
 
     Array<TextureRegion> wallTextureRegionArray;
     Array<TextureRegion> healthTextureRegionArray;
@@ -93,6 +94,7 @@ public class MazeRunnerGame extends Game {
     Animation<TextureRegion> flameAnimation;
     Animation<TextureRegion> keyAnimation;
     Animation<TextureRegion> doorAnimation;
+    Animation<TextureRegion> heartAnimation;
 
     Array<Sound> hurtSoundArray;
 
@@ -101,7 +103,6 @@ public class MazeRunnerGame extends Game {
 
     /**
      * Constructor for MazeRunnerGame.
-     *
      * @param fileChooser The file chooser for the game, typically used in desktop environment.
      */
     public MazeRunnerGame(NativeFileChooser fileChooser) {
@@ -156,11 +157,10 @@ public class MazeRunnerGame extends Game {
 
         // Load texture regions
         floorTextureRegion = new TextureRegion(basictilesTexture, 16, 16 * 9, 16, 16);
+        ladderTextureRegion = new TextureRegion(basictilesTexture, 16, 16 * 7, 16, 16);
 
-        wallTextureRegionArray = loadTextureRegionArray(basictilesTexture,
-                16, 16, 4, 0, 0);
-        healthTextureRegionArray = loadTextureRegionArray(objectsTexture,
-                16, 16, 5, 16 * 4, 0);
+        wallTextureRegionArray = loadTextureRegionArray(basictilesTexture, 16, 16, 4, 0, 0);
+        healthTextureRegionArray = loadTextureRegionArray(objectsTexture, 16, 16, 5, 16 * 4, 0);
 
         // Load character animations
         characterDownAnimation = loadAnimation(characterTexture,
@@ -192,7 +192,7 @@ public class MazeRunnerGame extends Game {
 
         // Load the flame animation
         flameAnimation = loadAnimation(objectsTexture,
-                16, 16, 7, 0.1f, 4 * 16, 3 * 16);
+                16, 16, 7, 0.1f, 4 * CELL_WIDTH, 3 * CELL_HEIGHT);
 
         // Load the key animation
         keyAnimation = loadAnimation(keyTexture,
@@ -200,7 +200,11 @@ public class MazeRunnerGame extends Game {
 
         // Load the door animation
         doorAnimation = loadAnimation(thingsTexture,
-                16, 16, 1, 4, 0.1f, 16 * 3, 0);
+                16, 16, 1, 4, 0.1f, 3 * CELL_WIDTH, 0);
+
+        // Load the heart animation
+        heartAnimation = loadAnimation(objectsTexture,
+                16, 16, 4, 0.1f, 0, 4 * CELL_HEIGHT);
 
         // Play some background music
         Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("music/Harry Potter - Main Theme.mp3"));
@@ -247,7 +251,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Switches to the game screen with current level index
+     * Switches to the game screen with current level index.
      */
     public void goToCurrentLevelIndexGame() {
         try {
@@ -261,7 +265,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Load texture region array of images from texture that stands in one row
+     * Load texture region array of images from texture that stands in one row.
      * @param texture the texture
      * @param frameWidth the frame width
      * @param frameHeight the frame height
@@ -276,7 +280,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Load texture region array from texture
+     * Load texture region array from texture.
      * @param texture the texture
      * @param frameWidth the frame width
      * @param frameHeight the frame height
@@ -298,7 +302,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Load animation from texture
+     * Load animation from texture.
      * @param texture the texture
      * @param frameWidth the frame width
      * @param frameHeight the frame height
@@ -316,7 +320,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Load animation from texture that stands in on row
+     * Load animation from texture that stands in on row.
      * @param texture the texture
      * @param frameWidth the frame width
      * @param frameHeight the frame height
@@ -369,7 +373,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Dispose array
+     * Dispose array.
      * @param array the array of disposable
      */
     private void disposeArray(Array<? extends Disposable> array) {
@@ -379,14 +383,16 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Increment level index
+     * Increment level index.
      */
     public void incrementLevel() {
-        if (++levelIndex > MAX_LEVEL_INDEX) levelIndex = DEFAULT_LEVEL_INDEX;
+        if (++levelIndex > MAX_LEVEL_INDEX) {
+            levelIndex = DEFAULT_LEVEL_INDEX;
+        }
     }
 
     /**
-     * Set current level index
+     * Set current level index.
      * @param index the current level index
      */
     public void setLevelIndex(int index) {
@@ -395,7 +401,7 @@ public class MazeRunnerGame extends Game {
 
     // Getter methods
     /**
-     * Get ui skin
+     * Get ui skin.
      * @return the ui skin
      */
     public Skin getSkin() {
@@ -403,7 +409,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get maze background texture
+     * Get maze background texture.
      * @return the maze background texture
      */
     public Texture getMazeBackground() {
@@ -411,7 +417,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get floor texture region
+     * Get floor texture region.
      * @return the floor texture region
      */
     public TextureRegion getFloorTextureRegion() {
@@ -419,7 +425,15 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Gew wall texture region array
+     * Get ladder texture region.
+     * @return the ladder texture region
+     */
+    public TextureRegion getLadderTextureRegion() {
+        return ladderTextureRegion;
+    }
+
+    /**
+     * Gew wall texture region array.
      * @return the array of wall texture region
      */
     public Array<TextureRegion> getWallTextureRegionArray() {
@@ -427,7 +441,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get health texture region array
+     * Get health texture region array.
      * @return the array of health texture region
      */
     public Array<TextureRegion> getHealthTextureRegionArray() {
@@ -435,7 +449,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get character down animation
+     * Get character down animation.
      * @return the animation of character down movement
      */
     public Animation<TextureRegion> getCharacterDownAnimation() {
@@ -443,7 +457,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get character right animation
+     * Get character right animation.
      * @return the animation of character right movement
      */
     public Animation<TextureRegion> getCharacterRightAnimation() {
@@ -451,7 +465,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get character up animation
+     * Get character up animation.
      * @return the animation of character up movement
      */
     public Animation<TextureRegion> getCharacterUpAnimation() {
@@ -459,7 +473,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get character left animation
+     * Get character left animation.
      * @return the animation of character left movement
      */
     public Animation<TextureRegion> getCharacterLeftAnimation() {
@@ -467,7 +481,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get character attack down animation
+     * Get character attack down animation.
      * @return the animation of character attack down movement
      */
     public Animation<TextureRegion> getCharacterAttackDownAnimation() {
@@ -475,7 +489,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get character attack right animation
+     * Get character attack right animation.
      * @return the animation of character attack right movement
      */
     public Animation<TextureRegion> getCharacterAttackRightAnimation() {
@@ -483,7 +497,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get character attack up animation
+     * Get character attack up animation.
      * @return the animation of character attack up movement
      */
     public Animation<TextureRegion> getCharacterAttackUpAnimation() {
@@ -491,7 +505,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get character attack left animation
+     * Get character attack left animation.
      * @return the animation of character attack left movement
      */
     public Animation<TextureRegion> getCharacterAttackLeftAnimation() {
@@ -499,7 +513,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get flame animation
+     * Get flame animation.
      * @return the animation of flame
      */
     public Animation<TextureRegion> getFlameAnimation() {
@@ -507,7 +521,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get enemy down animation
+     * Get enemy down animation.
      * @return the animation of enemy down movement
      */
     public Animation<TextureRegion> getEnemyDownAnimation() {
@@ -515,7 +529,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get enemy left animation
+     * Get enemy left animation.
      * @return the animation of enemy left movement
      */
     public Animation<TextureRegion> getEnemyLeftAnimation() {
@@ -523,7 +537,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get enemy right animation
+     * Get enemy right animation.
      * @return the animation of enemy right movement
      */
     public Animation<TextureRegion> getEnemyRightAnimation() {
@@ -531,7 +545,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get enemy up animation
+     * Get enemy up animation.
      * @return the animation of enemy up movement
      */
     public Animation<TextureRegion> getEnemyUpAnimation() {
@@ -539,7 +553,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get key animation
+     * Get key animation.
      * @return the animation of key rotating
      */
     public Animation<TextureRegion> getKeyAnimation() {
@@ -547,7 +561,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get door animation
+     * Get door animation.
      * @return the animation of door opening
      */
     public Animation<TextureRegion> getDoorAnimation() {
@@ -555,7 +569,15 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get hurt sound array
+     * Get heart animation.
+     * @return the animation of heart
+     */
+    public Animation<TextureRegion> getHeartAnimation() {
+        return heartAnimation;
+    }
+
+    /**
+     * Get hurt sound array.
      * @return the array of hurt sounds
      */
     public Array<Sound> getHurtSoundArray() {
@@ -563,7 +585,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get key sound
+     * Get key sound.
      * @return the sound of picking key
      */
     public Sound getKeySound() {
@@ -571,7 +593,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get sprite batch
+     * Get sprite batch.
      * @return the sprite batch
      */
     public SpriteBatch getSpriteBatch() {
@@ -579,7 +601,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get level map
+     * Get level map.
      * @return the level map
      */
     public LevelMap getLevelMap() {
@@ -587,7 +609,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get file chooser
+     * Get file chooser.
      * @return the native file chooser
      */
     public NativeFileChooser getFileChooser() {
@@ -595,7 +617,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get game screen
+     * Get game screen.
      * @return the game screen
      */
     public GameScreen getGameScreen() {
@@ -603,7 +625,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get label style
+     * Get label style.
      * @return the label style
      */
     public Label.LabelStyle getLabelStyle() {
@@ -611,7 +633,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get text button style
+     * Get text button style.
      * @return the text button style
      */
     public TextButton.TextButtonStyle getTextButtonStyle() {

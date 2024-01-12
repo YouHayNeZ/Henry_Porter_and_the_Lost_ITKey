@@ -5,6 +5,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import de.tum.cit.ase.maze.MazeRunnerGame;
 
+/**
+ * Enemy class represents enemy entity, which is moveable and updatable.
+ * It moves in random directions
+ */
 public class Enemy extends MovableEntity {
 
     // World cell width size
@@ -12,57 +16,44 @@ public class Enemy extends MovableEntity {
     // World cell height size
     private static final int CELL_HEIGHT = 16;
 
-    private final Animation<TextureRegion> enemyDownAnimation;
+    private final Animation<TextureRegion> downAnimation;
+    private final Animation<TextureRegion> upAnimation;
+    private final Animation<TextureRegion> leftAnimation;
+    private final Animation<TextureRegion> rightAnimation;
 
     public Enemy(MazeRunnerGame game) {
         super(game);
-        enemyDownAnimation = game.getEnemyDownAnimation();
-        setTextureRegion(enemyDownAnimation.getKeyFrames()[0]);
+        downAnimation = game.getEnemyDownAnimation();
+        upAnimation = game.getEnemyUpAnimation();
+        leftAnimation = game.getEnemyLeftAnimation();
+        rightAnimation = game.getEnemyRightAnimation();
+        setTextureRegion(downAnimation.getKeyFrames()[0]);
     }
 
-    /**
-     * Get animation of move to up direction
-     *
-     * @return Animation<TextureRegion> class that contains animation
-     */
+    // Override getter methods for animations
     @Override
     public Animation<TextureRegion> getUpAnimation() {
-        return null;
+        return upAnimation;
     }
 
-    /**
-     * Get animation of move to down direction
-     *
-     * @return Animation<TextureRegion> class that contains animation
-     */
     @Override
     public Animation<TextureRegion> getDownAnimation() {
-        return null;
+        return downAnimation;
     }
 
-    /**
-     * Get animation of move to left direction
-     *
-     * @return Animation<TextureRegion> class that contains animation
-     */
     @Override
     public Animation<TextureRegion> getLeftAnimation() {
-        return null;
+        return leftAnimation;
     }
 
-    /**
-     * Get animation of move to right direction
-     *
-     * @return Animation<TextureRegion> class that contains animation
-     */
     @Override
     public Animation<TextureRegion> getRightAnimation() {
-        return null;
+        return rightAnimation;
     }
 
     @Override
     public void update(float delta) {
         super.update(delta);
-        setTextureRegion(enemyDownAnimation.getKeyFrame(getTime(), true));
+        setTextureRegion(downAnimation.getKeyFrame(getTime(), true));
     }
 }

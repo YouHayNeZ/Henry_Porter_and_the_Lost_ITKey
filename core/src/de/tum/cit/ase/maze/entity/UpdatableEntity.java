@@ -3,8 +3,8 @@ package de.tum.cit.ase.maze.entity;
 import de.tum.cit.ase.maze.MazeRunnerGame;
 
 /**
- * UpdatableEntity the parent of all objects that can change over time.
- * Mainly used to display animations, but can also simply change internal parameters over time
+ * UpdatableEntity the parent of all game objects that can change over time.
+ * Mainly used to display animations, but can also simply change internal parameters over time.
  */
 public class UpdatableEntity extends Entity {
 
@@ -12,7 +12,7 @@ public class UpdatableEntity extends Entity {
 
     /**
      * Creates one updatableEntity.
-     * As with regular objects, if you want to create objects in this way, you need to define a texture
+     * As with regular game objects, if we want to create game objects in this way, we need to define a texture.
      * @param game the main game
      */
     public UpdatableEntity(MazeRunnerGame game) {
@@ -21,16 +21,14 @@ public class UpdatableEntity extends Entity {
 
     /**
      * Here the time variable is updated over time.
-     * You can use it any time by calling <bold>getTime()</bold> for you animations in way:
-     * <pre>
+     * We can use it any time by calling <bold>getTime()</bold> for the animations in way:
      *      {@code @Override}
      *      public void update(float delta) {
      *          super.update(delta);
-     *          setTextureRegion(yourAnimation.getKeyFrame(getTime(), true));
+     *          setTextureRegion(entityAnimation.getKeyFrame(getTime(), true));
      *      }
-     * </pre>
-     * Where <bold>yourAnimation</bold> - is your animation class
-     * You can override this method to change the object as you wish, but it is advisable to call the parent method first
+     * Where <bold>entityAnimation</bold> - is the animation class
+     * We can override this method to change the object as we wish, but it is advisable to call the parent method first.
      * @param delta the delta time
      */
     public void update(float delta) {

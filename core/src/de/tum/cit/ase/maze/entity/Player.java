@@ -12,6 +12,12 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import de.tum.cit.ase.maze.MazeRunnerGame;
 
+/**
+ * Player class represents player entity, which is moveable and updatable.
+ * It has health and can be damaged by traps and enemies.
+ * It can also attack enemies.
+ * Its movement controlled by the user.
+ */
 public class Player extends MovableEntity {
 
     // World cell width size
@@ -41,7 +47,6 @@ public class Player extends MovableEntity {
     private float immutableTime;
 
     private boolean hasKey;
-    private final Rectangle character;
 
     public Player(MazeRunnerGame game) {
         super(game);
@@ -62,9 +67,6 @@ public class Player extends MovableEntity {
 
         health = DEFAULT_HEALTH;
         hasKey = false;
-
-        // Create a Rectangle to logically represent the character
-        character = new Rectangle(600, 300, 32, 64);
     }
 
     // Override getter methods for animations
@@ -94,13 +96,19 @@ public class Player extends MovableEntity {
 
         immutableTime -= delta;
 
-        if (Gdx.input.isKeyPressed(Input.Keys.W)) moveUp(delta);
-        else if (Gdx.input.isKeyPressed(Input.Keys.S)) moveDown(delta);
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            moveUp(delta);
+        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            moveDown(delta);
+        }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) moveLeft(delta);
-        else if (Gdx.input.isKeyPressed(Input.Keys.D)) moveRight(delta);
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            moveLeft(delta);
+        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            moveRight(delta);
+        }
 
-        //Check key collision
+        // Check key collision
         Key key = checkKeyCollision();
         if (key != null) {
             hasKey = true;
@@ -109,12 +117,12 @@ public class Player extends MovableEntity {
             keySound.play();
         }
 
-        //Check trap or enemy collision
+        // Check trap or enemy collision
         if (checkTrapOrEnemyCollision() && immutableTime <= 0) {
             health -= DEFAULT_DAMAGE;
             immutableTime = DEFAULT_IMMUTABLE_TIME;
 
-            //Play random hurt sound
+            // Play random hurt sound
             hurtSoundArray.random().play();
         }
     }
@@ -127,7 +135,9 @@ public class Player extends MovableEntity {
 
     @Override
     public void draw(SpriteBatch batch) {
-        if (immutableTime <= 0 || immutableTime % 0.1 < 0.05) super.draw(batch);
+        if (immutableTime <= 0 || immutableTime % 0.1 < 0.05) {
+            super.draw(batch);
+        }
     }
 
     private Key checkKeyCollision() {
@@ -155,17 +165,10 @@ public class Player extends MovableEntity {
         return null;
     }
 
-    private void renderAnimation(SpriteBatch batch, Animation<TextureRegion> animation) {
-        batch.draw(animation.getKeyFrame(animationTime, true), character.x, character.y, character.width, character.height);
-    }
-
-    float animationTime;
     /**
      * Renders the character animation.
      */
     public void render(float delta, SpriteBatch batch) {
-        super.update(delta);
-        animationTime += delta;
 
         float speed = 64 * Gdx.graphics.getDeltaTime();
 
@@ -184,36 +187,22 @@ public class Player extends MovableEntity {
 
             if (attackAnimation != null) {
                 // render attack animation
-                batch.draw(attackAnimation.getKeyFrame(animationTime, true), character.x, character.y, character.width, character.height);
                 return; // Skip normal movement rendering when attacking
             }
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            character.y += speed;
             // render move up animation
-            renderAnimation(batch, upAnimation);
         } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            character.y -= speed;
             // render move down animation
-            renderAnimation(batch, downAnimation);
         } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            character.x -= speed;
             // render move left animation
-            renderAnimation(batch, leftAnimation);
         } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            character.x += speed;
             // render move right animation
-            renderAnimation(batch, rightAnimation);
-        }
-
-        else {
-            // render standing animation
-            batch.draw(downAnimation.getKeyFrame(1, true), character.x, character.y, character.width, character.height);
         }
     }
 
-    //Getter methods
+    // Getter methods
     /**
      * Get player health
      * @return the player health

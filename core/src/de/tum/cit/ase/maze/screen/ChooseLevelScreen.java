@@ -105,7 +105,6 @@ public class ChooseLevelScreen implements Screen {
 
                     @Override
                     public void onCancellation() {
-
                     }
 
                     @Override

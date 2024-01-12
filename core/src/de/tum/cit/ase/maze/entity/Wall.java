@@ -23,7 +23,7 @@ public class Wall extends Entity {
         LOWER_WITH_UPPER(2),
         UPPER(3);
 
-        int imageIndex;
+        final int imageIndex;
 
         RepresentationType(int imageIndex) {
             this.imageIndex = imageIndex;
@@ -34,7 +34,7 @@ public class Wall extends Entity {
     RepresentationType representationType;
 
     /**
-     * Create one wall
+     * Creates one wall.
      * @param game the main game
      */
     public Wall(MazeRunnerGame game) {
@@ -44,7 +44,7 @@ public class Wall extends Entity {
     }
 
     /**
-     * Set representation type
+     * Set representation type.
      * @param type the representation type
      */
     public void setRepresentationType(RepresentationType type) {

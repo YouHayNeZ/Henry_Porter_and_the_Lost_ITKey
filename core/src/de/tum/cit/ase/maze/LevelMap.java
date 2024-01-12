@@ -19,9 +19,9 @@ import de.tum.cit.ase.maze.entity.Wall;
 /**
  * LevelMap class provides the ability to work with maps, namely:
  * - load maps
- * - search for certain objects on the map
+ * - search for certain game objects on the map
  * - calculate the size of the map
- * - and also gain access to objects
+ * - and also gain access to game objects
  */
 public class LevelMap {
 
@@ -47,7 +47,9 @@ public class LevelMap {
 
         public static Type valueOf(int value) {
             for (Type type: values()) {
-                if (type.value == value) return type;
+                if (type.value == value) {
+                    return type;
+                }
             }
             return null;
         }
@@ -113,15 +115,19 @@ public class LevelMap {
                     entity.setX(col * CELL_WIDTH);
                     entity.setY(row * CELL_HEIGHT);
 
-                    //Additional options if it wall
+                    //Additional options if it's a wall
                     if (entity instanceof Wall wall) {
-                        boolean hasLowerWall = checkCellExistAndItWall(map, col, row - 1);
-                        boolean hasUpperWall = checkCellExistAndItWall(map, col, row + 1);
+                        boolean hasLowerWall = checkCellExistAndIsWall(map, col, row - 1);
+                        boolean hasUpperWall = checkCellExistAndIsWall(map, col, row + 1);
 
                         wall.setRepresentationType(Wall.RepresentationType.LOWER_WITHOUT_UPPER);
-                        if (hasLowerWall && hasUpperWall) wall.setRepresentationType(Wall.RepresentationType.CENTER_WITH_UPPER_AND_LOWER);
-                        else if (hasLowerWall) wall.setRepresentationType(Wall.RepresentationType.UPPER);
-                        else if (hasUpperWall) wall.setRepresentationType(Wall.RepresentationType.LOWER_WITH_UPPER);
+                        if (hasLowerWall && hasUpperWall) {
+                            wall.setRepresentationType(Wall.RepresentationType.CENTER_WITH_UPPER_AND_LOWER);
+                        } else if (hasLowerWall) {
+                            wall.setRepresentationType(Wall.RepresentationType.UPPER);
+                        } else if (hasUpperWall) {
+                            wall.setRepresentationType(Wall.RepresentationType.LOWER_WITH_UPPER);
+                        }
                     }
 
                     entities.add(entity);
@@ -154,7 +160,9 @@ public class LevelMap {
     public float getMapWidth() {
         float maxX = 0;
         for (Entity entity: entities) {
-            if (entity.getX() > maxX) maxX = entity.getX();
+            if (entity.getX() > maxX) {
+                maxX = entity.getX();
+            }
         }
         return maxX + CELL_WIDTH;
     }
@@ -166,13 +174,15 @@ public class LevelMap {
     public float getMapHeight() {
         float maxY = 0;
         for (Entity entity: entities) {
-            if (entity.getY() > maxY) maxY = entity.getY();
+            if (entity.getY() > maxY) {
+                maxY = entity.getY();
+            }
         }
         return maxY + CELL_HEIGHT;
     }
 
-    //Check cell exist in current col and row position
-    private boolean checkCellExistAndItWall(ObjectMap<String, String> map, int col, int row) {
+    // Check cell exist in current col and row position
+    private boolean checkCellExistAndIsWall(ObjectMap<String, String> map, int col, int row) {
         try {
             String value = map.get(String.format("%d,%d", col, row));
             return value != null && Integer.parseInt(value) == Type.WALL.getValue();

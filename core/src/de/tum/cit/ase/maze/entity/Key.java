@@ -10,7 +10,7 @@ import de.tum.cit.ase.maze.MazeRunnerGame;
  */
 public class Key extends UpdatableEntity {
 
-    private Animation<TextureRegion> keyAnimation;
+    private final Animation<TextureRegion> keyAnimation;
 
     /**
      * Create one key
