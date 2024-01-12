@@ -5,14 +5,14 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.math.Intersector;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
 import de.tum.cit.ase.maze.Hud;
 import de.tum.cit.ase.maze.LevelMap;
 import de.tum.cit.ase.maze.MazeRunnerGame;
-import de.tum.cit.ase.maze.entity.Entity;
-import de.tum.cit.ase.maze.entity.EntryPoint;
-import de.tum.cit.ase.maze.entity.Player;
+import de.tum.cit.ase.maze.entity.*;
 
 /**
  * The GameScreen class is responsible for rendering the gameplay screen.
@@ -100,6 +100,35 @@ public class GameScreen implements Screen {
         }
 
         ScreenUtils.clear(0, 0, 0, 1); // Clear the screen
+
+        //Update all updatable entites
+        int size = levelMap.getEntities().size;
+        for (int i = 0; i < size; i++) {
+            Entity entity = levelMap.getEntities().get(i);
+            if (entity instanceof UpdatableEntity updatableEntity) updatableEntity.update(delta);
+        }
+        player.update(delta);
+
+        //Check player collision with exit
+        Rectangle playerRectangle = player.getEntityRectangle();
+        size = levelMap.getEntities().size;
+        for (int i = 0; i < size; i++) {
+            Entity entity = levelMap.getEntities().get(i);
+            if (entity instanceof Exit exit) {
+                if (exit.isOpen() && Intersector.overlaps(playerRectangle, exit.getExitRectangle())) {
+                    //introduce endgame screen here
+                    return;
+                } else if (player.isHasKey() && Intersector.overlaps(playerRectangle, exit.getActionRectangle())) {
+                    exit.open();
+                }
+            }
+        }
+
+        //Check player health
+        if (player.getHealth() <= 0) {
+            //introduce endgame screen here
+            return;
+        }
 
         // Set up and begin drawing with the sprite batch
         game.getSpriteBatch().setProjectionMatrix(camera.combined);
