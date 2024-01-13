@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -68,7 +69,7 @@ public class ChooseLevelScreen implements Screen {
     }
 
     private Table getTable(MazeRunnerGame game) {
-        TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(new TextureRegion(game.getMazeBackground()));
+        TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(new TextureRegion(new Texture("ChooseLevel Background.png")));
 
         Table table = new Table(); // Create a table for layout
 

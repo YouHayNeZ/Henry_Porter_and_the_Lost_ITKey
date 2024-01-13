@@ -150,27 +150,24 @@ public class GameScreen implements Screen {
                 player.update(delta);
             }
 
-            //Check player collision with exit
-            Rectangle playerRectangle = player.getEntityRectangle();
-            size = levelMap.getEntities().size;
-            for (int i = 0; i < size; i++) {
-                Entity entity = levelMap.getEntities().get(i);
-                if (entity instanceof Exit exit) {
-                    if (exit.isOpen() && Intersector.overlaps(playerRectangle, exit.getExitRectangle())) {
-                        // introduce endgame screen here
-                        return;
-                    } else if (player.isHasKey() && Intersector.overlaps(playerRectangle, exit.getActionRectangle())) {
-                        exit.open();
-                    }
+        //Check player collision with exit
+        Rectangle playerRectangle = player.getEntityRectangle();
+        size = levelMap.getEntities().size;
+        for (int i = 0; i < size; i++) {
+            Entity entity = levelMap.getEntities().get(i);
+            if (entity instanceof Exit exit) {
+                if (exit.isOpen() && Intersector.overlaps(playerRectangle, exit.getExitRectangle())) {
+                    game.goToEndGame(true);
+                } else if (player.isHasKey() && Intersector.overlaps(playerRectangle, exit.getActionRectangle())) {
+                    exit.open();
                 }
             }
+        }
 
-            // Check player health
-            if (player.getHealth() <= 0) {
-                //introduce endgame screen here
-                return;
-            }
-//        }
+        //Check player health
+        if (player.getHealth() <= 0) {
+            game.goToEndGame(false);
+    }
 
         ScreenUtils.clear(0, 0, 0, 1); // Clear the screen
 

@@ -19,6 +19,7 @@ import com.badlogic.gdx.utils.Array;
 
 import com.badlogic.gdx.utils.Disposable;
 import de.tum.cit.ase.maze.screen.ChooseLevelScreen;
+import de.tum.cit.ase.maze.screen.EndGameScreen;
 import de.tum.cit.ase.maze.screen.GameScreen;
 import de.tum.cit.ase.maze.screen.MenuScreen;
 import games.spooky.gdx.nativefilechooser.NativeFileChooser;
@@ -49,6 +50,7 @@ public class MazeRunnerGame extends Game {
     private MenuScreen menuScreen;
     private ChooseLevelScreen chooseLevelScreen;
     private GameScreen gameScreen;
+    private EndGameScreen endGameScreen;
 
     // Sprite Batch for rendering
     private SpriteBatch spriteBatch;
@@ -224,6 +226,7 @@ public class MazeRunnerGame extends Game {
         menuScreen = new MenuScreen(this);
         chooseLevelScreen = new ChooseLevelScreen(this);
         gameScreen = new GameScreen(this);
+        endGameScreen = new EndGameScreen(this);
 
         goToMenu(); // Navigate to the menu screen
     }
@@ -262,6 +265,18 @@ public class MazeRunnerGame extends Game {
             Gdx.app.log("ERROR", "Failed to load level index: " + levelIndex, e);
         }
     }
+
+    /**
+     * Go to the end game screen
+     * @param isWinner indicates game end status
+     */
+
+    public void goToEndGame(boolean isWinner) {
+        endGameScreen.setIsWinner(isWinner);
+        setScreen(endGameScreen);
+    }
+
+
 
     /**
      * Load texture region array of images from texture that stands in one row.
