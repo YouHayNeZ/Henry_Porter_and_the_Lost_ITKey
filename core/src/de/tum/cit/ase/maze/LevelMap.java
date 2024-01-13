@@ -117,8 +117,8 @@ public class LevelMap {
 
                     //Additional options if it's a wall
                     if (entity instanceof Wall wall) {
-                        boolean hasLowerWall = checkCellExistAndIsWall(map, col, row - 1);
-                        boolean hasUpperWall = checkCellExistAndIsWall(map, col, row + 1);
+                        boolean hasLowerWall = checkIfCellExistsAndItIsWall(map, col, row - 1);
+                        boolean hasUpperWall = checkIfCellExistsAndItIsWall(map, col, row + 1);
 
                         wall.setRepresentationType(Wall.RepresentationType.LOWER_WITHOUT_UPPER);
                         if (hasLowerWall && hasUpperWall) {
@@ -182,7 +182,7 @@ public class LevelMap {
     }
 
     // Check cell exist in current col and row position
-    private boolean checkCellExistAndIsWall(ObjectMap<String, String> map, int col, int row) {
+    private boolean checkIfCellExistsAndItIsWall(ObjectMap<String, String> map, int col, int row) {
         try {
             String value = map.get(String.format("%d,%d", col, row));
             return value != null && Integer.parseInt(value) == Type.WALL.getValue();
