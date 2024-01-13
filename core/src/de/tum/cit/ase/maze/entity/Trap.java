@@ -6,14 +6,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.tum.cit.ase.maze.MazeRunnerGame;
 
 /**
- * Trap class represents trap entity. Nothing unusual
+ * Trap class represents trap entity. Nothing unusual.
  */
 public class Trap extends UpdatableEntity {
 
     private final Animation<TextureRegion> flameAnimation;
 
     /**
-     * Create one trap
+     * Creates one new trap.
      * @param game the main game
      */
     public Trap(MazeRunnerGame game) {

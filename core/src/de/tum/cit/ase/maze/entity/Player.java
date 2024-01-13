@@ -15,8 +15,7 @@ import de.tum.cit.ase.maze.MazeRunnerGame;
 /**
  * Player class represents player entity, which is moveable and updatable.
  * It has health and can be damaged by traps and enemies.
- * It can also attack enemies.
- * Its movement controlled by the user.
+ * Can also attack enemies. Its movement controlled by the user.
  */
 public class Player extends MovableEntity {
 
@@ -96,6 +95,26 @@ public class Player extends MovableEntity {
 
         immutableTime -= delta;
 
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
+            Animation<TextureRegion> attackAnimation = null;
+
+            if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+                attackAnimation = attackDownAnimation;
+            } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+                attackAnimation = attackRightAnimation;
+            } else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+                attackAnimation = attackUpAnimation;
+            } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+                attackAnimation = attackLeftAnimation;
+            }
+
+            if (attackAnimation != null) {
+                // render attack animation
+                setTextureRegion(attackAnimation.getKeyFrame(getTime(), true));
+                return; // Skip normal movement rendering when attacking
+            }
+        }
+
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             moveUp(delta);
         } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
@@ -165,46 +184,9 @@ public class Player extends MovableEntity {
         return null;
     }
 
-    /**
-     * Renders the character animation.
-     */
-    public void render(float delta, SpriteBatch batch) {
-
-        float speed = 64 * Gdx.graphics.getDeltaTime();
-
-        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            Animation<TextureRegion> attackAnimation = null;
-
-            if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-                attackAnimation = attackDownAnimation;
-            } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-                attackAnimation = attackRightAnimation;
-            } else if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-                attackAnimation = attackUpAnimation;
-            } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-                attackAnimation = attackLeftAnimation;
-            }
-
-            if (attackAnimation != null) {
-                // render attack animation
-                return; // Skip normal movement rendering when attacking
-            }
-        }
-
-        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            // render move up animation
-        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            // render move down animation
-        } else if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            // render move left animation
-        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            // render move right animation
-        }
-    }
-
     // Getter methods
     /**
-     * Get player health
+     * Get player health.
      * @return the player health
      */
     public float getHealth() {
@@ -212,7 +194,7 @@ public class Player extends MovableEntity {
     }
 
     /**
-     * Set player health
+     * Set player health.
      * @param health the player health
      */
     public void setHealth(float health) {
@@ -220,7 +202,7 @@ public class Player extends MovableEntity {
     }
 
     /**
-     * Get immutable time left
+     * Get immutable time left.
      * @return the immutable time
      */
     public float getImmutableTime() {
@@ -228,7 +210,7 @@ public class Player extends MovableEntity {
     }
 
     /**
-     * Return if player has key
+     * Return if player has key.
      * @return true if player has the key
      */
     public boolean isHasKey() {
@@ -236,7 +218,7 @@ public class Player extends MovableEntity {
     }
 
     /**
-     * Set player has key
+     * Set player has key.
      * @param hasKey the has key
      */
     public void setHasKey(boolean hasKey) {

@@ -3,8 +3,10 @@ package de.tum.cit.ase.maze.screen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
@@ -24,10 +26,15 @@ public class GameScreen implements Screen {
     private static final int CELL_WIDTH = 16;
     private static final int CELL_HEIGHT = 16;
 
+    private static final float CAMERA_SPEED = 50f;
+    private static final float PLAYER_AND_CAMERA_MAX_DIFF_X_PERCENT = 0.8f;
+    private static final float PLAYER_AND_CAMERA_MAX_DIFF_Y_PERCENT = 0.7f;
+
     private final MazeRunnerGame game;
     private final OrthographicCamera camera;
 
-    private BitmapFont font;
+    private BitmapFont defaultFont;
+    private BitmapFont boldFont;
 
     private LevelMap levelMap;
     private Hud hud;
@@ -37,6 +44,11 @@ public class GameScreen implements Screen {
 
     private float mapWidth;
     private float mapHeight;
+
+    private float cameraDestX;
+    private float cameraDestY;
+
+    private boolean gameOver = false;
 
     /**
      * Constructor for GameScreen. Sets up the camera and font.
@@ -48,22 +60,28 @@ public class GameScreen implements Screen {
 
         // Create and configure the camera for the game view
         camera = new OrthographicCamera();
-        camera.setToOrtho(false);
-        camera.zoom = 0.50f;
+        camera.setToOrtho(false, WIDTH, HEIGHT);
+        camera.zoom = 0.5f;
 
-        initLevel();
+        // Get the font from the game's skin
+        defaultFont = game.getSkin().getFont("font");
+
+        boldFont = game.getSkin().getFont("bold");
+        boldFont.getData().setScale(0.5f);
+
+        initializeLevel();
     }
 
     /**
-     * Init level using map
+     * Initialize level using map.
      */
-    public void initLevel() {
+    public void initializeLevel() {
         levelMap = game.getLevelMap();
 
         mapWidth = (int) levelMap.getMapWidth();
         mapHeight = (int) levelMap.getMapHeight();
 
-        //Generate floor
+        // Generate floor
         int columns = Math.floorDiv((int) mapWidth, CELL_WIDTH);
         int rows = Math.floorDiv((int) mapHeight, CELL_HEIGHT);
 
@@ -78,7 +96,7 @@ public class GameScreen implements Screen {
             }
         }
 
-        //Generate player
+        // Generate player
         EntryPoint entryPoint = levelMap.findEntryPoint();
 
         float mapCenterX = mapWidth / 2;
@@ -94,44 +112,71 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         delta = Math.min(delta, 1 / 60f);
 
-        // Check for escape key press to go back to the menu
+        // Check for escape key press or game over to go back to the menu
         if (Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
             game.goToMenu();
         }
 
-        ScreenUtils.clear(0, 0, 0, 1); // Clear the screen
+//        if (game.isPlaying() && !game.isPaused()) {
+            // Update camera destination position (only map bigger than viewport)
+            if ((mapWidth > camera.viewportWidth * camera.zoom || mapHeight > camera.viewportHeight * camera.zoom) &&
+                    (player.getX() + PLAYER_AND_CAMERA_MAX_DIFF_X_PERCENT * camera.viewportWidth * camera.zoom / 2 < cameraDestX ||
+                            player.getX() - PLAYER_AND_CAMERA_MAX_DIFF_X_PERCENT * camera.viewportWidth * camera.zoom / 2 > cameraDestX ||
+                            player.getY() + PLAYER_AND_CAMERA_MAX_DIFF_Y_PERCENT * camera.viewportHeight * camera.zoom / 2 < cameraDestY ||
+                            player.getY() - PLAYER_AND_CAMERA_MAX_DIFF_Y_PERCENT * camera.viewportHeight * camera.zoom / 2 > cameraDestY)) {
 
-        //Update all updatable entites
-        int size = levelMap.getEntities().size;
-        for (int i = 0; i < size; i++) {
-            Entity entity = levelMap.getEntities().get(i);
-            if (entity instanceof UpdatableEntity updatableEntity) updatableEntity.update(delta);
-        }
-        player.update(delta);
+                cameraDestX = player.getX();
+                cameraDestY = player.getY();
+            }
 
-        //Check player collision with exit
-        Rectangle playerRectangle = player.getEntityRectangle();
-        size = levelMap.getEntities().size;
-        for (int i = 0; i < size; i++) {
-            Entity entity = levelMap.getEntities().get(i);
-            if (entity instanceof Exit exit) {
-                if (exit.isOpen() && Intersector.overlaps(playerRectangle, exit.getExitRectangle())) {
-                    //introduce endgame screen here
-                    return;
-                } else if (player.isHasKey() && Intersector.overlaps(playerRectangle, exit.getActionRectangle())) {
-                    exit.open();
+            clampCameraDestPosition();
+
+            // Update camera position
+            float xDiff = cameraDestX - camera.position.x;
+            float yDiff = cameraDestY - camera.position.y;
+            if (xDiff < 0) camera.position.x -= Math.max(delta * CAMERA_SPEED, xDiff);
+            else if (xDiff > 0) camera.position.x += Math.min(delta * CAMERA_SPEED, xDiff);
+            if (yDiff < 0) camera.position.y -= Math.max(delta * CAMERA_SPEED, yDiff);
+            else if (yDiff > 0) camera.position.y += Math.min(delta * CAMERA_SPEED, yDiff);
+            camera.update();
+
+            // Update all updatable entities
+            int size = levelMap.getEntities().size;
+            if (!gameOver) {
+                for (int i = 0; i < size; i++) {
+                    Entity entity = levelMap.getEntities().get(i);
+                    if (entity instanceof UpdatableEntity updatableEntity) updatableEntity.update(delta);
+                }
+                player.update(delta);
+            }
+
+            //Check player collision with exit
+            Rectangle playerRectangle = player.getEntityRectangle();
+            size = levelMap.getEntities().size;
+            for (int i = 0; i < size; i++) {
+                Entity entity = levelMap.getEntities().get(i);
+                if (entity instanceof Exit exit) {
+                    if (exit.isOpen() && Intersector.overlaps(playerRectangle, exit.getExitRectangle())) {
+                        // introduce endgame screen here
+                        return;
+                    } else if (player.isHasKey() && Intersector.overlaps(playerRectangle, exit.getActionRectangle())) {
+                        exit.open();
+                    }
                 }
             }
-        }
 
-        //Check player health
-        if (player.getHealth() <= 0) {
-            //introduce endgame screen here
-            return;
-        }
+            // Check player health
+            if (player.getHealth() <= 0) {
+                //introduce endgame screen here
+                return;
+            }
+//        }
+
+        ScreenUtils.clear(0, 0, 0, 1); // Clear the screen
 
         // Set up and begin drawing with the sprite batch
         game.getSpriteBatch().setProjectionMatrix(camera.combined);
+        game.getShapeRenderer().setProjectionMatrix(camera.combined);
 
         // Draw floor
         game.getSpriteBatch().begin();
@@ -178,11 +223,72 @@ public class GameScreen implements Screen {
                     CELL_WIDTH, CELL_HEIGHT);
         }
 
+        // Draw end game
+        if (gameOver) {
+            String message = player.getHealth() > 0 ? "You win" : "You die";
+            GlyphLayout glyphLayout = new GlyphLayout();
+            glyphLayout.setText(defaultFont, message);
+
+            defaultFont.draw(game.getSpriteBatch(), message,
+                    camera.position.x - glyphLayout.width / 2,
+                    camera.position.y + glyphLayout.height * 2);
+
+            message = "Press ESC button to continue";
+            glyphLayout.setText(boldFont, message);
+            boldFont.draw(game.getSpriteBatch(), message,
+                    camera.position.x - glyphLayout.width / 2,
+                    camera.position.y + glyphLayout.height / 2);
+        }
+
         // Draw debug
         // defaultFont.draw(game.getSpriteBatch(), "Game over: " + gameOver, 0, 0);
         game.getSpriteBatch().end();
 
         // drawDebugActionRectangles();
+    }
+    private void drawDebugActionRectangles() {
+        game.getShapeRenderer().begin();
+
+        //Draw player rectangle
+        game.getShapeRenderer().setColor(Color.WHITE);
+        drawRectangle(player.getEntityRectangle());
+
+        //Draw exit rectangles
+        int size = game.getLevelMap().getEntities().size;
+        for (int i = 0; i < size; i++) {
+            Entity entity = game.getLevelMap().getEntities().get(i);
+            if (entity instanceof Exit exit) {
+                //Action rectangle
+                game.getShapeRenderer().setColor(Color.RED);
+                drawRectangle(exit.getActionRectangle());
+
+                game.getShapeRenderer().setColor(Color.PURPLE);
+                drawRectangle(exit.getExitRectangle());
+            }
+            if (entity instanceof Enemy) {
+                game.getShapeRenderer().setColor(Color.RED);
+                drawRectangle(entity.getEntityRectangle());
+            }
+        }
+
+        game.getShapeRenderer().end();
+    }
+
+    private void drawRectangle(Rectangle rectangle) {
+        game.getShapeRenderer().rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+    }
+
+    //Clamp camera destination position (only need if map bigger than camera viewport)
+    private void clampCameraDestPosition() {
+        if (mapWidth > camera.viewportWidth / 2) {
+            if (cameraDestX < camera.viewportWidth / 4) cameraDestX = camera.viewportWidth / 4;
+            if (cameraDestX > mapWidth - camera.viewportWidth / 4) cameraDestX = mapWidth - camera.viewportWidth / 4;
+        }
+        if (mapHeight > camera.viewportHeight / 2) {
+            if (cameraDestY < camera.viewportHeight / 4) cameraDestY = camera.viewportHeight / 4;
+            if (cameraDestY > mapHeight - camera.viewportHeight / 4 + CELL_WIDTH * 2)
+                cameraDestY = mapHeight - camera.viewportHeight / 4 + CELL_WIDTH * 2;
+        }
     }
 
     private int getImageIndex(int healthIndex, float health, float maxHealth) {
@@ -195,6 +301,15 @@ public class GameScreen implements Screen {
         camera.setToOrtho(false);
         camera.viewportWidth = width;
         camera.viewportHeight = height;
+
+        //Set camera on center map
+        cameraDestX = mapWidth < camera.viewportWidth * camera.zoom ? mapWidth / 2 : player.getX();
+        cameraDestY = mapHeight < camera.viewportHeight * camera.zoom ? mapHeight / 2 : player.getY();
+
+        //Clamp camera position (only need if map bigger than camera viewport)
+        clampCameraDestPosition();
+
+        camera.position.set(cameraDestX, cameraDestY, 0);
     }
 
     @Override

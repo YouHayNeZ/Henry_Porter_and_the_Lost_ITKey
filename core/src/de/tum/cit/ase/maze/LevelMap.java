@@ -38,11 +38,11 @@ public class LevelMap {
         KEY(5, Key.class);
 
         final int value;
-        Class clazz;
+        final Class aClass;
 
-        Type(int value, Class clazz) {
+        Type(int value, Class aClass) {
             this.value = value;
-            this.clazz = clazz;
+            this.aClass = aClass;
         }
 
         public static Type valueOf(int value) {
@@ -58,8 +58,8 @@ public class LevelMap {
             return value;
         }
 
-        public Class getClazz() {
-            return clazz;
+        public Class getaClass() {
+            return aClass;
         }
     }
 
@@ -108,7 +108,7 @@ public class LevelMap {
                 if (coords.length == 2) {
                     int typeValue = Integer.parseInt(entry.value);
                     Type type = Type.valueOf(typeValue);
-                    Entity entity = (Entity) type.getClazz().getConstructor(MazeRunnerGame.class)
+                    Entity entity = (Entity) type.getaClass().getConstructor(MazeRunnerGame.class)
                             .newInstance(game);
                     int col = Integer.parseInt(coords[0]);
                     int row = Integer.parseInt(coords[1]);

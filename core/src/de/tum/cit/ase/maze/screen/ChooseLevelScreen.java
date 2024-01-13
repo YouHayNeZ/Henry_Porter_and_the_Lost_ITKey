@@ -18,11 +18,12 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import de.tum.cit.ase.maze.MazeRunnerGame;
 import games.spooky.gdx.nativefilechooser.NativeFileChooserCallback;
 import games.spooky.gdx.nativefilechooser.NativeFileChooserConfiguration;
+import games.spooky.gdx.nativefilechooser.NativeFileChooserIntent;
 
 import java.io.IOException;
 
 /**
- * The ChooseLevelScreen class is responsible for displaying the all levels that contains in LOCAL_DIRECTORY/maps.
+ * The ChooseLevelScreen class is responsible for displaying the all levels that are contained in LOCAL_DIRECTORY/maps.
  * It extends the LibGDX Screen class and sets up the UI components for the menu.
  */
 public class ChooseLevelScreen implements Screen {
@@ -85,31 +86,33 @@ public class ChooseLevelScreen implements Screen {
         selectFileButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                NativeFileChooserConfiguration configuration = new NativeFileChooserConfiguration();
-                configuration.title = "Select File";
-                configuration.nameFilter = (dir, name) -> name.endsWith(".properties");
-                configuration.directory = Gdx.files.local("maps");
-                game.getFileChooser().chooseFile(configuration, new NativeFileChooserCallback() {
-
+                var fileChooserConfig = new NativeFileChooserConfiguration();
+                fileChooserConfig.title = "Pick a maze file"; // Title of the window that will be opened
+                fileChooserConfig.intent = NativeFileChooserIntent.OPEN; // We want to open a file
+                fileChooserConfig.nameFilter = (file, name) -> name.endsWith("properties"); // Only accept .properties files
+                fileChooserConfig.directory = Gdx.files.absolute(System.getProperty("user.home")); // Open at the user's home directory
+                game.getFileChooser().chooseFile(fileChooserConfig, new NativeFileChooserCallback() {
                     @Override
-                    public void onFileChosen(FileHandle file) {
+                    public void onFileChosen(FileHandle fileHandle) {
+                        // Do something with fileHandle
                         try {
-                            game.getLevelMap().load(file);
-                            game.getGameScreen().initLevel();
+                            game.getLevelMap().load(fileHandle);
+                            game.getGameScreen().initializeLevel();
                             game.goToGame();
                         }
                         catch (IOException e) {
-                            Gdx.app.log("ERROR", "Failed to load level map at: " + file.path());
+                            Gdx.app.log("ERROR", "Failed to load level map at: " + fileHandle.path());
                         }
                     }
 
                     @Override
                     public void onCancellation() {
+                        // User closed the window, don't need to do anything
                     }
 
                     @Override
-                    public void onError(Exception e) {
-                        Gdx.app.log("ERROR", "Error while choosing file", e);
+                    public void onError(Exception exception) {
+                        System.err.println("Error picking maze file: " + exception.getMessage());
                     }
                 });
             }

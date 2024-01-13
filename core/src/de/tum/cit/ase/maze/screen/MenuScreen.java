@@ -23,18 +23,17 @@ import de.tum.cit.ase.maze.MazeRunnerGame;
  */
 public class MenuScreen implements Screen {
     private final MazeRunnerGame game;
-
     private final Stage stage;
+
     /**
      * Constructor for MenuScreen. Sets up the camera, viewport, stage, and UI elements.
-     *
      * @param game The main game class, used to access global resources and methods.
      */
     public MenuScreen(MazeRunnerGame game) {
         this.game = game;
 
         var camera = new OrthographicCamera();
-        camera.zoom = 1f;
+        camera.zoom = 1f; // Set camera zoom for a closer view
 
         Viewport viewport = new ScreenViewport(camera); // Create a viewport with the camera
         stage = new Stage(viewport, game.getSpriteBatch()); // Create a stage for UI elements

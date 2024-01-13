@@ -14,7 +14,7 @@ import de.tum.cit.ase.maze.MazeRunnerGame;
 public class Wall extends Entity {
 
     /**
-     * RepresentationType provides a list of possible displaying
+     * RepresentationType provides a list of possible displaying.
      */
     public enum RepresentationType {
 

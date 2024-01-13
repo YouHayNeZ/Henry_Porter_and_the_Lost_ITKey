@@ -3,7 +3,7 @@ package de.tum.cit.ase.maze.entity;
 import de.tum.cit.ase.maze.MazeRunnerGame;
 
 /**
- * UpdatableEntity the parent of all game objects that can change over time.
+ * UpdatableEntity class is the parent class of all game objects that can change over time.
  * Mainly used to display animations, but can also simply change internal parameters over time.
  */
 public class UpdatableEntity extends Entity {
@@ -36,7 +36,7 @@ public class UpdatableEntity extends Entity {
     }
 
     /**
-     * Get time variable
+     * Get time variable.
      * @return time in milliseconds
      */
     public float getTime() {

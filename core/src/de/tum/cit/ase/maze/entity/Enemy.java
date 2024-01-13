@@ -3,20 +3,17 @@ package de.tum.cit.ase.maze.entity;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
-import de.tum.cit.ase.maze.MazeRunnerGame;
-
 import java.util.Random;
+import de.tum.cit.ase.maze.MazeRunnerGame;
 
 /**
  * Enemy class represents enemy entity, which is movable and updatable.
- * It moves in random directions
+ * It moves in random directions.
  */
 public class Enemy extends MovableEntity {
 
     // World cell width size
     private static final int CELL_WIDTH = 16;
-    // World cell height size
-    private static final int CELL_HEIGHT = 16;
 
     private static final int DEST_ACCURACY = CELL_WIDTH / 8;
     private static final int DEFAULT_MOVE_LENGTH = CELL_WIDTH * 5;
@@ -32,7 +29,7 @@ public class Enemy extends MovableEntity {
     private float destY;
 
     /**
-     * Create new one enemy
+     * Creates one new enemy.
      * @param game the main game
      */
     public Enemy(MazeRunnerGame game) {
@@ -55,7 +52,7 @@ public class Enemy extends MovableEntity {
         super.update(delta);
         setTextureRegion(downAnimation.getKeyFrame(getTime(), true));
 
-        //check dest position equals actual position
+        // check if destination position equals actual position
         if (Math.abs(destX - getX()) < DEST_ACCURACY && Math.abs(destY - getY()) < DEST_ACCURACY) {
             int sign = random.nextBoolean() ? 1 : -1;
             if (random.nextBoolean()) {
@@ -74,12 +71,12 @@ public class Enemy extends MovableEntity {
         else if (destY < getY()) moveResult = moveDown(delta);
         else if (destY > getY()) moveResult = moveUp(delta);
 
-        //If cant move than reset dest position
+        // If it can't move than reset destination position
         if (!moveResult) resetDestPosition();
     }
 
     /**
-     * Reset enemy destination position
+     * Reset enemy destination position.
      */
     private void resetDestPosition() {
         destX = getX();

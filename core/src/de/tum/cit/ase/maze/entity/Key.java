@@ -13,7 +13,7 @@ public class Key extends UpdatableEntity {
     private final Animation<TextureRegion> keyAnimation;
 
     /**
-     * Create one key
+     * Creates one key.
      * @param game the main game
      */
     public Key(MazeRunnerGame game) {

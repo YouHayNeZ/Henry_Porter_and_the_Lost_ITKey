@@ -2,6 +2,7 @@ package de.tum.cit.ase.maze.entity;
 
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+
 import com.badlogic.gdx.math.Rectangle;
 import de.tum.cit.ase.maze.MazeRunnerGame;
 
@@ -18,7 +19,7 @@ public class Exit extends UpdatableEntity {
     private boolean isOpening;
 
     /**
-     * Create new one Exit
+     * Create one new Exit.
      * @param game the main game
      */
     public Exit(MazeRunnerGame game) {
@@ -57,7 +58,7 @@ public class Exit extends UpdatableEntity {
     }
 
     /**
-     * Check is open door for exit.
+     * Check if the door is open for exit.
      * @return true if exit is open
      */
     public boolean isOpen() {
@@ -66,7 +67,7 @@ public class Exit extends UpdatableEntity {
     }
 
     /**
-     * Open a door.
+     * Open the door.
      * Start an animation timer that's opening the door.
      */
     public void open() {

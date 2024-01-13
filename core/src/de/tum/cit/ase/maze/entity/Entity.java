@@ -7,8 +7,8 @@ import com.badlogic.gdx.math.Rectangle;
 import de.tum.cit.ase.maze.MazeRunnerGame;
 
 /**
- * Entity class is a parent for all game objects.
- * This contains common object elements that are necessary for simple texture drawing on the screen
+ * Entity class is the parent class for all game objects.
+ * It contains common game object elements that are necessary for simple texture drawing on the screen.
  */
 public class Entity {
 
@@ -26,7 +26,7 @@ public class Entity {
 
     /**
      * Creates one entity.
-     * If we want to create entity by this way - we need to declare textureRegion and position for this entity
+     * If we want to create entity by this way - we need to declare textureRegion and position for this entity.
      * @param game the main game
      */
     public Entity(MazeRunnerGame game) {
@@ -34,8 +34,8 @@ public class Entity {
     }
 
     /**
-     * Draw entity on sprite batch.
-     * Declare textureRegion before calling this method to draw something
+     * Draws entity on sprite batch.
+     * Declare textureRegion before calling this method to draw something.
      * @param batch the sprite batch, that used to draw
      */
     public void draw(SpriteBatch batch) {
@@ -46,17 +46,17 @@ public class Entity {
     }
 
     /**
-     * Set draw offset to draw along the middle coordinates
+     * Sets draw offset to draw along the middle coordinates.
      */
     public void centerDrawOffset() {
         xDrawOffset = (float) -textureRegion.getRegionWidth() / 2;
         yDrawOffset = (float) -textureRegion.getRegionHeight() / 2;
     }
 
-    //Getter & Setter methods
+    // Getter & Setter methods
     /**
      * Get entity rectangle with paddings.
-     * Used to calculate collisions or other actions
+     * Used to calculate collisions or other actions.
      * @param padding the padding in pixels
      * @return rectangle with paddings
      */
@@ -67,7 +67,7 @@ public class Entity {
 
     /**
      * Get entity default rectangle with DEFAULT PADDINGS which is -1.
-     * Used to calculate collisions or other actions
+     * Used to calculate collisions or other actions.
      * @return rectangle with DEFAULT PADDINGS
      */
     public Rectangle getEntityRectangle() {
@@ -75,7 +75,7 @@ public class Entity {
     }
 
     /**
-     * Get x position
+     * Get x position.
      * @return the x position in float
      */
     public float getX() {
@@ -83,7 +83,7 @@ public class Entity {
     }
 
     /**
-     * Set x position
+     * Set x position.
      * @param x the x position in float
      */
     public void setX(float x) {
@@ -91,7 +91,7 @@ public class Entity {
     }
 
     /**
-     * Get y position
+     * Get y position.
      * @return the y position in float
      */
     public float getY() {
@@ -99,7 +99,7 @@ public class Entity {
     }
 
     /**
-     * Set y position
+     * Set y position.
      * @param y the y position in float
      */
     public void setY(float y) {
@@ -107,7 +107,7 @@ public class Entity {
     }
 
     /**
-     * Get texture region
+     * Get texture region.
      * @return the texture region
      */
     public TextureRegion getTextureRegion() {
@@ -115,7 +115,7 @@ public class Entity {
     }
 
     /**
-     * Set texture region
+     * Set texture region.
      * @param textureRegion the texture region
      */
     public void setTextureRegion(TextureRegion textureRegion) {
@@ -123,7 +123,7 @@ public class Entity {
     }
 
     /**
-     * Get game instance
+     * Get game instance.
      * @return the game instance
      */
     protected MazeRunnerGame getGame() {

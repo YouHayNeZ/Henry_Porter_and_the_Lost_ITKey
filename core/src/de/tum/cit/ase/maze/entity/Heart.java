@@ -6,13 +6,14 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.tum.cit.ase.maze.MazeRunnerGame;
 
 /**
- * Heart class represents heart entity. It is a collectible game object, which refills players health.
+ * Heart class represents heart entity.
+ * It is a collectible game object, which refills player's health.
  */
 public class Heart extends UpdatableEntity {
     private final Animation<TextureRegion> heartAnimation;
 
     /**
-     * Create one collectible heart
+     * Creates one collectible heart.
      * @param game the main game
      */
     public Heart(MazeRunnerGame game) {

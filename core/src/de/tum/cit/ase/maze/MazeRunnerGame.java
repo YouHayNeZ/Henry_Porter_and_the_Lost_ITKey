@@ -42,7 +42,6 @@ public class MazeRunnerGame extends Game {
     private static final int MAX_LEVEL_INDEX = 5;
     private int levelIndex = DEFAULT_LEVEL_INDEX;
 
-
     //Native file chooser
     private final NativeFileChooser fileChooser;
 
@@ -172,13 +171,13 @@ public class MazeRunnerGame extends Game {
         characterLeftAnimation = loadAnimation(characterTexture,
                 16, 32, 4, 0.1f, 0, 96);
         characterAttackDownAnimation = loadAnimation(characterTexture,
-                16, 32, 4, 0.1f, 7, 128);
-        characterAttackRightAnimation = loadAnimation(characterTexture,
-                16, 32, 4, 0.1f, 7, 160);
+                16, 32, 4, 0.1f, 0, 128);
         characterAttackUpAnimation = loadAnimation(characterTexture,
-                16, 32, 4, 0.1f, 7, 192);
+                16, 32, 4, 0.1f, 0, 160);
+        characterAttackRightAnimation = loadAnimation(characterTexture,
+                16, 32, 4, 0.1f, 0, 192);
         characterAttackLeftAnimation = loadAnimation(characterTexture,
-                16, 32, 4, 0.1f, 7, 224);
+                16, 32, 4, 0.1f, 0, 224);
 
         // Load the enemy animation
         enemyDownAnimation = loadAnimation(mobsTexture,
@@ -256,7 +255,7 @@ public class MazeRunnerGame extends Game {
     public void goToCurrentLevelIndexGame() {
         try {
             levelMap.load(String.format(LEVEL_MAP_FORMAT, levelIndex));
-            gameScreen.initLevel();
+            gameScreen.initializeLevel();
             setScreen(gameScreen); // Set the current screen to GameScreen
         }
         catch (IOException e) {
@@ -598,6 +597,14 @@ public class MazeRunnerGame extends Game {
      */
     public SpriteBatch getSpriteBatch() {
         return spriteBatch;
+    }
+
+    /**
+     * Get shape renderer.
+     * @return the shape renderer
+     */
+    public ShapeRenderer getShapeRenderer() {
+        return shapeRenderer;
     }
 
     /**
