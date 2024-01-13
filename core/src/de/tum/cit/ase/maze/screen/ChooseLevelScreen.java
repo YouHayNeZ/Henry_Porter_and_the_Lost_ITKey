@@ -71,7 +71,7 @@ public class ChooseLevelScreen implements Screen {
     private Table getTable(MazeRunnerGame game) {
         TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(new TextureRegion(new Texture("ChooseLevel Background.png")));
 
-        Table table = new Table(); // Create a table for layout
+        Table table = new Table();
 
         // Set the background
         backgroundDrawable.setMinWidth(stage.getWidth());
