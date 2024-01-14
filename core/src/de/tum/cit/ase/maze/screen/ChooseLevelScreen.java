@@ -22,6 +22,10 @@ import games.spooky.gdx.nativefilechooser.NativeFileChooserConfiguration;
 import games.spooky.gdx.nativefilechooser.NativeFileChooserIntent;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The ChooseLevelScreen class is responsible for displaying the all levels that are contained in LOCAL_DIRECTORY/maps.
@@ -43,16 +47,26 @@ public class ChooseLevelScreen implements Screen {
         stage = new Stage(viewport, game.getSpriteBatch()); // Create a stage for UI elements
 
         Table table = getTable();
-        stage.addActor(table); // Add the table to the stage
+        stage.addActor(table);
 
-        // Add a label as a title
         table.add(new Label("Choose Level", game.getSkin(), "title")).padBottom(40).row();
 
         FileHandle[] propertiesHandles = Gdx.files.local("maps").list(".properties");
-        int size = propertiesHandles.length;
+
+        // Filter out files that are not level maps
+        List<FileHandle> levelMaps = Arrays.stream(propertiesHandles)
+                .filter(file -> file.name().startsWith("level-") && file.name().endsWith(".properties"))
+                .collect(Collectors.toList());
+
+        // Ensure that only the first 5 level maps are considered
+        int size = Math.min(levelMaps.size(), 5);
+
+        // Sort the level maps based on their names
+        levelMaps.sort(Comparator.comparing(FileHandle::name));
+
         for (int i = 0; i < size; i++) {
             final int index = i + 1;
-            TextButton levelButton = new TextButton(propertiesHandles[i].nameWithoutExtension(), game.getSkin(), "button");
+            TextButton levelButton = new TextButton(levelMaps.get(i).nameWithoutExtension(), game.getSkin(), "button");
             levelButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
@@ -91,7 +105,8 @@ public class ChooseLevelScreen implements Screen {
                 fileChooserConfig.title = "Pick a maze file"; // Title of the window that will be opened
                 fileChooserConfig.intent = NativeFileChooserIntent.OPEN; // We want to open a file
                 fileChooserConfig.nameFilter = (file, name) -> name.endsWith("properties"); // Only accept .properties files
-                fileChooserConfig.directory = Gdx.files.absolute(System.getProperty("user.home")); // Open at the user's home directory
+                fileChooserConfig.directory = Gdx.files.local("maps");
+                // Open at the user's home directory
                 game.getFileChooser().chooseFile(fileChooserConfig, new NativeFileChooserCallback() {
                     @Override
                     public void onFileChosen(FileHandle fileHandle) {

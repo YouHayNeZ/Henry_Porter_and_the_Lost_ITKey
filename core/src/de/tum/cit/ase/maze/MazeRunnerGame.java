@@ -101,6 +101,7 @@ public class MazeRunnerGame extends Game {
     Sound keySound;
     Sound winSound;
     Sound loseSound;
+    Sound healSound;
     Array<Sound> hurtSoundArray;
 
     // Music
@@ -232,12 +233,13 @@ public class MazeRunnerGame extends Game {
 
         // Load the heart animation
         heartAnimation = loadAnimation(objectsTexture,
-                16, 16, 4, 0.1f, 0, 4 * CELL_HEIGHT);
+                16, 16, 4, 0.1f, 0, 3 * CELL_HEIGHT);
 
         // Sounds
         keySound = Gdx.audio.newSound(Gdx.files.internal("sound/ring_inventory.wav"));
         winSound = Gdx.audio.newSound(Gdx.files.internal("sound/crowd_cheer.mp3"));
         loseSound = Gdx.audio.newSound(Gdx.files.internal("sound/violin_lose.mp3"));
+        healSound = Gdx.audio.newSound(Gdx.files.internal("sound/healspell1.mp3"));
 
         // Hurt sound
         hurtSoundArray = new Array<>();
@@ -478,6 +480,7 @@ public class MazeRunnerGame extends Game {
         disposeArray(hurtSoundArray);
 
         keySound.dispose();
+        healSound.dispose();
     }
 
     /**
@@ -681,6 +684,14 @@ public class MazeRunnerGame extends Game {
      */
     public Sound getKeySound() {
         return keySound;
+    }
+
+    /**
+     * Get heal sound.
+     * @return the sound of healing
+     */
+    public Sound getHealSound() {
+        return healSound;
     }
 
     /**

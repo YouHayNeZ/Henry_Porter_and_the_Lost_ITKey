@@ -15,6 +15,7 @@ import de.tum.cit.ase.maze.entity.Exit;
 import de.tum.cit.ase.maze.entity.Key;
 import de.tum.cit.ase.maze.entity.Trap;
 import de.tum.cit.ase.maze.entity.Wall;
+import de.tum.cit.ase.maze.entity.Heart;
 
 /**
  * LevelMap class provides the ability to work with maps, namely:
@@ -35,7 +36,8 @@ public class LevelMap {
         EXIT(2, Exit.class),
         TRAP(3, Trap.class),
         ENEMY(4, Enemy.class),
-        KEY(5, Key.class);
+        KEY(5, Key.class),
+        HEART(6, Heart.class);
 
         final int value;
         final Class aClass;
