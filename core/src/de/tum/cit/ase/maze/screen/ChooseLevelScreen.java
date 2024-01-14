@@ -47,7 +47,7 @@ public class ChooseLevelScreen implements Screen {
         stage = new Stage(viewport, game.getSpriteBatch()); // Create a stage for UI elements
 
         Table table = getTable();
-        stage.addActor(table);
+        stage.addActor(table); // Add the table to the stage
 
         table.add(new Label("Choose Level", game.getSkin(), "title")).padBottom(40).row();
 
@@ -74,11 +74,11 @@ public class ChooseLevelScreen implements Screen {
                     game.goToCurrentLevelIndexGame();
                 }
             });
-            table.add(levelButton).width(400).row();
+            table.add(levelButton).width(400).height(80).row();
         }
 
         TextButton selectFileButton = getTextButton(game);
-        table.add(selectFileButton).width(400).row();
+        table.add(selectFileButton).width(400).height(80).row();
     }
 
     private Table getTable() {

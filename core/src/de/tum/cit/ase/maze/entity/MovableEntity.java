@@ -113,14 +113,14 @@ public abstract class MovableEntity extends UpdatableEntity {
         Rectangle entityRectangle;
         int size = getGame().getLevelMap().getEntities().size;
         for (int i = 0; i < size; i++) {
-            Entity e = getGame().getLevelMap().getEntities().get(i);
-            if (e instanceof Wall wall) {
+            Entity entity = getGame().getLevelMap().getEntities().get(i);
+            if (entity instanceof Wall wall) {
                 entityRectangle = new Rectangle(wall.getX(), wall.getY(), CELL_WIDTH, CELL_HEIGHT);
                 if (Intersector.overlaps(rectangle, entityRectangle)) {
                     return true;
                 }
             }
-            if (e instanceof Exit exit) {
+            if (entity instanceof Exit exit) {
                 entityRectangle = exit.getEntityRectangle();
                 if (!exit.isOpen() && Intersector.overlaps(rectangle, entityRectangle)) {
                     return true;
@@ -147,8 +147,8 @@ public abstract class MovableEntity extends UpdatableEntity {
                 return false;
             }
         }
-        catch (Exception e) {
-            throw new RuntimeException("Cant set float value in movable entity: " + this, e);
+        catch (Exception exception) {
+            throw new RuntimeException("Cant set float value in movable entity: " + this, exception);
         }
         return true;
     }

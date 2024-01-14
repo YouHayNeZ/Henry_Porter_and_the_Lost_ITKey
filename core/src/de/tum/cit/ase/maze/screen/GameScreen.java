@@ -213,15 +213,22 @@ public class GameScreen implements Screen {
                     CELL_WIDTH * 2, CELL_WIDTH * 2);
         }
 
-        // Draw key if player has it
-        if (player.isHasAllKeys()) {
+        // Draw keys if player has them
+        int keys = player.getCollectedKeys();
+        for (int i = 0; i < keys; i++) {
             game.getSpriteBatch().draw(game.getKeyAnimation().getKeyFrames()[0],
-                    camera.position.x - camera.viewportWidth * camera.zoom / 2,
-                    camera.position.y + camera.viewportHeight * camera.zoom / 2 - CELL_HEIGHT,
+                    camera.position.x - camera.viewportWidth * camera.zoom / 2 + i * CELL_WIDTH,
+                    camera.position.y + camera.viewportHeight * camera.zoom / 2 - CELL_WIDTH,
                     CELL_WIDTH, CELL_HEIGHT);
         }
+//        if (player.isHasAllKeys()) {
+//            game.getSpriteBatch().draw(game.getKeyAnimation().getKeyFrames()[0],
+//                    camera.position.x - camera.viewportWidth * camera.zoom / 2,
+//                    camera.position.y + camera.viewportHeight * camera.zoom / 2 - CELL_HEIGHT,
+//                    CELL_WIDTH, CELL_HEIGHT);
+//        }
 
-        // Draw end game
+        // Draw end game ????
         if (gameOver) {
             String message = player.getHealth() > 0 ? "You win" : "You die";
             GlyphLayout glyphLayout = new GlyphLayout();
@@ -242,7 +249,7 @@ public class GameScreen implements Screen {
         // defaultFont.draw(game.getSpriteBatch(), "Game over: " + gameOver, 0, 0);
         game.getSpriteBatch().end();
 
-        // drawDebugActionRectangles();
+         drawDebugActionRectangles();
     }
 
     private void drawDebugActionRectangles() {

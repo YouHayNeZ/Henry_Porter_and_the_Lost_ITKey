@@ -106,7 +106,7 @@ public class LevelMap {
         map.forEach(entry -> {
             try {
                 String[] coords = entry.key.split(",");
-                //check if coordinates is correct
+                // check if coordinates are correct
                 if (coords.length == 2) {
                     int typeValue = Integer.parseInt(entry.value);
                     Type type = Type.valueOf(typeValue);

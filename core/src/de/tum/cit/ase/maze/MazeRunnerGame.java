@@ -41,7 +41,7 @@ public class MazeRunnerGame extends Game {
     private static final String LEVEL_MAP_FORMAT = "maps/level-%d.properties";
 
     private static final int DEFAULT_LEVEL_INDEX = 1;
-    private static final int MAX_LEVEL_INDEX = 7;
+    private static final int MAX_LEVEL_INDEX = 5;
     private int levelIndex = DEFAULT_LEVEL_INDEX;
 
     //Native file chooser
@@ -239,7 +239,7 @@ public class MazeRunnerGame extends Game {
         keySound = Gdx.audio.newSound(Gdx.files.internal("sound/ring_inventory.wav"));
         winSound = Gdx.audio.newSound(Gdx.files.internal("sound/crowd_cheer.mp3"));
         loseSound = Gdx.audio.newSound(Gdx.files.internal("sound/violin_lose.mp3"));
-        healSound = Gdx.audio.newSound(Gdx.files.internal("sound/healspell1.mp3"));
+        healSound = Gdx.audio.newSound(Gdx.files.internal("sound/heal_spell.mp3"));
 
         // Hurt sound
         hurtSoundArray = new Array<>();
@@ -344,7 +344,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Increment level index
+     * Increment level index.
      */
     public void incrementLevel() {
         if (++levelIndex > MAX_LEVEL_INDEX) {
@@ -353,7 +353,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Set game on pause
+     * Set game on pause.
      */
     public void pause() {
         isPaused = true;
@@ -469,7 +469,7 @@ public class MazeRunnerGame extends Game {
         shapeRenderer.dispose(); // Dispose the shapeRenderer
         skin.dispose(); // Dispose the skin
 
-        //Dispose textures
+        // Dispose textures
         basictilesTexture.dispose();
         characterTexture.dispose();
         objectsTexture.dispose();
@@ -479,7 +479,10 @@ public class MazeRunnerGame extends Game {
 
         disposeArray(hurtSoundArray);
 
+        // Dispose sounds
         keySound.dispose();
+        winSound.dispose();
+        loseSound.dispose();
         healSound.dispose();
     }
 

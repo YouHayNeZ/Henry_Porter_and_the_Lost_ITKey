@@ -38,6 +38,7 @@ public class Player extends MovableEntity {
     private final Animation<TextureRegion> attackUpAnimation;
     private final Animation<TextureRegion> attackRightAnimation;
     private final Animation<TextureRegion> attackLeftAnimation;
+    private Animation<TextureRegion> attackAnimation;
 
     private final Array<Sound> hurtSoundArray;
     private final Sound keySound;
@@ -100,9 +101,9 @@ public class Player extends MovableEntity {
         super.update(delta);
 
         immutableTime -= delta;
+        attackAnimation = null;
 
         if (Gdx.input.isKeyPressed(Input.Keys.SPACE)) {
-            Animation<TextureRegion> attackAnimation = null;
 
             if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
                 attackAnimation = attackDownAnimation;
@@ -121,6 +122,10 @@ public class Player extends MovableEntity {
             }
         }
 
+        else {
+
+            attackAnimation = null;
+
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             moveUp(delta);
         } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
@@ -133,6 +138,8 @@ public class Player extends MovableEntity {
             moveRight(delta);
         }
 
+        }
+
         // Check key collision
         Key key = checkKeyCollision();
         if (key != null) {
@@ -142,16 +149,26 @@ public class Player extends MovableEntity {
             }
             getGame().getLevelMap().getEntities().removeValue(key, true);
 
+            // Play key sound
             keySound.play();
         }
 
         // Check heart collision
         Heart heart = checkHeartCollision();
         if (heart != null) {
-            health = Math.min(DEFAULT_HEALTH, health + (1f/5f)*DEFAULT_HEALTH);
+            health = Math.min(DEFAULT_HEALTH, health + (1f/5f) * DEFAULT_HEALTH);
             getGame().getLevelMap().getEntities().removeValue(heart, true);
 
+            // Play heal sound
             healSound.play();
+        }
+
+        // Check player attack with enemy collision
+        Enemy enemy = checkEnemyCollision();
+        if (enemy != null && (Gdx.input.isKeyPressed(Input.Keys.SPACE) &&
+                (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.DOWN) ||
+                Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)))) {
+            getGame().getLevelMap().getEntities().removeValue(enemy, true);
         }
 
         // Check trap or enemy collision
@@ -166,8 +183,13 @@ public class Player extends MovableEntity {
 
     @Override
     public Rectangle getEntityRectangle() {
-        return new Rectangle(getX() - (float) CELL_WIDTH / 4, y - (float) CELL_HEIGHT / 2,
-                (float) CELL_WIDTH / 2, (float) CELL_HEIGHT / 2);
+        if (attackAnimation != null) {
+            return new Rectangle(getX() - (float) CELL_WIDTH / 2, getY() - (float) CELL_HEIGHT / 2,
+                    (float) CELL_WIDTH, (float) CELL_HEIGHT);
+        } else {
+            return new Rectangle(getX() - (float) CELL_WIDTH / 4, getY() - (float) CELL_HEIGHT / 2,
+                    (float) CELL_WIDTH / 2, (float) CELL_HEIGHT / 2);
+        }
     }
 
     @Override
@@ -175,6 +197,10 @@ public class Player extends MovableEntity {
         if (immutableTime <= 0 || immutableTime % 0.1 < 0.05) {
             super.draw(batch);
         }
+    }
+
+    private boolean checkTrapOrEnemyCollision() {
+        return checkCollision(Trap.class, Enemy.class) != null;
     }
 
     private Heart checkHeartCollision() {
@@ -185,8 +211,8 @@ public class Player extends MovableEntity {
         return (Key) checkCollision(Key.class);
     }
 
-    private boolean checkTrapOrEnemyCollision() {
-        return checkCollision(Trap.class, Enemy.class) != null;
+    private Enemy checkEnemyCollision() {
+        return (Enemy) checkCollision(Enemy.class);
     }
 
     private Object checkCollision(Class... classes) {
@@ -229,6 +255,22 @@ public class Player extends MovableEntity {
      */
     public float getImmutableTime() {
         return immutableTime;
+    }
+
+    /**
+     * Get collected keys.
+     * @return the collected keys
+     */
+    public int getCollectedKeys() {
+        return collectedKeys;
+    }
+
+    /**
+     * Get total keys.
+     * @return the total keys
+     */
+    public int getTotalKeys() {
+        return totalKeys;
     }
 
     /**

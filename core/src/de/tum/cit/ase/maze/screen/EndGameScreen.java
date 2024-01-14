@@ -19,8 +19,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import de.tum.cit.ase.maze.MazeRunnerGame;
 
-import static com.badlogic.gdx.scenes.scene2d.ui.Table.Debug.table;
-
 /**
  * The EndGameScreen class is responsible for displaying the end game menu when the game is over.
  * It extends the LibGDX Screen class and sets up the UI components for the menu.
