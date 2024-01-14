@@ -41,6 +41,7 @@ public class Player extends MovableEntity {
 
     private final Array<Sound> hurtSoundArray;
     private final Sound keySound;
+    private final Sound healSound;
 
     private float health;
     private float immutableTime;
@@ -60,6 +61,7 @@ public class Player extends MovableEntity {
 
         hurtSoundArray = game.getHurtSoundArray();
         keySound = game.getKeySound();
+        healSound = game.getHealSound();
 
         setTextureRegion(downAnimation.getKeyFrames()[0]);
         centerDrawOffset();
@@ -136,6 +138,15 @@ public class Player extends MovableEntity {
             keySound.play();
         }
 
+        // Check heart collision
+        Heart heart = checkHeartCollision();
+        if (heart != null) {
+            health = Math.min(DEFAULT_HEALTH, health + (1f/5f)*DEFAULT_HEALTH);
+            getGame().getLevelMap().getEntities().removeValue(heart, true);
+
+            healSound.play();
+        }
+
         // Check trap or enemy collision
         if (checkTrapOrEnemyCollision() && immutableTime <= 0) {
             health -= DEFAULT_DAMAGE;
@@ -157,6 +168,10 @@ public class Player extends MovableEntity {
         if (immutableTime <= 0 || immutableTime % 0.1 < 0.05) {
             super.draw(batch);
         }
+    }
+
+    private Heart checkHeartCollision() {
+        return (Heart) checkCollision(Heart.class);
     }
 
     private Key checkKeyCollision() {
