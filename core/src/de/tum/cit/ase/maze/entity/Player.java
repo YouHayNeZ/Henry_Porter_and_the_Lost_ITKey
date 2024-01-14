@@ -49,7 +49,7 @@ public class Player extends MovableEntity {
 
     private int collectedKeys;
     private final int totalKeys;
-    private boolean hasAllKeys;
+    private boolean hasAtLeastOneKey;
 
     public Player(MazeRunnerGame game) {
         super(game);
@@ -72,7 +72,7 @@ public class Player extends MovableEntity {
         health = DEFAULT_HEALTH;
         collectedKeys = 0;
         totalKeys = getGame().getLevelMap().findNumberOfKeys();
-        hasAllKeys = false;
+        hasAtLeastOneKey = false;
     }
 
     // Override getter methods for animations
@@ -144,8 +144,8 @@ public class Player extends MovableEntity {
         Key key = checkKeyCollision();
         if (key != null) {
             collectedKeys++;
-            if (collectedKeys == totalKeys) {
-                hasAllKeys = true;
+            if (collectedKeys > 0) {
+                hasAtLeastOneKey = true;
             }
             getGame().getLevelMap().getEntities().removeValue(key, true);
 
@@ -277,15 +277,15 @@ public class Player extends MovableEntity {
      * Return if player has key.
      * @return true if player has the key
      */
-    public boolean isHasAllKeys() {
-        return hasAllKeys;
+    public boolean isHasAtLeastOneKey() {
+        return hasAtLeastOneKey;
     }
 
     /**
      * Set player has key.
-     * @param hasAllKeys the has key
+     * @param hasAtLeastOneKey the has key
      */
-    public void setHasAllKeys(boolean hasAllKeys) {
-        this.hasAllKeys = hasAllKeys;
+    public void setHasAtLeastOneKey(boolean hasAtLeastOneKey) {
+        this.hasAtLeastOneKey = hasAtLeastOneKey;
     }
 }

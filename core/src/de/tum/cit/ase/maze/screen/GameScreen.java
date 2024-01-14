@@ -158,7 +158,7 @@ public class GameScreen implements Screen {
                 if (entity instanceof Exit exit) {
                     if (exit.isOpen() && Intersector.overlaps(playerRectangle, exit.getExitRectangle())) {
                         game.goToEndGame(true);
-                    } else if (player.isHasAllKeys() && Intersector.overlaps(playerRectangle, exit.getActionRectangle())) {
+                    } else if (player.isHasAtLeastOneKey() && Intersector.overlaps(playerRectangle, exit.getActionRectangle())) {
                         exit.open();
                     }
                 }
