@@ -116,6 +116,7 @@ public class EndGameScreen implements Screen {
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true); // Update the stage viewport on resize
+        background.setSize(stage.getWidth(), stage.getHeight());
     }
 
     @Override
