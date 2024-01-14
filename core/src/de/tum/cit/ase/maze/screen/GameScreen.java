@@ -11,7 +11,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
-import de.tum.cit.ase.maze.Hud;
+import com.badlogic.gdx.utils.Timer;
 import de.tum.cit.ase.maze.LevelMap;
 import de.tum.cit.ase.maze.MazeRunnerGame;
 import de.tum.cit.ase.maze.entity.*;
@@ -37,7 +37,6 @@ public class GameScreen implements Screen {
     private BitmapFont boldFont;
 
     private LevelMap levelMap;
-    private Hud hud;
 
     private Array<Entity> floor;
     private Player player;
@@ -50,13 +49,17 @@ public class GameScreen implements Screen {
 
     private boolean gameOver = false;
 
+    private float timeLeft = 20;
+    private float accumulator = 0.0f;
+    private Timer timer;
+
+
     /**
      * Constructor for GameScreen. Sets up the camera and font.
      * @param game The main game class, used to access global resources and methods.
      */
     public GameScreen(MazeRunnerGame game) {
         this.game = game;
-//        hud = new Hud(game.getSpriteBatch());
 
         // Create and configure the camera for the game view
         camera = new OrthographicCamera();
@@ -105,6 +108,24 @@ public class GameScreen implements Screen {
         player = new Player(game);
         player.setX(entryPoint != null ? entryPoint.getX() + CELL_WIDTH / 2f : mapCenterX);
         player.setY(entryPoint != null ? entryPoint.getY() + CELL_HEIGHT / 2f : mapCenterY);
+
+
+        //initialize timer
+        timer = new Timer();
+        timer.scheduleTask(new Timer.Task() {
+            @Override
+            public void run() {
+                if (!gameOver) {
+                    timeLeft -= 1; // Decrease time by 1 second
+                    if (timeLeft <= 0) {
+                        // Time's up, end the game
+                        gameOver = true;
+                        game.goToEndGame(false);
+                        timer.stop();  // Stop the timer to prevent further decrements
+                    }
+                }
+            }
+        }, 1, 1); // Schedule the task to run every 1 second
     }
 
     // Screen interface methods with necessary functionality
@@ -217,8 +238,8 @@ public class GameScreen implements Screen {
         int keys = player.getCollectedKeys();
         for (int i = 0; i < keys; i++) {
             game.getSpriteBatch().draw(game.getKeyAnimation().getKeyFrames()[0],
-                    camera.position.x - camera.viewportWidth * camera.zoom / 2 + i * CELL_WIDTH,
-                    camera.position.y + camera.viewportHeight * camera.zoom / 2 - CELL_WIDTH,
+                    camera.position.x - camera.viewportWidth * camera.zoom / 2 + i * CELL_WIDTH + 4,
+                    camera.position.y + camera.viewportHeight * camera.zoom / 2 - CELL_WIDTH - 4,
                     CELL_WIDTH, CELL_HEIGHT);
         }
 //        if (player.isHasAllKeys()) {
@@ -229,6 +250,7 @@ public class GameScreen implements Screen {
 //        }
 
         // Draw end game ????
+        /*
         if (gameOver) {
             String message = player.getHealth() > 0 ? "You win" : "You die";
             GlyphLayout glyphLayout = new GlyphLayout();
@@ -244,6 +266,10 @@ public class GameScreen implements Screen {
                     camera.position.x - glyphLayout.width / 2,
                     camera.position.y + glyphLayout.height / 2);
         }
+         */
+
+        // Draw timer
+        drawTimer();
 
         // Draw debug
         // defaultFont.draw(game.getSpriteBatch(), "Game over: " + gameOver, 0, 0);
@@ -308,6 +334,26 @@ public class GameScreen implements Screen {
         return health - healthIndex >= 1 ? 0 : (health - healthIndex) < 0 ? 4 : (int) maxHealth - 1 -
                 Math.floorDiv((int) ((health - healthIndex) * 100), Math.floorDiv(100, (int) maxHealth));
     }
+
+    private void drawTimer() {
+        int minutes = (int) (timeLeft / 60);
+        int seconds = (int) (timeLeft % 60);
+
+        String timerText = String.format("%02d:%02d", minutes, seconds);
+
+        GlyphLayout glyphLayout = new GlyphLayout();
+        glyphLayout.setText(defaultFont, timerText);
+
+        // Draw the timer in the top right corner
+        defaultFont.draw(
+                game.getSpriteBatch(),
+                timerText,
+                camera.position.x + camera.viewportWidth * camera.zoom / 2 - glyphLayout.width - 4,
+                camera.position.y + camera.viewportHeight * camera.zoom / 2 - 4
+        );
+    }
+
+
 
     @Override
     public void resize(int width, int height) {
