@@ -158,7 +158,7 @@ public class GameScreen implements Screen {
                 if (entity instanceof Exit exit) {
                     if (exit.isOpen() && Intersector.overlaps(playerRectangle, exit.getExitRectangle())) {
                         game.goToEndGame(true);
-                    } else if (player.isHasKey() && Intersector.overlaps(playerRectangle, exit.getActionRectangle())) {
+                    } else if (player.isHasAllKeys() && Intersector.overlaps(playerRectangle, exit.getActionRectangle())) {
                         exit.open();
                     }
                 }
@@ -214,7 +214,7 @@ public class GameScreen implements Screen {
         }
 
         // Draw key if player has it
-        if (player.isHasKey()) {
+        if (player.isHasAllKeys()) {
             game.getSpriteBatch().draw(game.getKeyAnimation().getKeyFrames()[0],
                     camera.position.x - camera.viewportWidth * camera.zoom / 2,
                     camera.position.y + camera.viewportHeight * camera.zoom / 2 - CELL_HEIGHT,

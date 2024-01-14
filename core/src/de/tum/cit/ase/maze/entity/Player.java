@@ -13,7 +13,7 @@ import com.badlogic.gdx.utils.Array;
 import de.tum.cit.ase.maze.MazeRunnerGame;
 
 /**
- * Player class represents player entity, which is moveable and updatable.
+ * Player class represents player entity, which is movable and updatable.
  * It has health and can be damaged by traps and enemies.
  * Can also attack enemies. Its movement controlled by the user.
  */
@@ -46,7 +46,8 @@ public class Player extends MovableEntity {
     private float health;
     private float immutableTime;
 
-    private boolean hasKey;
+    private int collectedKeys;
+    private boolean hasAllKeys;
 
     public Player(MazeRunnerGame game) {
         super(game);
@@ -67,7 +68,8 @@ public class Player extends MovableEntity {
         centerDrawOffset();
 
         health = DEFAULT_HEALTH;
-        hasKey = false;
+        collectedKeys = 0;
+        hasAllKeys = false;
     }
 
     // Override getter methods for animations
@@ -132,7 +134,10 @@ public class Player extends MovableEntity {
         // Check key collision
         Key key = checkKeyCollision();
         if (key != null) {
-            hasKey = true;
+            collectedKeys++;
+            if (collectedKeys == getGame().getLevelMap().findNumberOfKeys()) {
+                hasAllKeys = true;
+            }
             getGame().getLevelMap().getEntities().removeValue(key, true);
 
             keySound.play();
@@ -228,15 +233,15 @@ public class Player extends MovableEntity {
      * Return if player has key.
      * @return true if player has the key
      */
-    public boolean isHasKey() {
-        return hasKey;
+    public boolean isHasAllKeys() {
+        return hasAllKeys;
     }
 
     /**
      * Set player has key.
-     * @param hasKey the has key
+     * @param hasAllKeys the has key
      */
-    public void setHasKey(boolean hasKey) {
-        this.hasKey = hasKey;
+    public void setHasAllKeys(boolean hasAllKeys) {
+        this.hasAllKeys = hasAllKeys;
     }
 }

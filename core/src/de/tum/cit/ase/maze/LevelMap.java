@@ -156,6 +156,20 @@ public class LevelMap {
     }
 
     /**
+     * Find the number of keys in a map.
+     * @return number of keys
+     */
+    public int findNumberOfKeys() {
+        int numberOfKeys = 0;
+        for (Entity entity : entities) {
+            if (entity instanceof Key) {
+                numberOfKeys++;
+            }
+        }
+        return numberOfKeys;
+    }
+
+    /**
      * Calculates map width.
      * @return map width in pixels
      */
