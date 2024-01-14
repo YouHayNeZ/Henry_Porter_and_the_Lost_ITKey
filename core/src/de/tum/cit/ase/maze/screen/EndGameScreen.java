@@ -44,56 +44,64 @@ public class EndGameScreen implements Screen {
         OrthographicCamera camera = new OrthographicCamera();
         camera.zoom = 1f;
 
-        Viewport viewport = new ScreenViewport(camera);
-        stage = new Stage(viewport);
+        Viewport viewport = new ScreenViewport(camera); // Create a viewport with the camera
+        stage = new Stage(viewport); // Create a stage for UI elements
 
         background = new Image();
         stage.addActor(background);
 
         Table table = new Table();
         table.setFillParent(true);
-        stage.addActor(table);
+        stage.addActor(table); // Add the table to the stage
 
-        titleLabel = new Label("", game.getLabelStyle());  // Set the Magical Font style
-        table.add(titleLabel).padBottom(40f).row();
+        // Add a label as a title
+        titleLabel = new Label("", game.getSkin(), "title");  // Set the Magical Font style
+        table.add(titleLabel).padBottom(40).row();
 
-        nextLevelButton = new TextButton("", game.getSkin());
-        table.add(nextLevelButton).row();
+        nextLevelButton = new TextButton("", game.getSkin(), "button");
+        table.add(nextLevelButton).width(400).height(80).row();
 
-        TextButton goToMenuButton = new TextButton("Go to menu", game.getSkin());
+        TextButton goToMenuButton = new TextButton("Go to menu", game.getSkin(), "button");
         goToMenuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.goToMenu();
             }
         });
-        table.add(goToMenuButton).row();
+        table.add(goToMenuButton).width(400).height(80).row();
     }
 
     public void setIsWinner(boolean isWinner) {
         titleLabel.setText(isWinner ? "You win!" : "You lose!");
         nextLevelButton.setText(isWinner ? "Next level" : "Restart level");
 
-        // Remove all change listeners before adding a new one
-        nextLevelButton.clearListeners();
+        // Remove all change listeners before add new one
+        for (int i = 0; i < nextLevelButton.getListeners().size; i++) {
+            EventListener listener = nextLevelButton.getListeners().get(i);
+            if (listener instanceof ChangeListener) {
+                nextLevelButton.getListeners().removeIndex(i);
+                i--;
+            }
+        }
 
         nextLevelButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                if (isWinner) game.incrementLevel();
+                if (isWinner) {
+                    game.incrementLevel();
+                }
                 game.goToCurrentLevelIndexGame();
             }
         });
 
         // Set background based on winning or losing
         TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(
-                new TextureRegion(isWinner ? new Texture("Winning Background.png") : new Texture("Losing Background.png")));
+                new TextureRegion(isWinner ? new Texture("backgrounds/winning background.png") : new Texture("backgrounds/losing background.png")));
 
         // Set the background
         background.setDrawable(backgroundDrawable);
         background.setSize(stage.getWidth(), stage.getHeight());
     }
-
 
     @Override
     public void show() {

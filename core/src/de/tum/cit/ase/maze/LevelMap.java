@@ -73,7 +73,7 @@ public class LevelMap {
     private final MazeRunnerGame game;
 
     /**
-     * Create level map
+     * Creates level map.
      * @param game the game instance
      */
     public LevelMap(MazeRunnerGame game) {
@@ -82,18 +82,18 @@ public class LevelMap {
     }
 
     /**
-     * Load map from file that in LOCAL path
+     * Load map from file that is in the LOCAL path.
      * @param path local path
-     * @throws IOException when can't load map from this file
+     * @throws IOException when we can't load map from this file
      */
     public void load(String path) throws IOException {
         load(Gdx.files.local(path));
     }
 
     /**
-     * Load map from FileHandle
+     * Load map from FileHandle.
      * @param fileHandle fileHandle where we are going to load map
-     * @throws IOException when can't load map from this fileHandle
+     * @throws IOException when we can't load map from this fileHandle
      */
     public void load(FileHandle fileHandle) throws IOException {
         entities = new Array<>();
@@ -133,15 +133,15 @@ public class LevelMap {
                     entities.add(entity);
                 }
             }
-            catch (Exception e) {
-                //ignore wrong lines
-                e.printStackTrace();
+            catch (Exception exception) {
+                // ignore wrong lines
+                exception.printStackTrace();
             }
         });
     }
 
     /**
-     * Find first entry point in a map
+     * Find first entry point in a map.
      * @return first entry point
      */
     public EntryPoint findEntryPoint() {
@@ -154,7 +154,7 @@ public class LevelMap {
     }
 
     /**
-     * Calculates map width
+     * Calculates map width.
      * @return map width in pixels
      */
     public float getMapWidth() {
@@ -168,7 +168,7 @@ public class LevelMap {
     }
 
     /**
-     * Calculates map height
+     * Calculates map height.
      * @return map height in pixels
      */
     public float getMapHeight() {
@@ -181,20 +181,26 @@ public class LevelMap {
         return maxY + CELL_HEIGHT;
     }
 
-    // Check cell exist in current col and row position
+    /**
+     * Check if cell exist in current col and row position and it is a wall.
+     * @param map level map
+     * @param col current column
+     * @param row current row
+     * @return true if cell exists and it is a wall
+     */
     private boolean checkIfCellExistsAndItIsWall(ObjectMap<String, String> map, int col, int row) {
         try {
             String value = map.get(String.format("%d,%d", col, row));
             return value != null && Integer.parseInt(value) == Type.WALL.getValue();
         }
         catch (NumberFormatException e) {
-            //Ignore wrong file format
+            // Ignore wrong file format
         }
         return false;
     }
 
     /**
-     * Get all entities from this map
+     * Get all entities from this map.
      * @return array of all entities
      */
     public Array<Entity> getEntities() {

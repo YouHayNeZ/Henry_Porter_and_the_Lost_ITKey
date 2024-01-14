@@ -117,7 +117,7 @@ public class GameScreen implements Screen {
             game.goToMenu();
         }
 
-//        if (game.isPlaying() && !game.isPaused()) {
+        if (game.isPlaying() && !game.isPaused()) {
             // Update camera destination position (only map bigger than viewport)
             if ((mapWidth > camera.viewportWidth * camera.zoom || mapHeight > camera.viewportHeight * camera.zoom) &&
                     (player.getX() + PLAYER_AND_CAMERA_MAX_DIFF_X_PERCENT * camera.viewportWidth * camera.zoom / 2 < cameraDestX ||
@@ -150,24 +150,25 @@ public class GameScreen implements Screen {
                 player.update(delta);
             }
 
-        //Check player collision with exit
-        Rectangle playerRectangle = player.getEntityRectangle();
-        size = levelMap.getEntities().size;
-        for (int i = 0; i < size; i++) {
-            Entity entity = levelMap.getEntities().get(i);
-            if (entity instanceof Exit exit) {
-                if (exit.isOpen() && Intersector.overlaps(playerRectangle, exit.getExitRectangle())) {
-                    game.goToEndGame(true);
-                } else if (player.isHasKey() && Intersector.overlaps(playerRectangle, exit.getActionRectangle())) {
-                    exit.open();
+            // Check player collision with exit
+            Rectangle playerRectangle = player.getEntityRectangle();
+            size = levelMap.getEntities().size;
+            for (int i = 0; i < size; i++) {
+                Entity entity = levelMap.getEntities().get(i);
+                if (entity instanceof Exit exit) {
+                    if (exit.isOpen() && Intersector.overlaps(playerRectangle, exit.getExitRectangle())) {
+                        game.goToEndGame(true);
+                    } else if (player.isHasKey() && Intersector.overlaps(playerRectangle, exit.getActionRectangle())) {
+                        exit.open();
+                    }
                 }
             }
         }
 
-        //Check player health
+        // Check player health
         if (player.getHealth() <= 0) {
             game.goToEndGame(false);
-    }
+        }
 
         ScreenUtils.clear(0, 0, 0, 1); // Clear the screen
 
@@ -243,19 +244,20 @@ public class GameScreen implements Screen {
 
         // drawDebugActionRectangles();
     }
+
     private void drawDebugActionRectangles() {
         game.getShapeRenderer().begin();
 
-        //Draw player rectangle
+        // Draw player rectangle
         game.getShapeRenderer().setColor(Color.WHITE);
         drawRectangle(player.getEntityRectangle());
 
-        //Draw exit rectangles
+        // Draw exit rectangles
         int size = game.getLevelMap().getEntities().size;
         for (int i = 0; i < size; i++) {
             Entity entity = game.getLevelMap().getEntities().get(i);
             if (entity instanceof Exit exit) {
-                //Action rectangle
+                // Action rectangle
                 game.getShapeRenderer().setColor(Color.RED);
                 drawRectangle(exit.getActionRectangle());
 
@@ -275,16 +277,23 @@ public class GameScreen implements Screen {
         game.getShapeRenderer().rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
     }
 
-    //Clamp camera destination position (only need if map bigger than camera viewport)
+    // Clamp camera destination position (only need if map bigger than camera viewport)
     private void clampCameraDestPosition() {
         if (mapWidth > camera.viewportWidth / 2) {
-            if (cameraDestX < camera.viewportWidth / 4) cameraDestX = camera.viewportWidth / 4;
-            if (cameraDestX > mapWidth - camera.viewportWidth / 4) cameraDestX = mapWidth - camera.viewportWidth / 4;
+            if (cameraDestX < camera.viewportWidth / 4) {
+                cameraDestX = camera.viewportWidth / 4;
+            }
+            if (cameraDestX > mapWidth - camera.viewportWidth / 4) {
+                cameraDestX = mapWidth - camera.viewportWidth / 4;
+            }
         }
         if (mapHeight > camera.viewportHeight / 2) {
-            if (cameraDestY < camera.viewportHeight / 4) cameraDestY = camera.viewportHeight / 4;
-            if (cameraDestY > mapHeight - camera.viewportHeight / 4 + CELL_WIDTH * 2)
+            if (cameraDestY < camera.viewportHeight / 4) {
+                cameraDestY = camera.viewportHeight / 4;
+            }
+            if (cameraDestY > mapHeight - camera.viewportHeight / 4 + CELL_WIDTH * 2) {
                 cameraDestY = mapHeight - camera.viewportHeight / 4 + CELL_WIDTH * 2;
+            }
         }
     }
 

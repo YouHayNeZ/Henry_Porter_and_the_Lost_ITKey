@@ -1,4 +1,4 @@
-Lisence
+License
 
 Female Hurt Voice - pack licensed under (CC BY 4.0) - By author PlumpDev from https://opengameart.org/content/female-gruntwork-1
 Animation Key - Animated Pixel Art - by author Frakassets from https://frakassets.itch.io/free-rotating-key
@@ -6,6 +6,7 @@ Pickup Key Sound - Inventory Sound Effects - by author artisticdude from https:/
 Win sound - Sound Effect from <a href="https://pixabay.com/sound-effects/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=6185">Pixabay</a>Sound Effect from <a href="https://pixabay.com/sound-effects/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=6185">Pixabay</a>
 Lose sound - Sound Effect by <a href="https://pixabay.com/users/floraphonic-38928062/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=175615">floraphonic</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=175615">Pixabay</a>
 Menu music - Music by Cleyton Kauffman - https://soundcloud.com/cleytonkauffman
+Buttons - Buttons and Frame GUI by https://opengameart.org/content/buttons-and-frame
 
 Backgrounds - all backgrounds were created using Canva's built-in AI tool and therefore do not underlie any copyright restrictions.
-Player - all player frames were handdrawn and therefore do not underlie any copyright restrictions.
+Player - all player frames were hand drawn and therefore do not underlie any copyright restrictions.

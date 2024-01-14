@@ -15,6 +15,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Array;
 
 import com.badlogic.gdx.utils.Disposable;
@@ -40,7 +41,7 @@ public class MazeRunnerGame extends Game {
     private static final String LEVEL_MAP_FORMAT = "maps/level-%d.properties";
 
     private static final int DEFAULT_LEVEL_INDEX = 1;
-    private static final int MAX_LEVEL_INDEX = 5;
+    private static final int MAX_LEVEL_INDEX = 7;
     private int levelIndex = DEFAULT_LEVEL_INDEX;
 
     //Native file chooser
@@ -59,10 +60,6 @@ public class MazeRunnerGame extends Game {
     // UI Skin
     private Skin skin;
 
-    // Font styles
-    private Label.LabelStyle labelStyle;
-    private TextButton.TextButtonStyle textButtonStyle;
-
     //Textures
     Texture basictilesTexture;
     Texture characterTexture;
@@ -70,11 +67,14 @@ public class MazeRunnerGame extends Game {
     Texture mobsTexture;
     Texture thingsTexture;
     Texture keyTexture;
-    Texture mazeBackground;
+    Texture buttons;
 
     //TextureRegions
     TextureRegion floorTextureRegion;
     TextureRegion ladderTextureRegion;
+    TextureRegion buttonUpTextureRegion;
+    TextureRegion buttonOverTextureRegion;
+    TextureRegion buttonDownTextureRegion;
 
     Array<TextureRegion> wallTextureRegionArray;
     Array<TextureRegion> healthTextureRegionArray;
@@ -97,10 +97,20 @@ public class MazeRunnerGame extends Game {
     Animation<TextureRegion> doorAnimation;
     Animation<TextureRegion> heartAnimation;
 
+    // Sounds
+    Sound keySound;
+    Sound winSound;
+    Sound loseSound;
     Array<Sound> hurtSoundArray;
 
-    Sound keySound;
+    // Music
+    Music menuMusic;
+    Music gameMusic;
+
     LevelMap levelMap;
+
+    boolean isPlaying = false;
+    boolean isPaused = false;
 
     /**
      * Constructor for MazeRunnerGame.
@@ -112,13 +122,13 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Called when the game is created. Initializes the SpriteBatch and Skin.
+     * Called when the game is created. Initializes the SpriteBatch, Skin and all other resources.
      */
     @Override
     public void create() {
         spriteBatch = new SpriteBatch(); // Create SpriteBatch
 
-        shapeRenderer = new ShapeRenderer();
+        shapeRenderer = new ShapeRenderer(); // Create ShapeRenderer
         shapeRenderer.setAutoShapeType(true);
 
         skin = new Skin(Gdx.files.internal("craft/craftacular-ui.json")); // Load UI skin
@@ -138,12 +148,12 @@ public class MazeRunnerGame extends Game {
         generator.dispose(); // Dispose of the generator when done
 
         // Create a TextButtonStyle with the magical font for the TextButton
-        labelStyle = new Label.LabelStyle();
+        var labelStyle = new Label.LabelStyle();
         labelStyle.font = magicalFontTitle;
         labelStyle.fontColor = Color.GOLD;
 
         // Create a TextButtonStyle with the magical font for the TextButton
-        textButtonStyle = new TextButton.TextButtonStyle();
+        var textButtonStyle = new TextButton.TextButtonStyle();
         textButtonStyle.font = magicalFontButton;
         textButtonStyle.fontColor = Color.GOLD;
 
@@ -154,12 +164,29 @@ public class MazeRunnerGame extends Game {
         mobsTexture = new Texture(Gdx.files.internal("mobs.png"));
         thingsTexture = new Texture(Gdx.files.internal("things.png"));
         keyTexture = new Texture(Gdx.files.internal("key.png"));
-        mazeBackground = new Texture(Gdx.files.internal("Maze Background.png"));
+        buttons = new Texture(Gdx.files.internal("buttons.png"));
 
         // Load texture regions
         floorTextureRegion = new TextureRegion(basictilesTexture, 16, 16 * 9, 16, 16);
         ladderTextureRegion = new TextureRegion(basictilesTexture, 16, 16 * 7, 16, 16);
 
+        // Load the button texture regions
+        buttonUpTextureRegion = new TextureRegion(buttons, 0, 0, buttons.getWidth(), buttons.getHeight()/3);
+        buttonOverTextureRegion = new TextureRegion(buttons, 0, buttons.getHeight()/3, buttons.getWidth(), buttons.getHeight()/3);
+        buttonDownTextureRegion = new TextureRegion(buttons, 0, buttons.getHeight()/3*2, buttons.getWidth(), buttons.getHeight()/3);
+
+        // Set the button style with the pressed, unpressed and hover button images
+        textButtonStyle.up = new TextureRegionDrawable(buttonUpTextureRegion);
+        textButtonStyle.down = new TextureRegionDrawable(buttonDownTextureRegion);
+        textButtonStyle.over = new TextureRegionDrawable(buttonOverTextureRegion);
+        textButtonStyle.unpressedOffsetY = 7;
+        textButtonStyle.checkedOffsetY = 7;
+
+
+        skin.add("button", textButtonStyle); // Add the TextButtonStyle to the skin
+        skin.add("title", labelStyle); // Add the LabelStyle to the skin
+
+        // Load texture region arrays
         wallTextureRegionArray = loadTextureRegionArray(basictilesTexture, 16, 16, 4, 0, 0);
         healthTextureRegionArray = loadTextureRegionArray(objectsTexture, 16, 16, 5, 16 * 4, 0);
 
@@ -207,10 +234,10 @@ public class MazeRunnerGame extends Game {
         heartAnimation = loadAnimation(objectsTexture,
                 16, 16, 4, 0.1f, 0, 4 * CELL_HEIGHT);
 
-        // Play some background music
-        Music backgroundMusic = Gdx.audio.newMusic(Gdx.files.internal("music/Harry Potter - Main Theme.mp3"));
-        backgroundMusic.setLooping(true);
-        backgroundMusic.play();
+        // Sounds
+        keySound = Gdx.audio.newSound(Gdx.files.internal("sound/ring_inventory.wav"));
+        winSound = Gdx.audio.newSound(Gdx.files.internal("sound/crowd_cheer.mp3"));
+        loseSound = Gdx.audio.newSound(Gdx.files.internal("sound/violin_lose.mp3"));
 
         // Hurt sound
         hurtSoundArray = new Array<>();
@@ -218,23 +245,46 @@ public class MazeRunnerGame extends Game {
             hurtSoundArray.add(Gdx.audio.newSound(Gdx.files.internal(String.format("sound/hurt/hurt_%d.mp3", i))));
         }
 
-        // Key sound
-        keySound = Gdx.audio.newSound(Gdx.files.internal("sound/ring_inventory.wav"));
+        // Music
+        menuMusic = Gdx.audio.newMusic(Gdx.files.internal("music/Harry Potter - Main Theme.mp3"));
+        menuMusic.setLooping(true);
 
+        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("music/farewell.mp3"));
+        gameMusic.setLooping(true);
+
+        // Level map
         levelMap = new LevelMap(this);
 
+        // Screens
         menuScreen = new MenuScreen(this);
         chooseLevelScreen = new ChooseLevelScreen(this);
         gameScreen = new GameScreen(this);
         endGameScreen = new EndGameScreen(this);
 
+        // Go to menu
         goToMenu(); // Navigate to the menu screen
+    }
+
+    public void playMenuMusic() {
+        gameMusic.pause();
+        menuMusic.play();
+    }
+
+    public void playGameMusic() {
+        winSound.stop();
+        menuMusic.stop();
+        gameMusic.play();
+    }
+
+    public Sound getEndGameSound(boolean isWinner) {
+        return isWinner ? winSound : loseSound;
     }
 
     /**
      * Switches to the menu screen.
      */
     public void goToMenu() {
+        playMenuMusic();
         setScreen(menuScreen);
     }
 
@@ -245,11 +295,16 @@ public class MazeRunnerGame extends Game {
         setScreen(chooseLevelScreen);
     }
 
+
     /**
      * Switches to the game screen.
      */
     public void goToGame() {
+        isPlaying = true;
+        isPaused = false;
         setScreen(gameScreen);
+
+        playGameMusic();
     }
 
     /**
@@ -257,9 +312,15 @@ public class MazeRunnerGame extends Game {
      */
     public void goToCurrentLevelIndexGame() {
         try {
+            isPlaying = true;
+            isPaused = false;
+
+            gameMusic.play();
             levelMap.load(String.format(LEVEL_MAP_FORMAT, levelIndex));
             gameScreen.initializeLevel();
             setScreen(gameScreen); // Set the current screen to GameScreen
+
+            playGameMusic();
         }
         catch (IOException e) {
             Gdx.app.log("ERROR", "Failed to load level index: " + levelIndex, e);
@@ -267,16 +328,50 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Go to the end game screen
+     * Switches to the end game screen
      * @param isWinner indicates game end status
      */
-
     public void goToEndGame(boolean isWinner) {
+        getEndGameSound(isWinner).play();
+
+        isPlaying = false;
         endGameScreen.setIsWinner(isWinner);
         setScreen(endGameScreen);
+
+        playMenuMusic();
     }
 
+    /**
+     * Increment level index
+     */
+    public void incrementLevel() {
+        if (++levelIndex > MAX_LEVEL_INDEX) {
+            levelIndex = DEFAULT_LEVEL_INDEX;
+        }
+    }
 
+    /**
+     * Set game on pause
+     */
+    public void pause() {
+        isPaused = true;
+    }
+
+    /**
+     * Get game paused status
+     * @return true if game paused
+     */
+    public boolean isPaused() {
+        return isPaused;
+    }
+
+    /**
+     * Get game playing status
+     * @return true if game is playing
+     */
+    public boolean isPlaying()  {
+        return isPlaying;
+    }
 
     /**
      * Load texture region array of images from texture that stands in one row.
@@ -379,7 +474,6 @@ public class MazeRunnerGame extends Game {
         mobsTexture.dispose();
         thingsTexture.dispose();
         keyTexture.dispose();
-        mazeBackground.dispose();
 
         disposeArray(hurtSoundArray);
 
@@ -391,17 +485,8 @@ public class MazeRunnerGame extends Game {
      * @param array the array of disposable
      */
     private void disposeArray(Array<? extends Disposable> array) {
-        for (Disposable d: array) {
-            d.dispose();
-        }
-    }
-
-    /**
-     * Increment level index.
-     */
-    public void incrementLevel() {
-        if (++levelIndex > MAX_LEVEL_INDEX) {
-            levelIndex = DEFAULT_LEVEL_INDEX;
+        for (Disposable disposable: array) {
+            disposable.dispose();
         }
     }
 
@@ -420,14 +505,6 @@ public class MazeRunnerGame extends Game {
      */
     public Skin getSkin() {
         return skin;
-    }
-
-    /**
-     * Get maze background texture.
-     * @return the maze background texture
-     */
-    public Texture getMazeBackground() {
-        return mazeBackground;
     }
 
     /**
@@ -644,21 +721,5 @@ public class MazeRunnerGame extends Game {
      */
     public GameScreen getGameScreen() {
         return gameScreen;
-    }
-
-    /**
-     * Get label style.
-     * @return the label style
-     */
-    public Label.LabelStyle getLabelStyle() {
-        return labelStyle;
-    }
-
-    /**
-     * Get text button style.
-     * @return the text button style
-     */
-    public TextButton.TextButtonStyle getTextButtonStyle() {
-        return textButtonStyle;
     }
 }

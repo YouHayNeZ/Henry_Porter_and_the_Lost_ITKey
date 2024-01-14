@@ -42,18 +42,17 @@ public class ChooseLevelScreen implements Screen {
         Viewport viewport = new ScreenViewport(camera); // Create a viewport with the camera
         stage = new Stage(viewport, game.getSpriteBatch()); // Create a stage for UI elements
 
-        // Create a drawable from the texture
-        Table table = getTable(game);
+        Table table = getTable();
         stage.addActor(table); // Add the table to the stage
 
         // Add a label as a title
-        table.add(new Label("Choose Level", game.getLabelStyle())).padBottom(40).row();
+        table.add(new Label("Choose Level", game.getSkin(), "title")).padBottom(40).row();
 
         FileHandle[] propertiesHandles = Gdx.files.local("maps").list(".properties");
         int size = propertiesHandles.length;
         for (int i = 0; i < size; i++) {
             final int index = i + 1;
-            TextButton levelButton = new TextButton(propertiesHandles[i].nameWithoutExtension(), game.getTextButtonStyle());
+            TextButton levelButton = new TextButton(propertiesHandles[i].nameWithoutExtension(), game.getSkin(), "button");
             levelButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
@@ -68,8 +67,9 @@ public class ChooseLevelScreen implements Screen {
         table.add(selectFileButton).width(400).row();
     }
 
-    private Table getTable(MazeRunnerGame game) {
-        TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(new TextureRegion(new Texture("ChooseLevel Background.png")));
+    private Table getTable() {
+        // Create a drawable from the texture
+        TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(new TextureRegion(new Texture("backgrounds/choose level background.png")));
 
         Table table = new Table();
 
@@ -83,7 +83,7 @@ public class ChooseLevelScreen implements Screen {
     }
 
     private static TextButton getTextButton(MazeRunnerGame game) {
-        TextButton selectFileButton = new TextButton("Select file", game.getSkin());
+        TextButton selectFileButton = new TextButton("Select file", game.getSkin(), "button");
         selectFileButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {

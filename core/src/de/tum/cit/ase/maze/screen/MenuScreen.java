@@ -1,9 +1,11 @@
 package de.tum.cit.ase.maze.screen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -38,8 +40,50 @@ public class MenuScreen implements Screen {
         Viewport viewport = new ScreenViewport(camera); // Create a viewport with the camera
         stage = new Stage(viewport, game.getSpriteBatch()); // Create a stage for UI elements
 
+        Table table = getTable();
+        stage.addActor(table); // Add the table to the stage
+
+        // Create and add a label as a title with the title font
+        Label titleLabel = new Label("Henry Porter and the\n ITKey Torture Chamber", game.getSkin(), "title");
+        titleLabel.setAlignment(Align.center);
+        table.add(titleLabel).padBottom(80).row();
+
+        // Create and add a button to go to the game screen
+        TextButton goToGameButton = new TextButton("Start Game", game.getSkin(), "button");
+        goToGameButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.goToCurrentLevelIndexGame(); // Change to the game screen when button is pressed
+            }
+        });
+        table.add(goToGameButton).width(400).height(80).row();
+
+        // Create and add a button to continue the game
+        TextButton Continue = new TextButton("Continue", game.getSkin(), "button");
+        Continue.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                if (game.isPlaying()) {
+                    game.goToGame(); // Continue to the game screen when button is pressed
+                }
+            }
+        });
+        table.add(Continue).width(400).height(80).row();
+
+        // Create and add a button to choose a maze file
+        TextButton goToChooseLevelButton = new TextButton("Choose Level", game.getSkin(), "button");
+        goToChooseLevelButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.goToChooseLevel(); // Change to choose level screen when button is pressed
+            }
+        });
+        table.add(goToChooseLevelButton).width(400).height(80).row();
+    }
+
+    private Table getTable() {
         // Create a drawable from the texture
-        TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(new TextureRegion(game.getMazeBackground()));
+        TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(new TextureRegion(new Texture("backgrounds/menu background.png")));
 
         Table table = new Table(); // Create a table for layout
 
@@ -49,36 +93,15 @@ public class MenuScreen implements Screen {
         table.setBackground(backgroundDrawable);
 
         table.setFillParent(true); // Make the table fill the stage
-        stage.addActor(table); // Add the table to the stage
-
-        // Create and add a label as a title with the title font
-        Label titleLabel = new Label("Henry Porter and the\n ITKey Torture Chamber", game.getLabelStyle());
-        titleLabel.setAlignment(Align.center);
-        table.add(titleLabel).padBottom(80).row();
-
-        // Create and add a button to go to the game screen
-        TextButton goToGameButton = new TextButton("Start Game", game.getTextButtonStyle());
-        goToGameButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                game.goToCurrentLevelIndexGame(); // Change to the game screen when button is pressed
-            }
-        });
-        table.add(goToGameButton).width(300).height(80).row();
-
-        // Create and add a button to choose a maze file
-        TextButton goToChooseLevelButton = new TextButton("Choose Level", game.getTextButtonStyle());
-        goToChooseLevelButton.addListener(new ChangeListener() {
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                game.goToChooseLevel(); // Change to choose level screen when button is pressed
-            }
-        });
-        table.add(goToChooseLevelButton).width(300).height(80).row();
+        return table;
     }
 
     @Override
     public void render(float delta) {
+        if (game.isPlaying() && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
+            game.goToGame();
+        }
+
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // Clear the screen
         stage.act(Math.min(Gdx.graphics.getDeltaTime(), 1 / 30f)); // Update the stage
         stage.draw(); // Draw the stage

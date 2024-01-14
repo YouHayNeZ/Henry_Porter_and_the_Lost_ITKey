@@ -8,7 +8,7 @@ import de.tum.cit.ase.maze.MazeRunnerGame;
  */
 public class EntryPoint extends Entity {
 
-    TextureRegion textureRegionArray;
+    TextureRegion textureRegion;
 
     /**
      * Creates new EntryPoint.
@@ -16,7 +16,7 @@ public class EntryPoint extends Entity {
      */
     public EntryPoint(MazeRunnerGame game) {
         super(game);
-        textureRegionArray = game.getLadderTextureRegion();
-        setTextureRegion(textureRegionArray);
+        textureRegion = game.getLadderTextureRegion();
+        setTextureRegion(textureRegion);
     }
 }
