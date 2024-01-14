@@ -47,6 +47,7 @@ public class Player extends MovableEntity {
     private float immutableTime;
 
     private int collectedKeys;
+    private final int totalKeys;
     private boolean hasAllKeys;
 
     public Player(MazeRunnerGame game) {
@@ -69,6 +70,7 @@ public class Player extends MovableEntity {
 
         health = DEFAULT_HEALTH;
         collectedKeys = 0;
+        totalKeys = getGame().getLevelMap().findNumberOfKeys();
         hasAllKeys = false;
     }
 
@@ -135,7 +137,7 @@ public class Player extends MovableEntity {
         Key key = checkKeyCollision();
         if (key != null) {
             collectedKeys++;
-            if (collectedKeys == getGame().getLevelMap().findNumberOfKeys()) {
+            if (collectedKeys == totalKeys) {
                 hasAllKeys = true;
             }
             getGame().getLevelMap().getEntities().removeValue(key, true);
