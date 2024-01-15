@@ -8,6 +8,8 @@ Win sound - Sound Effect from <a href="https://pixabay.com/sound-effects/?utm_so
 Lose sound - Sound Effect by <a href="https://pixabay.com/users/floraphonic-38928062/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=175615">floraphonic</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=175615">Pixabay</a>
 Menu music - Music by Cleyton Kauffman - https://soundcloud.com/cleytonkauffman
 Buttons - Buttons and Frame GUI by https://opengameart.org/content/buttons-and-frame
+Avada Kedavra spell sound - Sound Effect by The Audio Horizon SFX - from  ⚡10 Harry Potter Spells (Sound Effects) - https://www.youtube.com/watch?v=bqixAkezavI
+Expecto Patronum spell sound - Sound Effect by The Audio Horizon SFX - from  ⚡10 Harry Potter Spells (Sound Effects) - https://www.youtube.com/watch?v=bqixAkezavI
 
 Backgrounds - all backgrounds were created using Canva's built-in AI tool and therefore do not underlie any copyright restrictions.
 Player - all player frames were hand drawn and therefore do not underlie any copyright restrictions.

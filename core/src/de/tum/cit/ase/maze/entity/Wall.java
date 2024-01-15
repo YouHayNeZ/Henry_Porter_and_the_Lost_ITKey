@@ -21,7 +21,8 @@ public class Wall extends Entity {
         LOWER_WITHOUT_UPPER(0),
         CENTER_WITH_UPPER_AND_LOWER(1),
         LOWER_WITH_UPPER(2),
-        UPPER(3);
+        UPPER(3),
+        WATER(4);
 
         final int imageIndex;
 
@@ -31,6 +32,7 @@ public class Wall extends Entity {
     }
 
     Array<TextureRegion> textureRegionArray;
+    TextureRegion waterTextureRegion;
     RepresentationType representationType;
 
     /**
@@ -40,6 +42,7 @@ public class Wall extends Entity {
     public Wall(MazeRunnerGame game) {
         super(game);
         textureRegionArray = game.getWallTextureRegionArray();
+        waterTextureRegion = game.getWaterTextureRegion();
         setRepresentationType(RepresentationType.CENTER_WITH_UPPER_AND_LOWER);
     }
 
@@ -49,6 +52,10 @@ public class Wall extends Entity {
      */
     public void setRepresentationType(RepresentationType type) {
         this.representationType = type;
-        setTextureRegion(textureRegionArray.get(representationType.imageIndex));
+        if (type == RepresentationType.WATER) {
+            setTextureRegion(waterTextureRegion);
+        } else {
+            setTextureRegion(textureRegionArray.get(representationType.imageIndex));
+        }
     }
 }

@@ -33,8 +33,7 @@ public class GameScreen implements Screen {
     private final MazeRunnerGame game;
     private final OrthographicCamera camera;
 
-    private BitmapFont defaultFont;
-    private BitmapFont boldFont;
+    private final BitmapFont magicalFont;
 
     private LevelMap levelMap;
 
@@ -67,10 +66,7 @@ public class GameScreen implements Screen {
         camera.zoom = 0.5f;
 
         // Get the font from the game's skin
-        defaultFont = game.getSkin().getFont("font");
-
-        boldFont = game.getSkin().getFont("bold");
-        boldFont.getData().setScale(0.5f);
+        magicalFont = game.getSkin().getFont("magical_font");
 
         initializeLevel();
     }
@@ -109,14 +105,13 @@ public class GameScreen implements Screen {
         player.setX(entryPoint != null ? entryPoint.getX() + CELL_WIDTH / 2f : mapCenterX);
         player.setY(entryPoint != null ? entryPoint.getY() + CELL_HEIGHT / 2f : mapCenterY);
 
-
-        //initialize timer
+        // Initialize timer
         timer = new Timer();
         timer.scheduleTask(new Timer.Task() {
             @Override
             public void run() {
                 if (!gameOver) {
-                    timeLeft -= 1; // Decrease time by 1 second
+//                    timeLeft -= 0.5F; // Decrease time by 1 second
                     if (timeLeft <= 0) {
                         // Time's up, end the game
                         gameOver = true;
@@ -249,33 +244,31 @@ public class GameScreen implements Screen {
 //                    CELL_WIDTH, CELL_HEIGHT);
 //        }
 
-        // Draw end game ????
-        /*
-        if (gameOver) {
-            String message = player.getHealth() > 0 ? "You win" : "You die";
-            GlyphLayout glyphLayout = new GlyphLayout();
-            glyphLayout.setText(defaultFont, message);
-
-            defaultFont.draw(game.getSpriteBatch(), message,
-                    camera.position.x - glyphLayout.width / 2,
-                    camera.position.y + glyphLayout.height * 2);
-
-            message = "Press ESC button to continue";
-            glyphLayout.setText(boldFont, message);
-            boldFont.draw(game.getSpriteBatch(), message,
-                    camera.position.x - glyphLayout.width / 2,
-                    camera.position.y + glyphLayout.height / 2);
-        }
-         */
+        // Draw end game
+//        if (gameOver) {
+//            String message = player.getHealth() > 0 ? "You win" : "You die";
+//            GlyphLayout glyphLayout = new GlyphLayout();
+//            glyphLayout.setText(magicalFont, message);
+//
+//            magicalFont.draw(game.getSpriteBatch(), message,
+//                    camera.position.x - glyphLayout.width / 2,
+//                    camera.position.y + glyphLayout.height * 2);
+//
+//            message = "Press ESC button to continue";
+//            glyphLayout.setText(magicalFont, message);
+//            magicalFont.draw(game.getSpriteBatch(), message,
+//                    camera.position.x - glyphLayout.width / 2,
+//                    camera.position.y + glyphLayout.height / 2);
+//        }
 
         // Draw timer
         drawTimer();
 
         // Draw debug
-        // defaultFont.draw(game.getSpriteBatch(), "Game over: " + gameOver, 0, 0);
+        // magicalFont.draw(game.getSpriteBatch(), "Game over: " + gameOver, 0, 0);
         game.getSpriteBatch().end();
 
-         drawDebugActionRectangles();
+//         drawDebugActionRectangles();
     }
 
     private void drawDebugActionRectangles() {
@@ -342,18 +335,15 @@ public class GameScreen implements Screen {
         String timerText = String.format("%02d:%02d", minutes, seconds);
 
         GlyphLayout glyphLayout = new GlyphLayout();
-        glyphLayout.setText(defaultFont, timerText);
+        glyphLayout.setText(magicalFont, timerText);
 
         // Draw the timer in the top right corner
-        defaultFont.draw(
-                game.getSpriteBatch(),
-                timerText,
+        magicalFont.draw(
+                game.getSpriteBatch(), timerText,
                 camera.position.x + camera.viewportWidth * camera.zoom / 2 - glyphLayout.width - 4,
                 camera.position.y + camera.viewportHeight * camera.zoom / 2 - 4
         );
     }
-
-
 
     @Override
     public void resize(int width, int height) {
@@ -389,5 +379,11 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
+        // Dispose of the timer
+        timer.clear();
+    }
+
+    public Timer getTimer() {
+        return timer;
     }
 }

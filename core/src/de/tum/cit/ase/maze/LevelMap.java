@@ -100,7 +100,7 @@ public class LevelMap {
     public void load(FileHandle fileHandle) throws IOException {
         entities = new Array<>();
 
-        //Read file content
+        // Read file content
         ObjectMap<String, String> map = new ObjectMap<>();
         PropertiesUtils.load(map, fileHandle.reader());
         map.forEach(entry -> {
@@ -117,18 +117,29 @@ public class LevelMap {
                     entity.setX(col * CELL_WIDTH);
                     entity.setY(row * CELL_HEIGHT);
 
-                    //Additional options if it's a wall
+                    // Additional options if it's a wall or inner water
                     if (entity instanceof Wall wall) {
                         boolean hasLowerWall = checkIfCellExistsAndItIsWall(map, col, row - 1);
                         boolean hasUpperWall = checkIfCellExistsAndItIsWall(map, col, row + 1);
+                        boolean hasOuterWalls = checkIfCellExistsAndItIsWall(map, col, row - 1) &&
+                                checkIfCellExistsAndItIsWall(map, col, row + 1) &&
+                                checkIfCellExistsAndItIsWall(map, col - 1, row) &&
+                                checkIfCellExistsAndItIsWall(map, col + 1, row) &&
+                                checkIfCellExistsAndItIsWall(map, col - 1, row - 1) &&
+                                checkIfCellExistsAndItIsWall(map, col + 1, row - 1) &&
+                                checkIfCellExistsAndItIsWall(map, col - 1, row + 1) &&
+                                checkIfCellExistsAndItIsWall(map, col + 1, row + 1);
 
-                        wall.setRepresentationType(Wall.RepresentationType.LOWER_WITHOUT_UPPER);
-                        if (hasLowerWall && hasUpperWall) {
+                        if (hasOuterWalls) {
+                            wall.setRepresentationType(Wall.RepresentationType.WATER);
+                        } else if (hasLowerWall && hasUpperWall) {
                             wall.setRepresentationType(Wall.RepresentationType.CENTER_WITH_UPPER_AND_LOWER);
                         } else if (hasLowerWall) {
                             wall.setRepresentationType(Wall.RepresentationType.UPPER);
                         } else if (hasUpperWall) {
                             wall.setRepresentationType(Wall.RepresentationType.LOWER_WITH_UPPER);
+                        } else {
+                            wall.setRepresentationType(Wall.RepresentationType.LOWER_WITHOUT_UPPER);
                         }
                     }
 

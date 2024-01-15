@@ -43,6 +43,7 @@ public class Player extends MovableEntity {
     private final Array<Sound> hurtSoundArray;
     private final Sound keySound;
     private final Sound healSound;
+    private final Sound spellSound;
 
     private float health;
     private float immutableTime;
@@ -65,6 +66,7 @@ public class Player extends MovableEntity {
         hurtSoundArray = game.getHurtSoundArray();
         keySound = game.getKeySound();
         healSound = game.getHealSound();
+        spellSound = game.getSpellSound();
 
         setTextureRegion(downAnimation.getKeyFrames()[0]);
         centerDrawOffset();
@@ -118,13 +120,16 @@ public class Player extends MovableEntity {
             if (attackAnimation != null) {
                 // render attack animation
                 setTextureRegion(attackAnimation.getKeyFrame(getTime(), true));
+                // Check player attack with enemy collision
+                Enemy enemy = checkEnemyCollision();
+                if (enemy != null) {
+                    getGame().getLevelMap().getEntities().removeValue(enemy, true);
+                    // Play spell sound
+                    spellSound.play();
+                }
                 return; // Skip normal movement rendering when attacking
             }
         }
-
-        else {
-
-            attackAnimation = null;
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             moveUp(delta);
@@ -136,8 +141,6 @@ public class Player extends MovableEntity {
             moveLeft(delta);
         } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             moveRight(delta);
-        }
-
         }
 
         // Check key collision
@@ -161,14 +164,6 @@ public class Player extends MovableEntity {
 
             // Play heal sound
             healSound.play();
-        }
-
-        // Check player attack with enemy collision
-        Enemy enemy = checkEnemyCollision();
-        if (enemy != null && (Gdx.input.isKeyPressed(Input.Keys.SPACE) &&
-                (Gdx.input.isKeyPressed(Input.Keys.UP) || Gdx.input.isKeyPressed(Input.Keys.DOWN) ||
-                Gdx.input.isKeyPressed(Input.Keys.LEFT) || Gdx.input.isKeyPressed(Input.Keys.RIGHT)))) {
-            getGame().getLevelMap().getEntities().removeValue(enemy, true);
         }
 
         // Check trap or enemy collision

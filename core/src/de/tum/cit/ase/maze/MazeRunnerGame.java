@@ -44,7 +44,7 @@ public class MazeRunnerGame extends Game {
     private static final int MAX_LEVEL_INDEX = 5;
     private int levelIndex = DEFAULT_LEVEL_INDEX;
 
-    //Native file chooser
+    // Native file chooser
     private final NativeFileChooser fileChooser;
 
     // Screens
@@ -60,7 +60,7 @@ public class MazeRunnerGame extends Game {
     // UI Skin
     private Skin skin;
 
-    //Textures
+    // Textures
     Texture basictilesTexture;
     Texture characterTexture;
     Texture objectsTexture;
@@ -69,9 +69,10 @@ public class MazeRunnerGame extends Game {
     Texture keyTexture;
     Texture buttons;
 
-    //TextureRegions
+    // TextureRegions
     TextureRegion floorTextureRegion;
     TextureRegion ladderTextureRegion;
+    TextureRegion waterTextureRegion;
     TextureRegion buttonUpTextureRegion;
     TextureRegion buttonOverTextureRegion;
     TextureRegion buttonDownTextureRegion;
@@ -79,7 +80,7 @@ public class MazeRunnerGame extends Game {
     Array<TextureRegion> wallTextureRegionArray;
     Array<TextureRegion> healthTextureRegionArray;
 
-    //Animations
+    // Animations
     Animation<TextureRegion> characterDownAnimation;
     Animation<TextureRegion> characterRightAnimation;
     Animation<TextureRegion> characterUpAnimation;
@@ -97,11 +98,14 @@ public class MazeRunnerGame extends Game {
     Animation<TextureRegion> doorAnimation;
     Animation<TextureRegion> heartAnimation;
 
+    Array<Animation<TextureRegion>> trapAnimations;
+
     // Sounds
     Sound keySound;
     Sound winSound;
     Sound loseSound;
     Sound healSound;
+    Sound spellSound;
     Array<Sound> hurtSoundArray;
 
     // Music
@@ -145,6 +149,7 @@ public class MazeRunnerGame extends Game {
         // Create a BitmapFont for the TextButton with the new size parameter
         parameter.size = 40; // Set the font size as needed
         BitmapFont magicalFontButton = generator.generateFont(parameter);
+        skin.add("magical_font", magicalFontButton); // Add the font to the skin
 
         generator.dispose(); // Dispose of the generator when done
 
@@ -168,8 +173,9 @@ public class MazeRunnerGame extends Game {
         buttons = new Texture(Gdx.files.internal("buttons.png"));
 
         // Load texture regions
-        floorTextureRegion = new TextureRegion(basictilesTexture, 16, 16 * 9, 16, 16);
+        floorTextureRegion = new TextureRegion(basictilesTexture, 16, 16 * 8, 16, 16);
         ladderTextureRegion = new TextureRegion(basictilesTexture, 16, 16 * 7, 16, 16);
+        waterTextureRegion = new TextureRegion(basictilesTexture, 16 * 5, 16, 16, 16);
 
         // Load the button texture regions
         buttonUpTextureRegion = new TextureRegion(buttons, 0, 0, buttons.getWidth(), buttons.getHeight()/3);
@@ -182,7 +188,6 @@ public class MazeRunnerGame extends Game {
         textButtonStyle.over = new TextureRegionDrawable(buttonOverTextureRegion);
         textButtonStyle.unpressedOffsetY = 7;
         textButtonStyle.checkedOffsetY = 7;
-
 
         skin.add("button", textButtonStyle); // Add the TextButtonStyle to the skin
         skin.add("title", labelStyle); // Add the LabelStyle to the skin
@@ -235,11 +240,24 @@ public class MazeRunnerGame extends Game {
         heartAnimation = loadAnimation(objectsTexture,
                 16, 16, 4, 0.1f, 0, 3 * CELL_HEIGHT);
 
+        // Load the trap animations
+        Animation<TextureRegion> yellowFlameAnimation = loadAnimation(thingsTexture,
+                16, 16, 3, 0.1f, 0, 4 * CELL_HEIGHT);
+        Animation<TextureRegion> blueFlameAnimation = loadAnimation(thingsTexture,
+                16, 16, 3, 0.1f, 0, 5 * CELL_HEIGHT);
+        Animation<TextureRegion> redFlameAnimation = loadAnimation(thingsTexture,
+                16, 16, 3, 0.1f, 0, 6 * CELL_HEIGHT);
+        Animation<TextureRegion> greenFlameAnimation = loadAnimation(thingsTexture,
+                16, 16, 3, 0.1f, 0, 7 * CELL_HEIGHT);
+        trapAnimations = new Array<>(Animation.class);
+        trapAnimations.add(yellowFlameAnimation, blueFlameAnimation, redFlameAnimation, greenFlameAnimation);
+
         // Sounds
         keySound = Gdx.audio.newSound(Gdx.files.internal("sound/ring_inventory.wav"));
         winSound = Gdx.audio.newSound(Gdx.files.internal("sound/crowd_cheer.mp3"));
         loseSound = Gdx.audio.newSound(Gdx.files.internal("sound/violin_lose.mp3"));
         healSound = Gdx.audio.newSound(Gdx.files.internal("sound/heal_spell.mp3"));
+        spellSound = Gdx.audio.newSound(Gdx.files.internal("sound/expecto_patronum.mp3"));
 
         // Hurt sound
         hurtSoundArray = new Array<>();
@@ -530,6 +548,14 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
+     * Get lava texture region.
+     * @return the lava texture region
+     */
+    public TextureRegion getWaterTextureRegion() {
+        return waterTextureRegion;
+    }
+
+    /**
      * Gew wall texture region array.
      * @return the array of wall texture region
      */
@@ -674,6 +700,14 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
+     * Get trap animations.
+     * @return the array of trap animations
+     */
+    public Array<Animation<TextureRegion>> getTrapAnimations() {
+        return trapAnimations;
+    }
+
+    /**
      * Get hurt sound array.
      * @return the array of hurt sounds
      */
@@ -695,6 +729,14 @@ public class MazeRunnerGame extends Game {
      */
     public Sound getHealSound() {
         return healSound;
+    }
+
+    /**
+     * Get spell sound.
+     * @return the sound of spell
+     */
+    public Sound getSpellSound() {
+        return spellSound;
     }
 
     /**
