@@ -241,13 +241,24 @@ public class GameScreen implements Screen {
         // Draw coins if player has them
         int coins = player.getCollectedCoins();
         if (coins > 0) {
+            // Save the original scale
+            float originalScaleX = magicalFont.getData().scaleX;
+            float originalScaleY = magicalFont.getData().scaleY;
+
+            // Set the desired scale (adjust these values accordingly)
+            magicalFont.getData().setScale(0.3f, 0.3f);
+
             game.getSpriteBatch().draw(game.getCoinAnimation().getKeyFrames()[0],
                     camera.position.x - camera.viewportWidth * camera.zoom / 2 + keys * CELL_WIDTH + 4,
                     camera.position.y + camera.viewportHeight * camera.zoom / 2 - CELL_WIDTH - 4,
                     CELL_WIDTH, CELL_HEIGHT);
+
             magicalFont.draw(game.getSpriteBatch(), "x" + coins,
                     camera.position.x - camera.viewportWidth * camera.zoom / 2 + keys * CELL_WIDTH + 4 + CELL_WIDTH,
                     camera.position.y + camera.viewportHeight * camera.zoom / 2 - CELL_WIDTH - 4 + CELL_HEIGHT);
+
+            // Revert to the original scale
+            magicalFont.getData().setScale(originalScaleX, originalScaleY);
         }
 
 //        if (player.isHasAllKeys()) {
