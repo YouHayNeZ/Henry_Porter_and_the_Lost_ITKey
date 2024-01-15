@@ -103,7 +103,7 @@ public class GameScreen implements Screen {
         player.setX(entryPoint != null ? entryPoint.getX() + CELL_WIDTH / 2f : mapCenterX);
         player.setY(entryPoint != null ? entryPoint.getY() + CELL_HEIGHT / 2f : mapCenterY);
 
-        timeLeft = 20;
+        timeLeft = 300;
     }
 
     // Screen interface methods with necessary functionality
