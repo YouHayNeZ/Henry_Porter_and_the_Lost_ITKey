@@ -121,24 +121,21 @@ public class LevelMap {
                     if (entity instanceof Wall wall) {
                         boolean hasLowerWall = checkIfCellExistsAndItIsWall(map, col, row - 1);
                         boolean hasUpperWall = checkIfCellExistsAndItIsWall(map, col, row + 1);
-                        boolean hasOuterWalls = checkIfCellExistsAndItIsWall(map, col, row - 1) &&
-                                checkIfCellExistsAndItIsWall(map, col, row + 1) &&
-                                checkIfCellExistsAndItIsWall(map, col - 1, row) &&
-                                checkIfCellExistsAndItIsWall(map, col + 1, row) &&
-                                checkIfCellExistsAndItIsWall(map, col - 1, row - 1) &&
-                                checkIfCellExistsAndItIsWall(map, col + 1, row - 1) &&
-                                checkIfCellExistsAndItIsWall(map, col - 1, row + 1) &&
-                                checkIfCellExistsAndItIsWall(map, col + 1, row + 1);
+                        boolean isWater = checkIfCellExistsAndItIsWater(map, col, row);
+                        boolean aboveWater = checkIfCellExistsAndItIsWater(map, col, row - 1);
 
-                        if (hasOuterWalls) {
+                        if (isWater) {
                             wall.setRepresentationType(Wall.RepresentationType.WATER);
+                        } else if (aboveWater) {
+                            wall.setRepresentationType(Wall.RepresentationType.LOWER_WITHOUT_UPPER);
                         } else if (hasLowerWall && hasUpperWall) {
                             wall.setRepresentationType(Wall.RepresentationType.CENTER_WITH_UPPER_AND_LOWER);
                         } else if (hasLowerWall) {
                             wall.setRepresentationType(Wall.RepresentationType.UPPER);
                         } else if (hasUpperWall) {
                             wall.setRepresentationType(Wall.RepresentationType.LOWER_WITH_UPPER);
-                        } else {
+                        }
+                        else {
                             wall.setRepresentationType(Wall.RepresentationType.LOWER_WITHOUT_UPPER);
                         }
                     }
@@ -219,6 +216,25 @@ public class LevelMap {
         try {
             String value = map.get(String.format("%d,%d", col, row));
             return value != null && Integer.parseInt(value) == Type.WALL.getValue();
+        }
+        catch (NumberFormatException e) {
+            // Ignore wrong file format
+        }
+        return false;
+    }
+
+    private boolean checkIfCellExistsAndItIsWater(ObjectMap<String, String> map, int col, int row) {
+        try {
+            String value = map.get(String.format("%d,%d", col, row));
+            boolean hasOuterWalls = checkIfCellExistsAndItIsWall(map, col, row - 1) &&
+                    checkIfCellExistsAndItIsWall(map, col, row + 1) &&
+                    checkIfCellExistsAndItIsWall(map, col - 1, row) &&
+                    checkIfCellExistsAndItIsWall(map, col + 1, row) &&
+                    checkIfCellExistsAndItIsWall(map, col - 1, row - 1) &&
+                    checkIfCellExistsAndItIsWall(map, col + 1, row - 1) &&
+                    checkIfCellExistsAndItIsWall(map, col - 1, row + 1) &&
+                    checkIfCellExistsAndItIsWall(map, col + 1, row + 1);
+            return value != null && Integer.parseInt(value) == Type.WALL.getValue() && hasOuterWalls;
         }
         catch (NumberFormatException e) {
             // Ignore wrong file format

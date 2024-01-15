@@ -94,11 +94,11 @@ public class MazeRunnerGame extends Game {
     Animation<TextureRegion> enemyRightAnimation;
     Animation<TextureRegion> enemyUpAnimation;
     Animation<TextureRegion> flameAnimation;
+    Animation<TextureRegion> blueFlameAnimation;
     Animation<TextureRegion> keyAnimation;
     Animation<TextureRegion> doorAnimation;
     Animation<TextureRegion> heartAnimation;
 
-    Array<Animation<TextureRegion>> trapAnimations;
 
     // Sounds
     Sound keySound;
@@ -224,9 +224,11 @@ public class MazeRunnerGame extends Game {
         enemyUpAnimation = loadAnimation(mobsTexture,
                 16, 16, 3, 0.2f, 6 * CELL_WIDTH, 7 * CELL_HEIGHT);
 
-        // Load the flame animation
+        // Load the flame animations
         flameAnimation = loadAnimation(objectsTexture,
                 16, 16, 7, 0.1f, 4 * CELL_WIDTH, 3 * CELL_HEIGHT);
+        blueFlameAnimation = loadAnimation(thingsTexture,
+                16, 16, 3, 0.1f, 0, 5 * CELL_HEIGHT);
 
         // Load the key animation
         keyAnimation = loadAnimation(keyTexture,
@@ -239,18 +241,6 @@ public class MazeRunnerGame extends Game {
         // Load the heart animation
         heartAnimation = loadAnimation(objectsTexture,
                 16, 16, 4, 0.1f, 0, 3 * CELL_HEIGHT);
-
-        // Load the trap animations
-        Animation<TextureRegion> yellowFlameAnimation = loadAnimation(thingsTexture,
-                16, 16, 3, 0.1f, 0, 4 * CELL_HEIGHT);
-        Animation<TextureRegion> blueFlameAnimation = loadAnimation(thingsTexture,
-                16, 16, 3, 0.1f, 0, 5 * CELL_HEIGHT);
-        Animation<TextureRegion> redFlameAnimation = loadAnimation(thingsTexture,
-                16, 16, 3, 0.1f, 0, 6 * CELL_HEIGHT);
-        Animation<TextureRegion> greenFlameAnimation = loadAnimation(thingsTexture,
-                16, 16, 3, 0.1f, 0, 7 * CELL_HEIGHT);
-        trapAnimations = new Array<>(Animation.class);
-        trapAnimations.add(yellowFlameAnimation, blueFlameAnimation, redFlameAnimation, greenFlameAnimation);
 
         // Sounds
         keySound = Gdx.audio.newSound(Gdx.files.internal("sound/ring_inventory.wav"));
@@ -366,7 +356,7 @@ public class MazeRunnerGame extends Game {
      */
     public void incrementLevel() {
         if (++levelIndex > MAX_LEVEL_INDEX) {
-            levelIndex = DEFAULT_LEVEL_INDEX;
+            levelIndex = MAX_LEVEL_INDEX;
         }
     }
 
@@ -644,6 +634,14 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
+     * Get blue flame animation.
+     * @return the animation of blue flame
+     */
+    public Animation<TextureRegion> getBlueFlameAnimation() {
+        return blueFlameAnimation;
+    }
+
+    /**
      * Get enemy down animation.
      * @return the animation of enemy down movement
      */
@@ -697,14 +695,6 @@ public class MazeRunnerGame extends Game {
      */
     public Animation<TextureRegion> getHeartAnimation() {
         return heartAnimation;
-    }
-
-    /**
-     * Get trap animations.
-     * @return the array of trap animations
-     */
-    public Array<Animation<TextureRegion>> getTrapAnimations() {
-        return trapAnimations;
     }
 
     /**
