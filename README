@@ -1,0 +1,145 @@
+####### Description of the Game "Henry Porter and the Lost ITKey" by V&P Designers #######
+
+
+
+
+
+###### STRUCTURE ######
+
+
+##### Assets #####
+- background: contains background images for the different screens if needed (all created
+  by Canva AI, no copyright issues)
+
+- craft: contains the new magical font that was used throughout the game
+
+- music: we have two tracks that match the vibe (slow menu music, secretive game music)
+
+- sound: we have sounds for each action that can occur during the game
+
+- .png files: contain animations and images for in game objects
+
+- License.txt: contains our citations for the assets we used
+
+
+##### Core #####
+- entity: contains the classes for the different entities in the game
+-> Entity: our main class that all entities (game objects) inherit from
+    - UpdatableEntity: class that all entities that need to be updated inherit from (Heart,
+    Key, Coin, Potion, Trap, Exit, Clock, Exit)
+    - MovableEntity: abstract class that all entities that need to be moved inherit from (Player,
+    Enemy)
+            -> only Wall and EntryPoint are regular Entities
+
+- screen: contains all the screens that are used in the game
+    - MenuScreen: the main menu screen
+    - ChooseLevelScreen: the screen where the player can choose the level map file
+    - GameScreen: the screen where the game is played
+    - EndGameScreen: the screen where the player can choose to play again or go back to menu
+    when game ends
+
+ - LevelMap: contains all methods used to load a map file
+
+ - MazeRunnerGame: core of the game containing all the animations etc.
+
+
+##### Desktop #####
+- DesktopLauncher: configures the window and launches the game
+
+
+
+
+
+###### HOW TO USE THE GAME/HOW THE GAME WORKS ######
+
+- In the main menu, the user can click on the start game button to start the game at level
+one automatically
+- The user can also click on the choose level button to choose a level map file (either with
+the buttons for levels 1- 5 or with the choose file button to choose another map, e.g. map 6)
+
+- Once the game started, the user can move the player in all directions with the arrow keys
+- The user can collect entities by colliding with them:
+    - keys: the player can open doors if he possesses at least one key
+    - coins: the player can collect coins to increase his speed by 20% each
+    - potions: the player can collect potions to be invincible for a short period of time
+    - hearts: the player can collect hearts to increase his life by 1 (if he is not at max health)
+- Two types of dangerous obstacles exit:
+    - enemies: roam the map without a particular pattern
+    - traps: static objects (randomly blue or red flames)
+
+- Traps and enemies can kill the player if he collides with them
+    - The player can kill enemies by colliding with them while pressing any key and the space bar
+    - If the player collides with a trap or enemy, he loses one life, all his coins and is
+    shortly invincible
+- If the player loses all lives or the timer reaches 0, he loses the level and can restart it if
+he wants to
+- If the user wants to pause the game, he can press ESC, to continue he can press the continue
+ button or ENTER
+- The player can win the level by colliding with the exit while having at least one key
+
+- When the user wins or loses, the endgame screen with the approriate buttons appears (menu button,
+next level OR restart level button depending on whether user won or lost)
+    - if the next level button is pressed, the next level map is automatically loaded
+    - alternatively, the user can go to the menu, hit the choose level button and choose a different
+    level map file
+
+- If the user wants to exit the game, he can press the exit button in the main menu
+
+
+
+
+
+###### BONUS FEATURES ######
+IN A NUTSHELL: A LOT more UI elements than asked for and they all match the Henry Porter theme, new items
+that are collectible and affect the  status of the player, additional game logic features (countdown
+timer, playthrough levels 1-5 automatically using the continue button), smart screens
+
+1. Menu Screen
+    - The menu screen has a nice background image and a slow music that matches the vibe
+    - The buttons are animated and change color when hovered over
+    - The buttons have a nice font and are centered
+    - The menu screen has a nice title with a new font
+    - The menu screen has an extra button to choose a level map file
+    - The player can continue the game by pressing ENTER (once the game started)
+
+2. Choose Level Screen
+    - The choose level screen has a nice background image and a slow music that matches the vibe
+    - The buttons are animated and change color when hovered over
+    - The buttons have a nice font and are centered
+    - The five given map files can be loaded via buttons
+
+3. Game Screen:
+    - Collectibles:
+        - The player can collect hearts: refill his life by 1 (if he is not at max health)
+        - The player can collect coins: increase his speed by 20% each time (he loses all coins after
+        colliding with an enemy or trap)
+        - The player can collect potions: be invincible for a short period of time
+        - The player can collect clocks: increase the timer by 30 seconds
+    - Enemies and Traps:
+        - The player can kill enemies by colliding with them while pressing any key and the space bar
+        - The enemy animation is hand-drawn and matches the Henry Porter theme (dementors)
+        - Traps have different colors (blue and red) -> texture differs randomly
+    - The player animation is hand-drawn and matches the Henry Porter theme
+    - Walls:
+        - The walls have different textures depending on their position (lower, upper, left, right wall)
+        - Inner walls (walls with walls all around) are converted to water texture to make them stand out
+    - Timer:
+        - The timer starts at 3 minutes and decreases by 1 second every second
+        - The timer is displayed in the top right corner with an icon
+        - When the timer reaches 0, the player loses the level
+        - The timer pauses, if the game is paused when pressed ESC
+    - Sounds:
+        - ALL actions have sounds
+        - The hurt sound is different each time (chosen randomly from set of hurt sounds)
+
+4. End Game Screen:
+    - The end game screen has a nice background image and a slow music that matches the vibe
+    - The buttons are animated and change color when hovered over
+    - The buttons have a nice font and are centered
+    - The screen is smart: it changes background and buttons depending on whether the user won or lost
+    - The user can play through levels 1-5 automatically if he wins by just clicking continue
+        -> extends the game logic and improves the gaming experience
+
+
+
+
