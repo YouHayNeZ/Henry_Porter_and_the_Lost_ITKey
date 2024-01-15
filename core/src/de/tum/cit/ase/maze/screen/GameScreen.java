@@ -48,8 +48,7 @@ public class GameScreen implements Screen {
 
     private boolean gameOver = false;
 
-    private float timeLeft = 20;
-    private Timer timer;
+    private float timeLeft;
 
 
     /**
@@ -104,8 +103,7 @@ public class GameScreen implements Screen {
         player.setX(entryPoint != null ? entryPoint.getX() + CELL_WIDTH / 2f : mapCenterX);
         player.setY(entryPoint != null ? entryPoint.getY() + CELL_HEIGHT / 2f : mapCenterY);
 
-        // Initialize timer
-        timer = new Timer();
+        timeLeft = 20;
     }
 
     // Screen interface methods with necessary functionality
@@ -119,18 +117,13 @@ public class GameScreen implements Screen {
         }
 
         if (game.isPlaying() && !game.isPaused()) {
-            // timeLeft calculation
-            timeLeft -= delta;
-            timer.scheduleTask(new Timer.Task() {
-                @Override
-                public void run() {
-                    // Time's up, end the game
-                    game.goToEndGame(false);
-                    timer.stop();  // Stop the timer to prevent further decrements
-                }
-            }, 20, 1); // Schedule the task to run every 1 second
-
             // Update camera destination position (only map bigger than viewport)
+            if (timeLeft > 0) {
+                timeLeft -= delta;
+            } else {
+                game.goToEndGame(false);
+            }
+
             if ((mapWidth > camera.viewportWidth * camera.zoom || mapHeight > camera.viewportHeight * camera.zoom) &&
                     (player.getX() + PLAYER_AND_CAMERA_MAX_DIFF_X_PERCENT * camera.viewportWidth * camera.zoom / 2 < cameraDestX ||
                             player.getX() - PLAYER_AND_CAMERA_MAX_DIFF_X_PERCENT * camera.viewportWidth * camera.zoom / 2 > cameraDestX ||
@@ -175,14 +168,6 @@ public class GameScreen implements Screen {
                     }
                 }
             }
-        }
-
-        // Pause the timer when the game is paused
-        if (game.isPaused()) {
-            timer.stop();
-        } else {
-            // Resume the timer when the game is not paused
-            timer.start();
         }
 
         // Check player health
@@ -407,7 +392,5 @@ public class GameScreen implements Screen {
 
     @Override
     public void dispose() {
-        // Dispose of the timer
-        timer.clear();
     }
 }
