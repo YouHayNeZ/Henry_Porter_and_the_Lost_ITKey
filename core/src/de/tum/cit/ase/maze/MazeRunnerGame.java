@@ -263,10 +263,10 @@ public class MazeRunnerGame extends Game {
         }
 
         // Music
-        menuMusic = Gdx.audio.newMusic(Gdx.files.internal("music/Harry Potter - Main Theme.mp3"));
+        menuMusic = Gdx.audio.newMusic(Gdx.files.internal("music/Menu Music.mp3"));
         menuMusic.setLooping(true);
 
-        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("music/farewell.mp3"));
+        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("music/Game Music.mp3"));
         gameMusic.setLooping(true);
 
         // Level map
