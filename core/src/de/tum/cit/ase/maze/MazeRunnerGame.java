@@ -68,6 +68,8 @@ public class MazeRunnerGame extends Game {
     Texture thingsTexture;
     Texture keyTexture;
     Texture buttons;
+    Texture clockTexture;
+    Texture potionTexture;
 
     // TextureRegions
     TextureRegion floorTextureRegion;
@@ -99,6 +101,8 @@ public class MazeRunnerGame extends Game {
     Animation<TextureRegion> doorAnimation;
     Animation<TextureRegion> heartAnimation;
     Animation<TextureRegion> coinAnimation;
+    Animation<TextureRegion> clockAnimation;
+    Animation<TextureRegion> potionAnimation;
 
 
     // Sounds
@@ -108,6 +112,8 @@ public class MazeRunnerGame extends Game {
     Sound healSound;
     Sound spellSound;
     Sound coinSound;
+    Sound clockSound;
+    Sound potionSound;
     Array<Sound> hurtSoundArray;
 
     // Music
@@ -173,6 +179,8 @@ public class MazeRunnerGame extends Game {
         thingsTexture = new Texture(Gdx.files.internal("things.png"));
         keyTexture = new Texture(Gdx.files.internal("key.png"));
         buttons = new Texture(Gdx.files.internal("buttons.png"));
+        clockTexture = new Texture(Gdx.files.internal("clock.png"));
+        potionTexture = new Texture(Gdx.files.internal("potion.png"));
 
         // Load texture regions
         floorTextureRegion = new TextureRegion(basictilesTexture, 16, 16 * 8, 16, 16);
@@ -248,6 +256,14 @@ public class MazeRunnerGame extends Game {
         coinAnimation = loadAnimation(objectsTexture,
                 16, 16, 4, 0.1f, 0, 4 * CELL_HEIGHT);
 
+        // Load the clock animation
+        clockAnimation = loadAnimation(clockTexture,
+                16, 16, 4, 0.1f, 0, 0);
+
+        // Load the potion animation
+        potionAnimation = loadAnimation(potionTexture,
+                16, 16, 4, 0.1f, 0, 0);
+
         // Sounds
         keySound = Gdx.audio.newSound(Gdx.files.internal("sound/ring_inventory.wav"));
         winSound = Gdx.audio.newSound(Gdx.files.internal("sound/crowd_cheer.mp3"));
@@ -255,6 +271,8 @@ public class MazeRunnerGame extends Game {
         healSound = Gdx.audio.newSound(Gdx.files.internal("sound/heal_spell.mp3"));
         spellSound = Gdx.audio.newSound(Gdx.files.internal("sound/expecto_patronum.mp3"));
         coinSound = Gdx.audio.newSound(Gdx.files.internal("sound/completetask_0.mp3"));
+        clockSound = Gdx.audio.newSound(Gdx.files.internal("sound/ticking.mp3"));
+        potionSound = Gdx.audio.newSound(Gdx.files.internal("sound/bubbling.mp3"));
 
         // Hurt sound
         hurtSoundArray = new Array<>();
@@ -714,6 +732,22 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
+     * Get clock animation.
+     * @return the animation of clock
+     */
+    public Animation<TextureRegion> getClockAnimation() {
+        return clockAnimation;
+    }
+
+    /**
+     * Get potion animation.
+     * @return the animation of potion
+     */
+    public Animation<TextureRegion> getPotionAnimation() {
+        return potionAnimation;
+    }
+
+    /**
      * Get hurt sound array.
      * @return the array of hurt sounds
      */
@@ -751,6 +785,22 @@ public class MazeRunnerGame extends Game {
      */
     public Sound getSpellSound() {
         return spellSound;
+    }
+
+    /**
+     * Get clock sound.
+     * @return the sound of clock
+     */
+    public Sound getClockSound() {
+        return clockSound;
+    }
+
+    /**
+     * Get potion sound.
+     * @return the sound of potion
+     */
+    public Sound getPotionSound() {
+        return potionSound;
     }
 
     /**

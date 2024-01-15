@@ -358,6 +358,14 @@ public class GameScreen implements Screen {
         );
     }
 
+    public float getTimeLeft() {
+        return timeLeft;
+    }
+
+    public void setTimeLeft(float timeLeft) {
+        this.timeLeft = timeLeft;
+    }
+
     @Override
     public void resize(int width, int height) {
         camera.setToOrtho(false);

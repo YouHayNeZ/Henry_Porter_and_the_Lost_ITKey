@@ -11,6 +11,7 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import de.tum.cit.ase.maze.MazeRunnerGame;
+import de.tum.cit.ase.maze.screen.GameScreen;
 
 /**
  * Player class represents player entity, which is movable and updatable.
@@ -45,6 +46,8 @@ public class Player extends MovableEntity {
     private final Sound healSound;
     private final Sound coinSound;
     private final Sound spellSound;
+    private final Sound clockSound;
+    private final Sound potionSound;
 
     private float health;
     private float immutableTime;
@@ -53,6 +56,7 @@ public class Player extends MovableEntity {
     private int collectedKeys;
     private final int totalKeys;
     private boolean hasAtLeastOneKey;
+    private GameScreen screen;
 
     public Player(MazeRunnerGame game) {
         super(game);
@@ -70,6 +74,8 @@ public class Player extends MovableEntity {
         healSound = game.getHealSound();
         spellSound = game.getSpellSound();
         coinSound = game.getCoinSound();
+        clockSound = game.getClockSound();
+        potionSound = game.getPotionSound();
 
         setTextureRegion(downAnimation.getKeyFrames()[0]);
         centerDrawOffset();
@@ -180,6 +186,26 @@ public class Player extends MovableEntity {
             coinSound.play();
         }
 
+        // Check clock collision
+        Clock clock = checkClockCollision();
+        if (clock != null) {
+            screen.setTimeLeft(screen.getTimeLeft() + 30);
+            getGame().getLevelMap().getEntities().removeValue(clock, true);
+
+            // Play clock sound
+            clockSound.play();
+        }
+
+        // Check potion collision
+        Potion potion = checkPotionCollision();
+        if (potion != null) {
+            immutableTime = DEFAULT_IMMUTABLE_TIME;
+            getGame().getLevelMap().getEntities().removeValue(potion, true);
+
+            // Play potion sound
+            potionSound.play();
+        }
+
         // Check trap or enemy collision
         if (checkTrapOrEnemyCollision() && immutableTime <= 0) {
             collectedCoins = 0;
@@ -219,6 +245,14 @@ public class Player extends MovableEntity {
 
     private Coin checkCoinCollision() {
         return (Coin) checkCollision(Coin.class);
+    }
+
+    private Clock checkClockCollision() {
+        return (Clock) checkCollision(Clock.class);
+    }
+
+    private Potion checkPotionCollision() {
+        return (Potion) checkCollision(Potion.class);
     }
 
     private Key checkKeyCollision() {

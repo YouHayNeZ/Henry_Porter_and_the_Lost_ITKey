@@ -31,7 +31,9 @@ public class LevelMap {
         ENEMY(4, Enemy.class),
         KEY(5, Key.class),
         HEART(6, Heart.class),
-        COIN(7, Coin.class);
+        COIN(7, Coin.class),
+        CLOCK(8, Clock.class),
+        POTION(9, Potion.class);
 
         final int value;
         final Class aClass;
