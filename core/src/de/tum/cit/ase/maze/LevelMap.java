@@ -8,14 +8,7 @@ import com.badlogic.gdx.utils.PropertiesUtils;
 
 import java.io.IOException;
 
-import de.tum.cit.ase.maze.entity.Enemy;
-import de.tum.cit.ase.maze.entity.Entity;
-import de.tum.cit.ase.maze.entity.EntryPoint;
-import de.tum.cit.ase.maze.entity.Exit;
-import de.tum.cit.ase.maze.entity.Key;
-import de.tum.cit.ase.maze.entity.Trap;
-import de.tum.cit.ase.maze.entity.Wall;
-import de.tum.cit.ase.maze.entity.Heart;
+import de.tum.cit.ase.maze.entity.*;
 
 /**
  * LevelMap class provides the ability to work with maps, namely:
@@ -37,7 +30,8 @@ public class LevelMap {
         TRAP(3, Trap.class),
         ENEMY(4, Enemy.class),
         KEY(5, Key.class),
-        HEART(6, Heart.class);
+        HEART(6, Heart.class),
+        COIN(7, Coin.class);
 
         final int value;
         final Class aClass;
