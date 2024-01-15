@@ -341,7 +341,7 @@ public class GameScreen implements Screen {
         magicalFont.draw(
                 game.getSpriteBatch(), timerText,
                 camera.position.x + camera.viewportWidth * camera.zoom / 2 - glyphLayout.width - 4,
-                camera.position.y + camera.viewportHeight * camera.zoom / 2 - 4
+                camera.position.y + camera.viewportHeight * camera.zoom / 2 + CELL_HEIGHT - 8
         );
     }
 
