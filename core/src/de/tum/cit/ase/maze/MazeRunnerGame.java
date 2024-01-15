@@ -270,8 +270,8 @@ public class MazeRunnerGame extends Game {
         loseSound = Gdx.audio.newSound(Gdx.files.internal("sound/violin_lose.mp3"));
         healSound = Gdx.audio.newSound(Gdx.files.internal("sound/heal_spell.mp3"));
         spellSound = Gdx.audio.newSound(Gdx.files.internal("sound/expecto_patronum.mp3"));
-        coinSound = Gdx.audio.newSound(Gdx.files.internal("sound/completetask_0.mp3"));
-        clockSound = Gdx.audio.newSound(Gdx.files.internal("sound/ticking.mp3"));
+        coinSound = Gdx.audio.newSound(Gdx.files.internal("sound/complete_task.mp3"));
+        clockSound = Gdx.audio.newSound(Gdx.files.internal("sound/time.mp3"));
         potionSound = Gdx.audio.newSound(Gdx.files.internal("sound/bubbling.mp3"));
 
         // Hurt sound
