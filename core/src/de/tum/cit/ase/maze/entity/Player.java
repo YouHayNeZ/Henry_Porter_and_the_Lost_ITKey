@@ -189,7 +189,10 @@ public class Player extends MovableEntity {
         // Check clock collision
         Clock clock = checkClockCollision();
         if (clock != null) {
+            //add 30 seconds to the timer
+            screen = (GameScreen) getGame().getScreen();
             screen.setTimeLeft(screen.getTimeLeft() + 30);
+
             getGame().getLevelMap().getEntities().removeValue(clock, true);
 
             // Play clock sound
