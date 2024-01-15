@@ -1,23 +1,22 @@
 License
 
-Female Hurt Voice - pack licensed under (CC BY 4.0) - by author PlumpDev from https://opengameart.org/content/female-gruntwork-1
-Animation Key - Animated Pixel Art - by author Frakassets from https://frakassets.itch.io/free-rotating-key
-Pickup Key Sound - Inventory Sound Effects - by author artisticdude from https://opengameart.org/content/inventory-sound-effects
-Pickup Heart Sound - 3 heal spells (healspell1) - by author DoKashiteru from https://opengameart.org/content/3-heal-spells
-Pickup Coin Sound - Completion Sound - by author Brandon Morris from https://opengameart.org/content/completion-sound
+Hurt Sounds - Female Gruntwork - 1 - by author PlumpDev from https://opengameart.org/content/female-gruntwork-1
+Key Sound - Inventory Sound Effects - by author artisticdude from https://opengameart.org/content/inventory-sound-effects
+Heal Sound - 3 heal spells (healspell1) - by author DoKashiteru from https://opengameart.org/content/3-heal-spells
+Coin Sound - Completion Sound - by author Brandon Morris from https://opengameart.org/content/completion-sound
 Win Sound - Sound Effect from <a href="https://pixabay.com/sound-effects/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=6185">Pixabay</a>Sound Effect from <a href="https://pixabay.com/sound-effects/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=6185">Pixabay</a>
-Lose Sound - Sound Effect by <a href="https://pixabay.com/users/floraphonic-38928062/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=175615">floraphonic</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=175615">Pixabay</a>
-Avada Kedavra Spell Sound - Sound Effect by The Audio Horizon SFX - from  ⚡10 Harry Potter Spells (Sound Effects) - https://www.youtube.com/watch?v=bqixAkezavI
-Expecto Patronum Spell Sound - Sound Effect by The Audio Horizon SFX - from  ⚡10 Harry Potter Spells (Sound Effects) - https://www.youtube.com/watch?v=bqixAkezavI
-Ticking Sound - Tick and Tock - by author cemkalyoncu from https://opengameart.org/content/tick-and-tock
-Bubbling Sound - Bubbling Acid - by author spookymodem from https://opengameart.org/content/bubbling-acid
+Lose Sound - Sound Effect from <a href="https://pixabay.com/users/floraphonic-38928062/?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=175615">floraphonic</a> from <a href="https://pixabay.com/sound-effects//?utm_source=link-attribution&utm_medium=referral&utm_campaign=music&utm_content=175615">Pixabay</a>
+Expecto Patronum Spell Sound - Sound Effect by The Audio Horizon SFX - by The Audio Horizon SFX from https://www.youtube.com/watch?v=bqixAkezavI
+Clock Sound - Tick and Tock - by author cemkalyoncu from https://opengameart.org/content/tick-and-tock
+Potion Sound - Bubbling Acid - by author spookymodem from https://opengameart.org/content/bubbling-acid
 
 Menu music - The Magical Tree - by author Geoff Harvey from https://pixabay.com/de/music/fantasie-vertraumte-kinder-the-magic-tree-150606/
 Game music - Music by Dmitry Taras - https://pixabay.com/de/music/gruselige-kinderlieder-slow-calm-dark-dark-ambient-halloween-walth-horror-and-creepy-116010/
 
-Buttons - Buttons and Frame GUI by https://opengameart.org/content/buttons-and-frame
-Clock - Simple Clock 16x16 - by author MSavioti from https://opengameart.org/content/simple-clock-16x16
+Buttons - Buttons and Frame - by author buttons from https://opengameart.org/content/buttons-and-frame
+Clock - Animated Hourglass - by author Zoedoz from https://opengameart.org/content/animated-hourglass
 Potion - Potion (animation and pyxeledit document) - by author Lovecraft from https://opengameart.org/content/potion-animation-and-pyxeledit-document
+Key - Animated Pixel Art - by author Frakassets from https://frakassets.itch.io/free-rotating-key
 
 Backgrounds - all backgrounds were created using Canva's built-in AI tool and therefore do not underlie any copyright restrictions.
 Player - all player frames were hand drawn and therefore do not underlie any copyright restrictions.

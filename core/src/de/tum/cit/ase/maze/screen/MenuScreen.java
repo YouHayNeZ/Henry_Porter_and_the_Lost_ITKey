@@ -45,8 +45,8 @@ public class MenuScreen implements Screen {
 
         // Create and add a label as a title with the title font
         Label titleLabel = new Label("Henry Porter and the\n Lost ITKey", game.getSkin(), "title");
-        titleLabel.setAlignment(Align.center);
-        table.add(titleLabel).padBottom(80).row();
+        titleLabel.setAlignment(Align.center); // Align the label to the center
+        table.add(titleLabel).padBottom(80).row(); // Add the label to the table
 
         // Create and add a button to go to the game screen
         TextButton goToGameButton = new TextButton("Start Game", game.getSkin(), "button");
@@ -56,7 +56,7 @@ public class MenuScreen implements Screen {
                 game.goToCurrentLevelIndexGame(); // Change to the game screen when button is pressed
             }
         });
-        table.add(goToGameButton).width(400).height(80).row();
+        table.add(goToGameButton).width(400).height(80).row(); // Add the button to the table
 
         // Create and add a button to continue the game
         TextButton Continue = new TextButton("Continue", game.getSkin(), "button");
@@ -68,7 +68,7 @@ public class MenuScreen implements Screen {
                 }
             }
         });
-        table.add(Continue).width(400).height(80).row();
+        table.add(Continue).width(400).height(80).row(); // Add the button to the table
 
         // Create and add a button to choose a maze file
         TextButton goToChooseLevelButton = new TextButton("Choose Level", game.getSkin(), "button");
@@ -78,9 +78,23 @@ public class MenuScreen implements Screen {
                 game.goToChooseLevel(); // Change to choose level screen when button is pressed
             }
         });
-        table.add(goToChooseLevelButton).width(400).height(80).row();
+        table.add(goToChooseLevelButton).width(400).height(80).row(); // Add the button to the table
+
+        // Create and add a button to exit the game
+        TextButton exitButton = new TextButton("Exit Game", game.getSkin(), "button");
+        exitButton.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                Gdx.app.exit(); // Close the application when the button is pressed
+            }
+        });
+        table.add(exitButton).width(400).height(80).row(); // Add the button to the table
     }
 
+    /**
+     * Creates a table with a background image.
+     * @return The table with the background image.
+     */
     private Table getTable() {
         // Create a drawable from the texture
         TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(new TextureRegion(new Texture("backgrounds/menu background.png")));
@@ -93,13 +107,18 @@ public class MenuScreen implements Screen {
         table.setBackground(backgroundDrawable);
 
         table.setFillParent(true); // Make the table fill the stage
+        table.padBottom(100); // Add padding to the bottom of the table
         return table;
     }
 
+    /**
+     * Renders the stage and clears the screen.
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
-        if (game.isPlaying() && Gdx.input.isKeyJustPressed(Input.Keys.ESCAPE)) {
-            game.goToGame();
+        if (game.isPlaying() && Gdx.input.isKeyJustPressed(Input.Keys.ENTER)) {
+            game.goToGame(); // Continue to the game screen when enter is pressed
         }
 
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // Clear the screen
@@ -107,17 +126,28 @@ public class MenuScreen implements Screen {
         stage.draw(); // Draw the stage
     }
 
+    /**
+     * Updates the stage viewport on resize.
+     * @param width The new width of the screen.
+     * @param height The new height of the screen.
+     */
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true); // Update the stage viewport on resize
     }
 
+    /**
+     * Disposes of the stage when the screen is disposed.
+     */
     @Override
     public void dispose() {
         // Dispose of the stage when screen is disposed
         stage.dispose();
     }
 
+    /**
+     * Sets the input processor to the stage when the screen is shown.
+     */
     @Override
     public void show() {
         // Set the input processor so the stage can receive input events
@@ -133,6 +163,9 @@ public class MenuScreen implements Screen {
     public void resume() {
     }
 
+    /**
+     * Sets the input processor to null when the screen is hidden.
+     */
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);

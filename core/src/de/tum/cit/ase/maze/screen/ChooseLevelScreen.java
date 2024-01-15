@@ -40,7 +40,7 @@ public class ChooseLevelScreen implements Screen {
      * @param game The main game class, used to access global resources and methods.
      */
     public ChooseLevelScreen(MazeRunnerGame game) {
-        var camera = new OrthographicCamera();
+        var camera = new OrthographicCamera(); // Create a camera
         camera.zoom = 1f; // Set camera zoom for a closer view
 
         Viewport viewport = new ScreenViewport(camera); // Create a viewport with the camera
@@ -49,16 +49,16 @@ public class ChooseLevelScreen implements Screen {
         Table table = getTable();
         stage.addActor(table); // Add the table to the stage
 
-        table.add(new Label("Choose Level", game.getSkin(), "title")).padBottom(40).row();
+        table.add(new Label("Choose Level", game.getSkin(), "title")).padBottom(40).row(); // Add a title label
 
-        FileHandle[] propertiesHandles = Gdx.files.local("maps").list(".properties");
+        FileHandle[] propertiesHandles = Gdx.files.local("maps").list(".properties"); // Get all files in LOCAL_DIRECTORY/maps that end with .properties
 
         // Filter out files that are not level maps
         List<FileHandle> levelMaps = Arrays.stream(propertiesHandles)
                 .filter(file -> file.name().startsWith("level-") && file.name().endsWith(".properties"))
                 .collect(Collectors.toList());
 
-        // Ensure that only the first 5 level maps are considered
+        // Ensure that only the first 5 level maps are considered (other maps can be loaded via button, but are not displayed as buttons)
         int size = Math.min(levelMaps.size(), 5);
 
         // Sort the level maps based on their names
@@ -66,21 +66,25 @@ public class ChooseLevelScreen implements Screen {
 
         for (int i = 0; i < size; i++) {
             final int index = i + 1;
-            TextButton levelButton = new TextButton(levelMaps.get(i).nameWithoutExtension(), game.getSkin(), "button");
+            TextButton levelButton = new TextButton(levelMaps.get(i).nameWithoutExtension(), game.getSkin(), "button"); // Create a button for each level map
             levelButton.addListener(new ChangeListener() {
                 @Override
                 public void changed(ChangeEvent event, Actor actor) {
-                    game.setLevelIndex(index);
-                    game.goToCurrentLevelIndexGame();
+                    game.setLevelIndex(index); // Set the level index in the game class
+                    game.goToCurrentLevelIndexGame(); // Go to the game screen
                 }
             });
-            table.add(levelButton).width(400).height(80).row();
+            table.add(levelButton).width(400).height(80).row(); // Add the button to the table
         }
 
-        TextButton selectFileButton = getTextButton(game);
-        table.add(selectFileButton).width(400).height(80).row();
+        TextButton selectFileButton = getTextButton(game); // Create a button to select a file
+        table.add(selectFileButton).width(400).height(80).row(); // Add the button to the table
     }
 
+    /**
+     * Creates a table with a background image.
+     * @return The table with the background image.
+     */
     private Table getTable() {
         // Create a drawable from the texture
         TextureRegionDrawable backgroundDrawable = new TextureRegionDrawable(new TextureRegion(new Texture("backgrounds/choose level background.png")));
@@ -96,36 +100,59 @@ public class ChooseLevelScreen implements Screen {
         return table;
     }
 
+    /**
+     * Creates a button that allows the user to select a file.
+     * @param game The main game class, used to access global resources and methods.
+     * @return The button that allows the user to select a file.
+     */
     private static TextButton getTextButton(MazeRunnerGame game) {
-        TextButton selectFileButton = new TextButton("Select file", game.getSkin(), "button");
+        TextButton selectFileButton = new TextButton("Select file", game.getSkin(), "button"); // Create a button to select a map file
         selectFileButton.addListener(new ChangeListener() {
+
+            /**
+             * Called when the button is clicked.
+             * @param event The change event.
+             * @param actor The actor that was clicked.
+             */
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                var fileChooserConfig = new NativeFileChooserConfiguration();
-                fileChooserConfig.title = "Pick a maze file"; // Title of the window that will be opened
+                var fileChooserConfig = new NativeFileChooserConfiguration(); // Create a file chooser configuration
+                fileChooserConfig.title = "Pick a map file"; // Title of the window that will be opened
                 fileChooserConfig.intent = NativeFileChooserIntent.OPEN; // We want to open a file
                 fileChooserConfig.nameFilter = (file, name) -> name.endsWith("properties"); // Only accept .properties files
-                fileChooserConfig.directory = Gdx.files.local("maps");
-                // Open at the user's home directory
+                fileChooserConfig.directory = Gdx.files.local("maps"); // Set the directory to LOCAL_DIRECTORY/maps
+
                 game.getFileChooser().chooseFile(fileChooserConfig, new NativeFileChooserCallback() {
+
+                    /**
+                     * Called when the user has selected a file.
+                     * @param fileHandle The file that was selected.
+                     */
                     @Override
                     public void onFileChosen(FileHandle fileHandle) {
                         // Do something with fileHandle
                         try {
-                            game.getLevelMap().load(fileHandle);
-                            game.getGameScreen().initializeLevel();
-                            game.goToGame();
+                            game.getLevelMap().load(fileHandle); // Load the level map
+                            game.getGameScreen().initializeLevel(); // Initialize the level
+                            game.goToGame(); // Go to the game screen
                         }
                         catch (IOException e) {
                             Gdx.app.log("ERROR", "Failed to load level map at: " + fileHandle.path());
                         }
                     }
 
+                    /**
+                     * Called when the user has cancelled the file selection.
+                     */
                     @Override
                     public void onCancellation() {
                         // User closed the window, don't need to do anything
                     }
 
+                    /**
+                     * Called when an error occurred while selecting a file.
+                     * @param exception The exception that occurred.
+                     */
                     @Override
                     public void onError(Exception exception) {
                         System.err.println("Error picking maze file: " + exception.getMessage());
@@ -136,6 +163,10 @@ public class ChooseLevelScreen implements Screen {
         return selectFileButton;
     }
 
+    /**
+     * Called when the screen should render itself.
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // Clear the screen
@@ -143,17 +174,28 @@ public class ChooseLevelScreen implements Screen {
         stage.draw(); // Draw the stage
     }
 
+    /**
+     * Called when the screen size was changed.
+     * @param width The new width in pixels.
+     * @param height The new height in pixels.
+     */
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true); // Update the stage viewport on resize
     }
 
+    /**
+     * Dispose of the stage when the screen is disposed.
+     */
     @Override
     public void dispose() {
         // Dispose of the stage when screen is disposed
         stage.dispose();
     }
 
+    /**
+     * Sets the input processor to the stage when the screen is shown.
+     */
     @Override
     public void show() {
         // Set the input processor so the stage can receive input events
@@ -169,6 +211,9 @@ public class ChooseLevelScreen implements Screen {
     public void resume() {
     }
 
+    /**
+     * Sets the input processor to null when the screen is hidden.
+     */
     @Override
     public void hide() {
         Gdx.input.setInputProcessor(null);

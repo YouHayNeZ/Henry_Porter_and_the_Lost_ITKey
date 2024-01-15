@@ -12,12 +12,11 @@ import games.spooky.gdx.nativefilechooser.desktop.DesktopFileChooser;
 public class DesktopLauncher {
 	/**
 	 * The main method sets up the configuration for the game window and starts the application.
-	 *
-	 * @param arg Command line arguments (not used in this application)
+	 * @param arg Command line arguments (not used in this application).
 	 */
 	public static void main(String[] arg) {
 		// Configuration for the game window
-		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration();
+		Lwjgl3ApplicationConfiguration config = new Lwjgl3ApplicationConfiguration(); // Create a new configuration
 		config.setTitle("Henry Porter and the Lost ITKey"); // Set the window title
 
 		// Get the display mode of the current monitor

@@ -11,7 +11,6 @@ import com.badlogic.gdx.math.Intersector;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Array;
 import com.badlogic.gdx.utils.ScreenUtils;
-import com.badlogic.gdx.utils.Timer;
 import de.tum.cit.ase.maze.LevelMap;
 import de.tum.cit.ase.maze.MazeRunnerGame;
 import de.tum.cit.ase.maze.entity.*;
@@ -21,17 +20,23 @@ import de.tum.cit.ase.maze.entity.*;
  * It handles the game logic and rendering of the game elements.
  */
 public class GameScreen implements Screen {
+    // World set up
     private static final float WIDTH = 1100f;
     private static final float HEIGHT = 600f;
     private static final int CELL_WIDTH = 16;
     private static final int CELL_HEIGHT = 16;
+    private float mapWidth;
+    private float mapHeight;
 
+    // Camera set up
     private static final float CAMERA_SPEED = 50f;
     private static final float PLAYER_AND_CAMERA_MAX_DIFF_X_PERCENT = 0.8f;
     private static final float PLAYER_AND_CAMERA_MAX_DIFF_Y_PERCENT = 0.7f;
+    private final OrthographicCamera camera;
+    private float cameraDestX;
+    private float cameraDestY;
 
     private final MazeRunnerGame game;
-    private final OrthographicCamera camera;
 
     private final BitmapFont magicalFont;
 
@@ -39,14 +44,6 @@ public class GameScreen implements Screen {
 
     private Array<Entity> floor;
     private Player player;
-
-    private float mapWidth;
-    private float mapHeight;
-
-    private float cameraDestX;
-    private float cameraDestY;
-
-    private boolean gameOver = false;
 
     private float timeLeft;
 
@@ -70,7 +67,7 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * Initialize level using map.
+     * Initializes the level by generating the floor and player.
      */
     public void initializeLevel() {
         levelMap = game.getLevelMap();
@@ -107,6 +104,11 @@ public class GameScreen implements Screen {
     }
 
     // Screen interface methods with necessary functionality
+
+    /**
+     * Renders the game screen. This method is called every frame.
+     * Does the most important things.
+     */
     @Override
     public void render(float delta) {
         delta = Math.min(delta, 1 / 60f);
@@ -119,11 +121,12 @@ public class GameScreen implements Screen {
         if (game.isPlaying() && !game.isPaused()) {
             // Update camera destination position (only map bigger than viewport)
             if (timeLeft > 0) {
-                timeLeft -= delta;
+                timeLeft -= delta; // Update timer
             } else {
-                game.goToEndGame(false);
+                game.goToEndGame(false); // Time is up and player loses
             }
 
+            // Update camera destination position (only map bigger than viewport)
             if ((mapWidth > camera.viewportWidth * camera.zoom || mapHeight > camera.viewportHeight * camera.zoom) &&
                     (player.getX() + PLAYER_AND_CAMERA_MAX_DIFF_X_PERCENT * camera.viewportWidth * camera.zoom / 2 < cameraDestX ||
                             player.getX() - PLAYER_AND_CAMERA_MAX_DIFF_X_PERCENT * camera.viewportWidth * camera.zoom / 2 > cameraDestX ||
@@ -134,7 +137,7 @@ public class GameScreen implements Screen {
                 cameraDestY = player.getY();
             }
 
-            clampCameraDestPosition();
+            clampCameraDestPosition(); // Clamp camera position (only need if map bigger than camera viewport)
 
             // Update camera position
             float xDiff = cameraDestX - camera.position.x;
@@ -147,13 +150,11 @@ public class GameScreen implements Screen {
 
             // Update all updatable entities
             int size = levelMap.getEntities().size;
-            if (!gameOver) {
-                for (int i = 0; i < size; i++) {
-                    Entity entity = levelMap.getEntities().get(i);
-                    if (entity instanceof UpdatableEntity updatableEntity) updatableEntity.update(delta);
-                }
-                player.update(delta);
+            for (int i = 0; i < size; i++) {
+                Entity entity = levelMap.getEntities().get(i);
+                if (entity instanceof UpdatableEntity updatableEntity) updatableEntity.update(delta);
             }
+            player.update(delta);
 
             // Check player collision with exit
             Rectangle playerRectangle = player.getEntityRectangle();
@@ -250,40 +251,18 @@ public class GameScreen implements Screen {
             magicalFont.getData().setScale(originalScaleX, originalScaleY);
         }
 
-//        if (player.isHasAllKeys()) {
-//            game.getSpriteBatch().draw(game.getKeyAnimation().getKeyFrames()[0],
-//                    camera.position.x - camera.viewportWidth * camera.zoom / 2,
-//                    camera.position.y + camera.viewportHeight * camera.zoom / 2 - CELL_HEIGHT,
-//                    CELL_WIDTH, CELL_HEIGHT);
-//        }
-
-        // Draw end game
-//        if (gameOver) {
-//            String message = player.getHealth() > 0 ? "You win" : "You die";
-//            GlyphLayout glyphLayout = new GlyphLayout();
-//            glyphLayout.setText(magicalFont, message);
-//
-//            magicalFont.draw(game.getSpriteBatch(), message,
-//                    camera.position.x - glyphLayout.width / 2,
-//                    camera.position.y + glyphLayout.height * 2);
-//
-//            message = "Press ESC button to continue";
-//            glyphLayout.setText(magicalFont, message);
-//            magicalFont.draw(game.getSpriteBatch(), message,
-//                    camera.position.x - glyphLayout.width / 2,
-//                    camera.position.y + glyphLayout.height / 2);
-//        }
-
         // Draw timer
         drawTimer();
 
         // Draw debug
-        // magicalFont.draw(game.getSpriteBatch(), "Game over: " + gameOver, 0, 0);
         game.getSpriteBatch().end();
 
-//         drawDebugActionRectangles();
+        //drawDebugActionRectangles();
     }
 
+    /**
+     * Draws the debug action rectangles for the player and exits.
+     */
     private void drawDebugActionRectangles() {
         game.getShapeRenderer().begin();
 
@@ -312,11 +291,17 @@ public class GameScreen implements Screen {
         game.getShapeRenderer().end();
     }
 
+    /**
+     * Draws a rectangle using the shape renderer.
+     * @param rectangle The rectangle to draw.
+     */
     private void drawRectangle(Rectangle rectangle) {
         game.getShapeRenderer().rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
     }
 
-    // Clamp camera destination position (only need if map bigger than camera viewport)
+    /**
+     * Draws the debug collision rectangles for the player and exits (only needed if map bigger than camera viewport).
+     */
     private void clampCameraDestPosition() {
         if (mapWidth > camera.viewportWidth / 2) {
             if (cameraDestX < camera.viewportWidth / 4) {
@@ -336,19 +321,29 @@ public class GameScreen implements Screen {
         }
     }
 
+    /**
+     * Gets the index of the health image to draw.
+     * @param healthIndex The index of the health image.
+     * @param health The current health of the player.
+     * @param maxHealth The maximum health of the player.
+     * @return The index of the health image to draw.
+     */
     private int getImageIndex(int healthIndex, float health, float maxHealth) {
         return health - healthIndex >= 1 ? 0 : (health - healthIndex) < 0 ? 4 : (int) maxHealth - 1 -
                 Math.floorDiv((int) ((health - healthIndex) * 100), Math.floorDiv(100, (int) maxHealth));
     }
 
+    /**
+     * Draws the timer in the top right corner.
+     */
     private void drawTimer() {
-        int minutes = (int) (timeLeft / 60);
-        int seconds = (int) (timeLeft % 60);
+        int minutes = (int) (timeLeft / 60); // Get the minutes
+        int seconds = (int) (timeLeft % 60); // Get the seconds
 
-        String timerText = String.format("%02d:%02d", minutes, seconds);
+        String timerText = String.format("%02d:%02d", minutes, seconds); // Format the timer text
 
-        GlyphLayout glyphLayout = new GlyphLayout();
-        glyphLayout.setText(magicalFont, timerText);
+        GlyphLayout glyphLayout = new GlyphLayout(); // Create a glyph layout to get the width of the text
+        glyphLayout.setText(magicalFont, timerText); // Set the text to the glyph layout
 
         // Draw the timer in the top right corner
         magicalFont.draw(
@@ -358,14 +353,27 @@ public class GameScreen implements Screen {
         );
     }
 
+    /**
+     * Gets the time left of the timer.
+     * @return the time left of the timer.
+     */
     public float getTimeLeft() {
         return timeLeft;
     }
 
+    /**
+     * Sets the time left.
+     * @param timeLeft The time left.
+     */
     public void setTimeLeft(float timeLeft) {
         this.timeLeft = timeLeft;
     }
 
+    /**
+     * Resize method is called when the window is resized.
+     * @param width to resize to.
+     * @param height to resize to.
+     */
     @Override
     public void resize(int width, int height) {
         camera.setToOrtho(false);

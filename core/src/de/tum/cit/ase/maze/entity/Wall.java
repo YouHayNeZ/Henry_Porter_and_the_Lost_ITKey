@@ -14,7 +14,7 @@ import de.tum.cit.ase.maze.MazeRunnerGame;
 public class Wall extends Entity {
 
     /**
-     * RepresentationType provides a list of possible displaying.
+     * RepresentationType provides a list of possible displaying options for the wall.
      */
     public enum RepresentationType {
 
@@ -22,7 +22,7 @@ public class Wall extends Entity {
         CENTER_WITH_UPPER_AND_LOWER(1),
         LOWER_WITH_UPPER(2),
         UPPER(3),
-        WATER(4);
+        WATER(4); // special case if it is between walls
 
         final int imageIndex;
 
@@ -36,7 +36,7 @@ public class Wall extends Entity {
     RepresentationType representationType;
 
     /**
-     * Creates one wall.
+     * Creates a wall.
      * @param game the main game
      */
     public Wall(MazeRunnerGame game) {

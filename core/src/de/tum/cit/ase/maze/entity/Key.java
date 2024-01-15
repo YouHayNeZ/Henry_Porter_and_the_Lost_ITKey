@@ -23,6 +23,10 @@ public class Key extends UpdatableEntity {
         setTextureRegion(keyAnimation.getKeyFrames()[0]);
     }
 
+    /**
+     * Updates the key animation.
+     * @param delta time since last update
+     */
     @Override
     public void update(float delta) {
         super.update(delta);

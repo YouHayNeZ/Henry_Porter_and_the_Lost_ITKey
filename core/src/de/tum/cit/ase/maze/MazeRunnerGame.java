@@ -33,13 +33,12 @@ import java.io.IOException;
  */
 public class MazeRunnerGame extends Game {
 
-    // World cell width size
+    // Set up world
     private static final int CELL_WIDTH = 16;
-    // World cell height size
     private static final int CELL_HEIGHT = 16;
-
     private static final String LEVEL_MAP_FORMAT = "maps/level-%d.properties";
 
+    // Level indices
     private static final int DEFAULT_LEVEL_INDEX = 1;
     private static final int MAX_LEVEL_INDEX = 5;
     private int levelIndex = DEFAULT_LEVEL_INDEX;
@@ -55,7 +54,7 @@ public class MazeRunnerGame extends Game {
 
     // Sprite Batch for rendering
     private SpriteBatch spriteBatch;
-    private ShapeRenderer shapeRenderer;
+    private ShapeRenderer shapeRenderer; //only used for debugging boxes
 
     // UI Skin
     private Skin skin;
@@ -78,7 +77,6 @@ public class MazeRunnerGame extends Game {
     TextureRegion buttonUpTextureRegion;
     TextureRegion buttonOverTextureRegion;
     TextureRegion buttonDownTextureRegion;
-
     Array<TextureRegion> wallTextureRegionArray;
     Array<TextureRegion> healthTextureRegionArray;
 
@@ -104,7 +102,6 @@ public class MazeRunnerGame extends Game {
     Animation<TextureRegion> clockAnimation;
     Animation<TextureRegion> potionAnimation;
 
-
     // Sounds
     Sound keySound;
     Sound winSound;
@@ -117,11 +114,13 @@ public class MazeRunnerGame extends Game {
     Array<Sound> hurtSoundArray;
 
     // Music
-    Music menuMusic;
+    Music menuMusic; //also used for EndGame and ChooseLevel screens
     Music gameMusic;
 
+    // Level map
     LevelMap levelMap;
 
+    // Game status
     boolean isPlaying = false;
     boolean isPaused = false;
 
@@ -146,20 +145,20 @@ public class MazeRunnerGame extends Game {
 
         skin = new Skin(Gdx.files.internal("craft/craftacular-ui.json")); // Load UI skin
 
-        // Load the TTF file for the new font
+        // Load the TTF file for the magical font
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal("craft/Magical Font.ttf"));
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
-        parameter.size = 120; // Set the font size as needed
+        parameter.size = 120; // Set the font size for the title
 
-        // Create a BitmapFont from the TTF file for the title
+        // Create title font
         BitmapFont magicalFontTitle = generator.generateFont(parameter);
 
-        // Create a BitmapFont for the TextButton with the new size parameter
+        // Create button font
         parameter.size = 40; // Set the font size as needed
         BitmapFont magicalFontButton = generator.generateFont(parameter);
         skin.add("magical_font", magicalFontButton); // Add the font to the skin
 
-        generator.dispose(); // Dispose of the generator when done
+        generator.dispose(); // Dispose of the generator
 
         // Create a TextButtonStyle with the magical font for the TextButton
         var labelStyle = new Label.LabelStyle();
@@ -265,14 +264,14 @@ public class MazeRunnerGame extends Game {
                 16, 16, 4, 0.1f, 0, 0);
 
         // Sounds
-        keySound = Gdx.audio.newSound(Gdx.files.internal("sound/ring_inventory.wav"));
-        winSound = Gdx.audio.newSound(Gdx.files.internal("sound/crowd_cheer.mp3"));
-        loseSound = Gdx.audio.newSound(Gdx.files.internal("sound/violin_lose.mp3"));
-        healSound = Gdx.audio.newSound(Gdx.files.internal("sound/heal_spell.mp3"));
-        spellSound = Gdx.audio.newSound(Gdx.files.internal("sound/expecto_patronum.mp3"));
-        coinSound = Gdx.audio.newSound(Gdx.files.internal("sound/complete_task.mp3"));
-        clockSound = Gdx.audio.newSound(Gdx.files.internal("sound/time.mp3"));
-        potionSound = Gdx.audio.newSound(Gdx.files.internal("sound/bubbling.mp3"));
+        keySound = Gdx.audio.newSound(Gdx.files.internal("sound/key.wav"));
+        winSound = Gdx.audio.newSound(Gdx.files.internal("sound/win.mp3"));
+        loseSound = Gdx.audio.newSound(Gdx.files.internal("sound/lose.mp3"));
+        healSound = Gdx.audio.newSound(Gdx.files.internal("sound/heal.mp3"));
+        spellSound = Gdx.audio.newSound(Gdx.files.internal("sound/expecto_patronum_spell.mp3"));
+        coinSound = Gdx.audio.newSound(Gdx.files.internal("sound/coin.mp3"));
+        clockSound = Gdx.audio.newSound(Gdx.files.internal("sound/clock.mp3"));
+        potionSound = Gdx.audio.newSound(Gdx.files.internal("sound/potion.mp3"));
 
         // Hurt sound
         hurtSoundArray = new Array<>();
@@ -300,17 +299,28 @@ public class MazeRunnerGame extends Game {
         goToMenu(); // Navigate to the menu screen
     }
 
+    /**
+     * Plays the menu music and pauses the game music.
+     */
     public void playMenuMusic() {
         gameMusic.pause();
         menuMusic.play();
     }
 
+    /**
+     * Plays the game music and pauses the menu music.
+     */
     public void playGameMusic() {
         winSound.stop();
         menuMusic.stop();
         gameMusic.play();
     }
 
+    /**
+     * Get the sound for the end game screen.
+     * @param isWinner indicates game end status
+     * @return the sound for the end game screen
+     */
     public Sound getEndGameSound(boolean isWinner) {
         return isWinner ? winSound : loseSound;
     }
@@ -510,6 +520,7 @@ public class MazeRunnerGame extends Game {
         thingsTexture.dispose();
         keyTexture.dispose();
 
+        // Dispose hurt sound array
         disposeArray(hurtSoundArray);
 
         // Dispose sounds
@@ -518,6 +529,8 @@ public class MazeRunnerGame extends Game {
         loseSound.dispose();
         healSound.dispose();
         coinSound.dispose();
+        clockSound.dispose();
+        potionSound.dispose();
     }
 
     /**

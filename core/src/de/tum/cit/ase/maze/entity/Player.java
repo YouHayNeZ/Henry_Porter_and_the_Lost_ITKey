@@ -54,7 +54,6 @@ public class Player extends MovableEntity {
 
     private int collectedCoins;
     private int collectedKeys;
-    private final int totalKeys;
     private boolean hasAtLeastOneKey;
     private GameScreen screen;
 
@@ -83,7 +82,6 @@ public class Player extends MovableEntity {
         health = DEFAULT_HEALTH;
         collectedCoins = 0;
         collectedKeys = 0;
-        totalKeys = getGame().getLevelMap().findNumberOfKeys();
         hasAtLeastOneKey = false;
     }
 
@@ -322,14 +320,6 @@ public class Player extends MovableEntity {
      */
     public int getCollectedKeys() {
         return collectedKeys;
-    }
-
-    /**
-     * Get total keys.
-     * @return the total keys
-     */
-    public int getTotalKeys() {
-        return totalKeys;
     }
 
     /**

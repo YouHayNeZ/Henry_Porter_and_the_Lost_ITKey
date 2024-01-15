@@ -23,6 +23,10 @@ public class Coin extends UpdatableEntity {
         setTextureRegion(coinAnimation.getKeyFrames()[0]);
     }
 
+    /**
+     * Updates the coin animation.
+     * @param delta time since last update
+     */
     @Override
     public void update(float delta) {
         super.update(delta);

@@ -23,6 +23,10 @@ public class Potion extends UpdatableEntity {
         setTextureRegion(potionAnimation.getKeyFrames()[0]);
     }
 
+    /**
+     * Updates the potion animation.
+     * @param delta time since last update
+     */
     @Override
     public void update(float delta) {
         super.update(delta);

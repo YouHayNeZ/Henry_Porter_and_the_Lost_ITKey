@@ -23,6 +23,10 @@ public class Clock extends UpdatableEntity {
         setTextureRegion(clockAnimation.getKeyFrames()[0]);
     }
 
+    /**
+     * Updates the clock animation.
+     * @param delta time since last update
+     */
     @Override
     public void update(float delta) {
         super.update(delta);

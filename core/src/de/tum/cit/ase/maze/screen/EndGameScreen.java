@@ -29,6 +29,7 @@ public class EndGameScreen implements Screen {
     private final Stage stage;
     private final Image background;
 
+    // UI elements
     private final Label titleLabel;
     private final TextButton nextLevelButton;
 
@@ -53,32 +54,36 @@ public class EndGameScreen implements Screen {
         stage.addActor(table); // Add the table to the stage
 
         // Add a label as a title
-        titleLabel = new Label("", game.getSkin(), "title");  // Set the Magical Font style
-        table.add(titleLabel).padBottom(40).row();
+        titleLabel = new Label("", game.getSkin(), "title"); // Use the "title" style from the skin
+        table.add(titleLabel).padBottom(40).row(); // Add the label to the table
 
-        nextLevelButton = new TextButton("", game.getSkin(), "button");
-        table.add(nextLevelButton).width(400).height(80).row();
+        nextLevelButton = new TextButton("", game.getSkin(), "button"); // Use the "button" style from the skin
+        table.add(nextLevelButton).width(400).height(80).row(); // Add the button to the table
 
-        TextButton goToMenuButton = new TextButton("Go to menu", game.getSkin(), "button");
+        TextButton goToMenuButton = new TextButton("Go to menu", game.getSkin(), "button"); // Use the "button" style from the skin
         goToMenuButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.goToMenu();
             }
-        });
-        table.add(goToMenuButton).width(400).height(80).row();
+        }); // Add a listener to the button
+        table.add(goToMenuButton).width(400).height(80).row(); // Add the button to the table
     }
 
+    /**
+     * Sets the screen to display the winning or losing screen.
+     * @param isWinner True if the player won the game, false if the player lost the game.
+     */
     public void setIsWinner(boolean isWinner) {
-        titleLabel.setText(isWinner ? "You win!" : "You lose!");
-        nextLevelButton.setText(isWinner ? "Next level" : "Restart level");
+        titleLabel.setText(isWinner ? "You win!" : "You lose!"); // Set the title based on winning or losing
+        nextLevelButton.setText(isWinner ? "Next level" : "Restart level"); // Set the button text based on winning or losing
 
         // Remove all change listeners before add new one
         for (int i = 0; i < nextLevelButton.getListeners().size; i++) {
-            EventListener listener = nextLevelButton.getListeners().get(i);
+            EventListener listener = nextLevelButton.getListeners().get(i); // Get the listener
             if (listener instanceof ChangeListener) {
-                nextLevelButton.getListeners().removeIndex(i);
-                i--;
+                nextLevelButton.getListeners().removeIndex(i); // Remove the listener
+                i--; // Decrement the index
             }
         }
 
@@ -86,9 +91,9 @@ public class EndGameScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (isWinner) {
-                    game.incrementLevel();
+                    game.incrementLevel(); // Increment the level
                 }
-                game.goToCurrentLevelIndexGame();
+                game.goToCurrentLevelIndexGame(); // Go to the current level
             }
         });
 
@@ -98,14 +103,21 @@ public class EndGameScreen implements Screen {
 
         // Set the background
         background.setDrawable(backgroundDrawable);
-        background.setSize(stage.getWidth(), stage.getHeight());
+        background.setSize(stage.getWidth(), stage.getHeight()); // Set the size of the background
     }
 
+    /**
+     * Sets the screen to display the game over screen.
+     */
     @Override
     public void show() {
-        Gdx.input.setInputProcessor(stage);
+        Gdx.input.setInputProcessor(stage); // Set the stage as the input processor
     }
 
+    /**
+     * Renders the screen.
+     * @param delta The time in seconds since the last render.
+     */
     @Override
     public void render(float delta) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT); // Clear the screen
@@ -113,29 +125,46 @@ public class EndGameScreen implements Screen {
         stage.draw(); // Draw the stage
     }
 
+    /**
+     * Resizes the screen.
+     * @param width The new width of the screen.
+     * @param height The new height of the screen.
+     */
     @Override
     public void resize(int width, int height) {
         stage.getViewport().update(width, height, true); // Update the stage viewport on resize
-        background.setSize(stage.getWidth(), stage.getHeight());
+        background.setSize(stage.getWidth(), stage.getHeight()); // Update the background size on resize
     }
 
+    /**
+     * Pauses the screen.
+     */
     @Override
     public void pause() {
 
     }
 
+    /**
+     * Resumes the screen.
+     */
     @Override
     public void resume() {
 
     }
 
+    /**
+     * Hides the screen.
+     */
     @Override
     public void hide() {
-        Gdx.input.setInputProcessor(null);
+        Gdx.input.setInputProcessor(null); // Remove the stage as the input processor
     }
 
+    /**
+     * Disposes the screen.
+     */
     @Override
     public void dispose() {
-        stage.dispose();
+        stage.dispose(); // Dispose the stage
     }
 }

@@ -20,7 +20,7 @@ import de.tum.cit.ase.maze.entity.*;
 public class LevelMap {
 
     /**
-     * Type enum provides a list of all possible feature classes on a map
+     * Type enum provides a list of all possible feature classes (entities) on a map
      */
     public enum Type {
 
@@ -38,11 +38,21 @@ public class LevelMap {
         final int value;
         final Class aClass;
 
+        /**
+         * Creates a new type.
+         * @param value type value
+         * @param aClass type class
+         */
         Type(int value, Class aClass) {
             this.value = value;
             this.aClass = aClass;
         }
 
+        /**
+         * Get type by value.
+         * @param value type value
+         * @return type
+         */
         public static Type valueOf(int value) {
             for (Type type: values()) {
                 if (type.value == value) {
@@ -52,20 +62,28 @@ public class LevelMap {
             return null;
         }
 
+        /**
+         * Get type value.
+         * @return type value
+         */
         public int getValue() {
             return value;
         }
 
+        /**
+         * Get type class.
+         * @return type class
+         */
         public Class getaClass() {
             return aClass;
         }
     }
 
-    // World cell width size
+    // Set up world
     private static final int CELL_WIDTH = 16;
-    // World cell height size
     private static final int CELL_HEIGHT = 16;
 
+    // Storage of all entities from map
     private Array<Entity> entities;
 
     private final MazeRunnerGame game;
@@ -97,23 +115,23 @@ public class LevelMap {
         entities = new Array<>();
 
         // Read file content
-        ObjectMap<String, String> map = new ObjectMap<>();
+        ObjectMap<String, String> map = new ObjectMap<>(); // first String is coordinates, second is type
         PropertiesUtils.load(map, fileHandle.reader());
         map.forEach(entry -> {
             try {
-                String[] coords = entry.key.split(",");
-                // check if coordinates are correct
+                String[] coords = entry.key.split(","); // split coordinates
+                // check if coordinates are correct (introduced because of level map 2)
                 if (coords.length == 2) {
-                    int typeValue = Integer.parseInt(entry.value);
-                    Type type = Type.valueOf(typeValue);
+                    int typeValue = Integer.parseInt(entry.value); // get type value
+                    Type type = Type.valueOf(typeValue); // get type
                     Entity entity = (Entity) type.getaClass().getConstructor(MazeRunnerGame.class)
-                            .newInstance(game);
-                    int col = Integer.parseInt(coords[0]);
-                    int row = Integer.parseInt(coords[1]);
-                    entity.setX(col * CELL_WIDTH);
-                    entity.setY(row * CELL_HEIGHT);
+                            .newInstance(game); // create new entity
+                    int col = Integer.parseInt(coords[0]); // get column
+                    int row = Integer.parseInt(coords[1]); // get row
+                    entity.setX(col * CELL_WIDTH); // set x coordinate
+                    entity.setY(row * CELL_HEIGHT); // set y coordinate
 
-                    // Additional options if it's a wall or inner water
+                    // Additional options if it is a wall or inner water
                     if (entity instanceof Wall wall) {
                         boolean hasLowerWall = checkIfCellExistsAndItIsWall(map, col, row - 1);
                         boolean hasUpperWall = checkIfCellExistsAndItIsWall(map, col, row + 1);
@@ -136,7 +154,7 @@ public class LevelMap {
                         }
                     }
 
-                    entities.add(entity);
+                    entities.add(entity); // add entity to the list to store them
                 }
             }
             catch (Exception exception) {
@@ -147,8 +165,8 @@ public class LevelMap {
     }
 
     /**
-     * Find first entry point in a map.
-     * @return first entry point
+     * Find (first) entry point in a map.
+     * @return (first) entry point
      */
     public EntryPoint findEntryPoint() {
         for (Entity entity: entities) {
@@ -157,20 +175,6 @@ public class LevelMap {
             }
         }
         return null;
-    }
-
-    /**
-     * Find the number of keys in a map.
-     * @return number of keys
-     */
-    public int findNumberOfKeys() {
-        int numberOfKeys = 0;
-        for (Entity entity : entities) {
-            if (entity instanceof Key) {
-                numberOfKeys++;
-            }
-        }
-        return numberOfKeys;
     }
 
     /**
@@ -210,8 +214,8 @@ public class LevelMap {
      */
     private boolean checkIfCellExistsAndItIsWall(ObjectMap<String, String> map, int col, int row) {
         try {
-            String value = map.get(String.format("%d,%d", col, row));
-            return value != null && Integer.parseInt(value) == Type.WALL.getValue();
+            String value = map.get(String.format("%d,%d", col, row)); // get value from map with format "col,row"
+            return value != null && Integer.parseInt(value) == Type.WALL.getValue(); // check if value is not null and it is a wall
         }
         catch (NumberFormatException e) {
             // Ignore wrong file format
@@ -221,7 +225,7 @@ public class LevelMap {
 
     private boolean checkIfCellExistsAndItIsWater(ObjectMap<String, String> map, int col, int row) {
         try {
-            String value = map.get(String.format("%d,%d", col, row));
+            String value = map.get(String.format("%d,%d", col, row)); // get value from map with format "col,row"
             boolean hasOuterWalls = checkIfCellExistsAndItIsWall(map, col, row - 1) &&
                     checkIfCellExistsAndItIsWall(map, col, row + 1) &&
                     checkIfCellExistsAndItIsWall(map, col - 1, row) &&
@@ -230,7 +234,7 @@ public class LevelMap {
                     checkIfCellExistsAndItIsWall(map, col + 1, row - 1) &&
                     checkIfCellExistsAndItIsWall(map, col - 1, row + 1) &&
                     checkIfCellExistsAndItIsWall(map, col + 1, row + 1);
-            return value != null && Integer.parseInt(value) == Type.WALL.getValue() && hasOuterWalls;
+            return value != null && Integer.parseInt(value) == Type.WALL.getValue() && hasOuterWalls; // check if value is not null and it is a wall
         }
         catch (NumberFormatException e) {
             // Ignore wrong file format

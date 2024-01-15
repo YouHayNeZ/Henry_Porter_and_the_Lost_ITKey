@@ -23,6 +23,10 @@ public class Heart extends UpdatableEntity {
         setTextureRegion(heartAnimation.getKeyFrames()[0]);
     }
 
+    /**
+     * Updates the heart animation.
+     * @param delta time since last update
+     */
     @Override
     public void update(float delta) {
         super.update(delta);

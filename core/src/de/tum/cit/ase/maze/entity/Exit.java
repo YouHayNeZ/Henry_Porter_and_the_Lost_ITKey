@@ -11,7 +11,6 @@ import de.tum.cit.ase.maze.MazeRunnerGame;
  * Only opens if Player has a key.
  */
 public class Exit extends UpdatableEntity {
-
     private static final float ACTION_PADDING = 4f;
     private static final float EXIT_PADDING = -7f;
 
@@ -29,6 +28,10 @@ public class Exit extends UpdatableEntity {
         setTextureRegion(animation.getKeyFrames()[0]);
     }
 
+    /**
+     * Updates the exit animation.
+     * @param delta time since last update
+     */
     @Override
     public void update(float delta) {
         if (isOpening) {

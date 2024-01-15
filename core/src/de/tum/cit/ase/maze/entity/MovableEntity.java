@@ -15,15 +15,17 @@ import java.util.function.Function;
  */
 public abstract class MovableEntity extends UpdatableEntity {
 
-    // World cell width size
+    // World set up
     private static final int CELL_WIDTH = 16;
-    // World cell height size
     private static final int CELL_HEIGHT = 16;
-
     private static final float DEFAULT_SPEED = 50f;
 
     private float speed;
 
+    /**
+     * Creates one new movable entity.
+     * @param game the main game.
+     */
     protected MovableEntity(MazeRunnerGame game) {
         super(game);
         this.speed = DEFAULT_SPEED;
@@ -31,8 +33,8 @@ public abstract class MovableEntity extends UpdatableEntity {
 
     /**
      * Move entity into UP direction.
-     * @param delta the delta time
-     * @return true if the object can move without obstacles in the given direction
+     * @param delta the delta time.
+     * @return true if the object can move without obstacles in the given direction.
      */
     public boolean moveUp(float delta) {
         setTextureRegion(getUpAnimation().getKeyFrame(getTime(), true));
@@ -42,8 +44,8 @@ public abstract class MovableEntity extends UpdatableEntity {
 
     /**
      * Move entity into DOWN direction.
-     * @param delta the delta time
-     * @return true if the object can move without obstacles in the given direction
+     * @param delta the delta time.
+     * @return true if the object can move without obstacles in the given direction.
      */
     public boolean moveDown(float delta) {
         setTextureRegion(getDownAnimation().getKeyFrame(getTime(), true));
@@ -53,8 +55,8 @@ public abstract class MovableEntity extends UpdatableEntity {
 
     /**
      * Move entity into LEFT direction.
-     * @param delta the delta time
-     * @return true if the object can move without obstacles in the given direction
+     * @param delta the delta time.
+     * @return true if the object can move without obstacles in the given direction.
      */
     public boolean moveLeft(float delta) {
         setTextureRegion(getLeftAnimation().getKeyFrame(getTime(), true));
@@ -64,8 +66,8 @@ public abstract class MovableEntity extends UpdatableEntity {
 
     /**
      * Move entity into RIGHT direction.
-     * @param delta the delta time
-     * @return true if the object can move without obstacles in the given direction
+     * @param delta the delta time.
+     * @return true if the object can move without obstacles in the given direction.
      */
     public boolean moveRight(float delta) {
         setTextureRegion(getRightAnimation().getKeyFrame(getTime(), true));
@@ -75,38 +77,38 @@ public abstract class MovableEntity extends UpdatableEntity {
 
     /**
      * Get animation of move into UP direction.
-     * @return Animation<TextureRegion> class that contains animation
+     * @return Animation<TextureRegion> class that contains animation.
      */
     public abstract Animation<TextureRegion> getUpAnimation();
 
     /**
      * Get animation of move into DOWN direction.
-     * @return Animation<TextureRegion> class that contains animation
+     * @return Animation<TextureRegion> class that contains animation.
      */
     public abstract Animation<TextureRegion> getDownAnimation();
 
     /**
      * Get animation of move into LEFT direction.
-     * @return Animation<TextureRegion> class that contains animation
+     * @return Animation<TextureRegion> class that contains animation.
      */
     public abstract Animation<TextureRegion> getLeftAnimation();
 
     /**
      * Get animation of move into RIGHT direction.
-     * @return Animation<TextureRegion> class that contains animation
+     * @return Animation<TextureRegion> class that contains animation.
      */
     public abstract Animation<TextureRegion> getRightAnimation();
 
     /**
      * Check current entity with borders, wall and exit collision.
-     * @return true if collision occurred
+     * @return true if collision occurred.
      */
     private boolean checkBordersWallAndExitCollision() {
         Rectangle rectangle = getEntityRectangle();
 
-        LevelMap levelMap = getGame().getLevelMap();
+        LevelMap levelMap = getGame().getLevelMap(); // get level map
         if (rectangle.x < 0 || rectangle.x + rectangle.width > levelMap.getMapWidth() ||
-                rectangle.y < 0 || rectangle.y + rectangle.height > levelMap.getMapHeight()) {
+                rectangle.y < 0 || rectangle.y + rectangle.height > levelMap.getMapHeight()) { // check borders
             return true;
         }
 
@@ -116,13 +118,13 @@ public abstract class MovableEntity extends UpdatableEntity {
             Entity entity = getGame().getLevelMap().getEntities().get(i);
             if (entity instanceof Wall wall) {
                 entityRectangle = new Rectangle(wall.getX(), wall.getY(), CELL_WIDTH, CELL_HEIGHT);
-                if (Intersector.overlaps(rectangle, entityRectangle)) {
+                if (Intersector.overlaps(rectangle, entityRectangle)) { // check wall collision
                     return true;
                 }
             }
             if (entity instanceof Exit exit) {
                 entityRectangle = exit.getEntityRectangle();
-                if (!exit.isOpen() && Intersector.overlaps(rectangle, entityRectangle)) {
+                if (!exit.isOpen() && Intersector.overlaps(rectangle, entityRectangle)) { // check exit collision
                     return true;
                 }
             }
@@ -132,14 +134,14 @@ public abstract class MovableEntity extends UpdatableEntity {
 
     /**
      * Set float value if the condition returns true.
-     * @param propertyName the property name that will change
-     * @param newValue the new value
-     * @param condition the condition
-     * @return true if value changed
+     * @param propertyName the property name that will change.
+     * @param newValue the new value.
+     * @param condition the condition.
+     * @return true if value changed.
      */
     private boolean setFloatValueIfNot(String propertyName, float newValue, Function<MovableEntity, Boolean> condition) {
         try {
-            Field field = Entity.class.getDeclaredField(propertyName);
+            Field field = Entity.class.getDeclaredField(propertyName); // get field
             float oldValue = field.getFloat(this);
             field.setFloat(this, newValue);
             if (condition.apply(this)) {
@@ -155,7 +157,7 @@ public abstract class MovableEntity extends UpdatableEntity {
 
     /**
      * Get speed property.
-     * @return the speed property
+     * @return the speed property.
      */
     public float getSpeed() {
         return speed;
@@ -163,7 +165,7 @@ public abstract class MovableEntity extends UpdatableEntity {
 
     /**
      * Set speed property.
-     * @param speed the speed property
+     * @param speed the speed property.
      */
     public void setSpeed(float speed) {
         this.speed = speed;
