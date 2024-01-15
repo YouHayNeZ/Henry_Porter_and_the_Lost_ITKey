@@ -98,6 +98,7 @@ public class MazeRunnerGame extends Game {
     Animation<TextureRegion> keyAnimation;
     Animation<TextureRegion> doorAnimation;
     Animation<TextureRegion> heartAnimation;
+    Animation<TextureRegion> coinAnimation;
 
 
     // Sounds
@@ -106,6 +107,7 @@ public class MazeRunnerGame extends Game {
     Sound loseSound;
     Sound healSound;
     Sound spellSound;
+    Sound coinSound;
     Array<Sound> hurtSoundArray;
 
     // Music
@@ -242,12 +244,17 @@ public class MazeRunnerGame extends Game {
         heartAnimation = loadAnimation(objectsTexture,
                 16, 16, 4, 0.1f, 0, 3 * CELL_HEIGHT);
 
+        // Load the coin animation
+        coinAnimation = loadAnimation(objectsTexture,
+                16, 16, 4, 0.1f, 0, 4 * CELL_HEIGHT);
+
         // Sounds
         keySound = Gdx.audio.newSound(Gdx.files.internal("sound/ring_inventory.wav"));
         winSound = Gdx.audio.newSound(Gdx.files.internal("sound/crowd_cheer.mp3"));
         loseSound = Gdx.audio.newSound(Gdx.files.internal("sound/violin_lose.mp3"));
         healSound = Gdx.audio.newSound(Gdx.files.internal("sound/heal_spell.mp3"));
         spellSound = Gdx.audio.newSound(Gdx.files.internal("sound/expecto_patronum.mp3"));
+        coinSound = Gdx.audio.newSound(Gdx.files.internal("sound/completetask_0.mp3"));
 
         // Hurt sound
         hurtSoundArray = new Array<>();
@@ -492,6 +499,7 @@ public class MazeRunnerGame extends Game {
         winSound.dispose();
         loseSound.dispose();
         healSound.dispose();
+        coinSound.dispose();
     }
 
     /**
@@ -698,6 +706,14 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
+     * Get coin animation.
+     * @return the animation of coin
+     */
+    public Animation<TextureRegion> getCoinAnimation() {
+        return coinAnimation;
+    }
+
+    /**
      * Get hurt sound array.
      * @return the array of hurt sounds
      */
@@ -719,6 +735,14 @@ public class MazeRunnerGame extends Game {
      */
     public Sound getHealSound() {
         return healSound;
+    }
+
+    /**
+     * Get coin sound.
+     * @return the sound of picking coin
+     */
+    public Sound getCoinSound() {
+        return coinSound;
     }
 
     /**

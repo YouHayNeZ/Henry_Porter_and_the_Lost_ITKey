@@ -43,11 +43,13 @@ public class Player extends MovableEntity {
     private final Array<Sound> hurtSoundArray;
     private final Sound keySound;
     private final Sound healSound;
+    private final Sound coinSound;
     private final Sound spellSound;
 
     private float health;
     private float immutableTime;
 
+    private int collectedCoins;
     private int collectedKeys;
     private final int totalKeys;
     private boolean hasAtLeastOneKey;
@@ -67,11 +69,13 @@ public class Player extends MovableEntity {
         keySound = game.getKeySound();
         healSound = game.getHealSound();
         spellSound = game.getSpellSound();
+        coinSound = game.getCoinSound();
 
         setTextureRegion(downAnimation.getKeyFrames()[0]);
         centerDrawOffset();
 
         health = DEFAULT_HEALTH;
+        collectedCoins = 0;
         collectedKeys = 0;
         totalKeys = getGame().getLevelMap().findNumberOfKeys();
         hasAtLeastOneKey = false;
@@ -132,15 +136,15 @@ public class Player extends MovableEntity {
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
-            moveUp(delta);
+            moveUp((float) (delta + 0.2 * delta * collectedCoins));
         } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
-            moveDown(delta);
+            moveDown((float) (delta + 0.2 * delta * collectedCoins));
         }
 
         if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
-            moveLeft(delta);
+            moveLeft((float) (delta + 0.2 * delta * collectedCoins));
         } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
-            moveRight(delta);
+            moveRight((float) (delta + 0.2 * delta * collectedCoins));
         }
 
         // Check key collision
@@ -166,8 +170,19 @@ public class Player extends MovableEntity {
             healSound.play();
         }
 
+        // Check coin collision
+        Coin coin = checkCoinCollision();
+        if (coin != null) {
+            collectedCoins++;
+            getGame().getLevelMap().getEntities().removeValue(coin, true);
+
+            // Play coin sound
+            coinSound.play();
+        }
+
         // Check trap or enemy collision
         if (checkTrapOrEnemyCollision() && immutableTime <= 0) {
+            collectedCoins = 0;
             health -= DEFAULT_DAMAGE;
             immutableTime = DEFAULT_IMMUTABLE_TIME;
 
@@ -200,6 +215,10 @@ public class Player extends MovableEntity {
 
     private Heart checkHeartCollision() {
         return (Heart) checkCollision(Heart.class);
+    }
+
+    private Coin checkCoinCollision() {
+        return (Coin) checkCollision(Coin.class);
     }
 
     private Key checkKeyCollision() {
@@ -250,6 +269,14 @@ public class Player extends MovableEntity {
      */
     public float getImmutableTime() {
         return immutableTime;
+    }
+
+    /**
+     * Get collected coins.
+     * @return the collected coins
+     */
+    public int getCollectedCoins() {
+        return collectedCoins;
     }
 
     /**
