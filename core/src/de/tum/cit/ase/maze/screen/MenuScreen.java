@@ -44,7 +44,7 @@ public class MenuScreen implements Screen {
         stage.addActor(table); // Add the table to the stage
 
         // Create and add a label as a title with the title font
-        Label titleLabel = new Label("Henry Porter and the\n ITKey Torture Chamber", game.getSkin(), "title");
+        Label titleLabel = new Label("Henry Porter and the\n Lost ITKey", game.getSkin(), "title");
         titleLabel.setAlignment(Align.center);
         table.add(titleLabel).padBottom(80).row();
 
