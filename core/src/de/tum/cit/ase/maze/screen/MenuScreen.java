@@ -46,7 +46,7 @@ public class MenuScreen implements Screen {
         // Create and add a label as a title with the title font
         Label titleLabel = new Label("Henry Porter and the\n Lost ITKey", game.getSkin(), "title");
         titleLabel.setAlignment(Align.center); // Align the label to the center
-        table.add(titleLabel).padBottom(80).row(); // Add the label to the table
+        table.add(titleLabel).padBottom(40).row(); // Add the label to the table
 
         // Create and add a button to go to the game screen
         TextButton goToGameButton = new TextButton("Start Game", game.getSkin(), "button");
