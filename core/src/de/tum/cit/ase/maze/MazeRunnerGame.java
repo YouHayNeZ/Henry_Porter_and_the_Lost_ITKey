@@ -94,7 +94,10 @@ public class MazeRunnerGame extends Game {
     Animation<TextureRegion> enemyRightAnimation;
     Animation<TextureRegion> enemyUpAnimation;
     Animation<TextureRegion> flameAnimation;
+    Animation<TextureRegion> yellowFlameAnimation;
     Animation<TextureRegion> blueFlameAnimation;
+    Animation<TextureRegion> redFlameAnimation;
+    Animation<TextureRegion> greenFlameAnimation;
     Animation<TextureRegion> keyAnimation;
     Animation<TextureRegion> doorAnimation;
     Animation<TextureRegion> heartAnimation;
@@ -236,8 +239,14 @@ public class MazeRunnerGame extends Game {
         // Load the flame animations
         flameAnimation = loadAnimation(objectsTexture,
                 16, 16, 7, 0.1f, 4 * CELL_WIDTH, 3 * CELL_HEIGHT);
+        yellowFlameAnimation = loadAnimation(thingsTexture,
+                16, 16, 3, 0.1f, 0, 4 * CELL_HEIGHT);
         blueFlameAnimation = loadAnimation(thingsTexture,
                 16, 16, 3, 0.1f, 0, 5 * CELL_HEIGHT);
+        redFlameAnimation = loadAnimation(thingsTexture,
+                16, 16, 3, 0.1f, 0, 6 * CELL_HEIGHT);
+        greenFlameAnimation = loadAnimation(thingsTexture,
+                16, 16, 3, 0.1f, 0, 7 * CELL_HEIGHT);
 
         // Load the key animation
         keyAnimation = loadAnimation(keyTexture,
@@ -257,7 +266,7 @@ public class MazeRunnerGame extends Game {
 
         // Load the clock animation
         clockAnimation = loadAnimation(clockTexture,
-                16, 16, 4, 0.1f, 0, 0);
+                clockTexture.getWidth()/15, clockTexture.getHeight(), 15, 0.1f, 0, 0);
 
         // Load the potion animation
         potionAnimation = loadAnimation(potionTexture,
@@ -673,11 +682,35 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
+     * Get yellow flame animation.
+     * @return the animation of yellow flame
+     */
+    public Animation<TextureRegion> getYellowFlameAnimation() {
+        return yellowFlameAnimation;
+    }
+
+    /**
      * Get blue flame animation.
      * @return the animation of blue flame
      */
     public Animation<TextureRegion> getBlueFlameAnimation() {
         return blueFlameAnimation;
+    }
+
+    /**
+     * Get red flame animation.
+     * @return the animation of red flame
+     */
+    public Animation<TextureRegion> getRedFlameAnimation() {
+        return redFlameAnimation;
+    }
+
+    /**
+     * Get green flame animation.
+     * @return the animation of green flame
+     */
+    public Animation<TextureRegion> getGreenFlameAnimation() {
+        return greenFlameAnimation;
     }
 
     /**

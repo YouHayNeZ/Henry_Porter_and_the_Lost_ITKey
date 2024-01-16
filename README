@@ -13,9 +13,10 @@
 
 - craft: contains the new magical font that was used throughout the game
 
-- music: we have two tracks that match the vibe (slow menu music, secretive game music)
+- music: we have two tracks that match the vibe (slow menu music, mystical game music)
 
-- sound: we have sounds for each action that can occur during the game
+- sound: we have sounds for each action that can occur during the game (e.g. collecting items,
+  killing enemies, getting hurt, opening doors, winning, losing)
 
 - .png files: contain animations and images for in game objects
 
@@ -40,7 +41,7 @@
 
  - LevelMap: contains all methods used to load a map file
 
- - MazeRunnerGame: core of the game containing all the animations etc.
+ - MazeRunnerGame: core of the game containing all the textures, animations, etc
 
 
 ##### Desktop #####
@@ -55,21 +56,23 @@
 - In the main menu, the user can click on the start game button to start the game at level
 one automatically
 - The user can also click on the choose level button to choose a level map file (either with
-the buttons for levels 1- 5 or with the choose file button to choose another map, e.g. map 6)
+the buttons for levels 1-5 or with the choose file button to choose another map, e.g. map 6)
 
 - Once the game started, the user can move the player in all directions with the arrow keys
 - The user can collect entities by colliding with them:
     - keys: the player can open doors if he possesses at least one key
-    - coins: the player can collect coins to increase his speed by 20% each
+    - coins: the player can collect coins to increase his speed by 20% each time (all coins are
+    lost after colliding with an enemy or trap)
     - potions: the player can collect potions to be invincible for a short period of time
-    - hearts: the player can collect hearts to increase his life by 1 (if he is not at max health)
+    - hearts: the player can collect hearts to increase his lives by 1 (if he is not at max health)
 - Two types of dangerous obstacles exit:
     - enemies: roam the map without a particular pattern
-    - traps: static objects (randomly blue or red flames)
+    - traps: static objects (randomly colored flames)
 
-- Traps and enemies can kill the player if he collides with them
-    - The player can kill enemies by colliding with them while pressing any key and the space bar
-    - If the player collides with a trap or enemy, he loses one life, all his coins and is
+- Traps and enemies can damage the player if he collides with them
+    - The player can kill enemies by colliding with them while pressing an arrow key and the space bar
+     at the same time
+    - If the player collides with a trap or enemy, he loses one life, all his coins and becomes
     shortly invincible
 - If the player loses all lives or the timer reaches 0, he loses the level and can restart it if
 he wants to
@@ -77,8 +80,8 @@ he wants to
  button or ENTER
 - The player can win the level by colliding with the exit while having at least one key
 
-- When the user wins or loses, the endgame screen with the approriate buttons appears (menu button,
-next level OR restart level button depending on whether user won or lost)
+- When the player wins or loses, the endgame screen with the appropriate buttons appears (menu button,
+next level OR restart level button depending on whether player won or lost)
     - if the next level button is pressed, the next level map is automatically loaded
     - alternatively, the user can go to the menu, hit the choose level button and choose a different
     level map file
@@ -91,21 +94,21 @@ next level OR restart level button depending on whether user won or lost)
 
 ###### BONUS FEATURES ######
 IN A NUTSHELL: A LOT more UI elements than asked for and they all match the Henry Porter theme, new items
-that are collectible and affect the  status of the player, additional game logic features (countdown
-timer, playthrough levels 1-5 automatically using the continue button), smart screens
+that are collectible and affect the status of the player, additional game logic features (countdown
+timer, play through levels 1-5 automatically using the continue button), smart screens
 
 1. Menu Screen
-    - The menu screen has a nice background image and a slow music that matches the vibe
+    - The menu screen has a custom background image and a slow music that matches the vibe
     - The buttons are animated and change color when hovered over
-    - The buttons have a nice font and are centered
-    - The menu screen has a nice title with a new font
+    - The buttons have a custom font and are centered
+    - The menu screen has a title with a custom font
     - The menu screen has an extra button to choose a level map file
     - The player can continue the game by pressing ENTER (once the game started)
 
 2. Choose Level Screen
-    - The choose level screen has a nice background image and a slow music that matches the vibe
+    - The choose level screen has a custom background image and a slow music that matches the vibe
     - The buttons are animated and change color when hovered over
-    - The buttons have a nice font and are centered
+    - The buttons have a custom font and are centered
     - The five given map files can be loaded via buttons
 
 3. Game Screen:
@@ -113,33 +116,30 @@ timer, playthrough levels 1-5 automatically using the continue button), smart sc
         - The player can collect hearts: refill his life by 1 (if he is not at max health)
         - The player can collect coins: increase his speed by 20% each time (he loses all coins after
         colliding with an enemy or trap)
-        - The player can collect potions: be invincible for a short period of time
+        - The player can collect potions: become invincible for a short period of time
         - The player can collect clocks: increase the timer by 30 seconds
     - Enemies and Traps:
-        - The player can kill enemies by colliding with them while pressing any key and the space bar
-        - The enemy animation is hand-drawn and matches the Henry Porter theme (dementors)
-        - Traps have different colors (blue and red) -> texture differs randomly
-    - The player animation is hand-drawn and matches the Henry Porter theme
+        - The player can kill enemies by colliding with them while pressing an arrow key and SPACE
+        - The enemy animation is customized and matches the Henry Porter theme (Dementors)
+        - Traps have different colors (red, blue, green, yellow) and are animated  -> texture are assigned
+        randomly each time the level is loaded
+    - The player attack animation is customized and matches the Henry Porter theme
     - Walls:
         - The walls have different textures depending on their position (lower, upper, left, right wall)
         - Inner walls (walls with walls all around) are converted to water texture to make them stand out
     - Timer:
         - The timer starts at 3 minutes and decreases by 1 second every second
         - The timer is displayed in the top right corner with an icon
-        - When the timer reaches 0, the player loses the level
+        - When the timer reaches 0, the player automatically loses the level
         - The timer pauses, if the game is paused when pressed ESC
     - Sounds:
         - ALL actions have sounds
         - The hurt sound is different each time (chosen randomly from set of hurt sounds)
 
 4. End Game Screen:
-    - The end game screen has a nice background image and a slow music that matches the vibe
+    - The end game screen has a custom background image and a slow music that matches the vibe
     - The buttons are animated and change color when hovered over
-    - The buttons have a nice font and are centered
+    - The buttons have a custom font and are centered
     - The screen is smart: it changes background and buttons depending on whether the user won or lost
-    - The user can play through levels 1-5 automatically if he wins by just clicking continue
+    - The user can play through levels 1-5 automatically if he wins by just clicking next level
         -> extends the game logic and improves the gaming experience
-
-
-
-
