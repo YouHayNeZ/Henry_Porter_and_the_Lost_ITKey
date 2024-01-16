@@ -123,9 +123,11 @@ timer, play through levels 1-5 automatically using the continue button), smart s
         - The enemy animation is customized and matches the Henry Porter theme (Dementors)
         - Traps have different colors (red, blue, green, yellow) and are animated  -> texture are assigned
         randomly each time the level is loaded
-    - The player attack animation is customized and matches the Henry Porter theme
-    - The entry point has its own texture and makes sense in the context of playing through the game -> go
+    - Player: The player attack animation is customized and matches the Henry Porter theme
+    - EntryPoint: The entry point has its own texture and makes sense in the context of playing through the game -> go
     through the door to finish a level and then enter the next level via stairs
+    - Camera: The camera follows the player in a smart manner so that the game is more dynamic (when player
+    reaches the boundary of the view, the camera adjusts to have the player at the center)
     - Walls:
         - The walls have different textures depending on their position (lower, upper, left, right wall)
         - Inner walls (walls with walls all around) are converted to water texture to make them stand out
