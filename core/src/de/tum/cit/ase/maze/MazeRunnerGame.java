@@ -270,7 +270,7 @@ public class MazeRunnerGame extends Game {
 
         // Load the potion animation
         potionAnimation = loadAnimation(potionTexture,
-                16, 16, 4, 0.1f, 0, 0);
+                16, 16, 8, 0.1f, 0, 0);
 
         // Sounds
         keySound = Gdx.audio.newSound(Gdx.files.internal("sound/key.wav"));
