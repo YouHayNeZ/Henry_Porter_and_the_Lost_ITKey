@@ -97,6 +97,7 @@ public class ChooseLevelScreen implements Screen {
         table.setBackground(backgroundDrawable);
 
         table.setFillParent(true); // Make the table fill the stage
+        table.padBottom(40);
         return table;
     }
 
