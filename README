@@ -60,7 +60,8 @@ the buttons for levels 1-5 or with the choose file button to choose another map,
 
 - Once the game started, the user can move the player in all directions with the arrow keys
 - The user can collect entities by colliding with them:
-    - keys: the player can open doors if he possesses at least one key
+    - keys: the player can open doors if he possesses at least half of the total keys of the map
+    (and the kill count > 0)
     - coins: the player can collect coins to increase his speed by 20% each time (all coins are
     lost after colliding with an enemy or trap)
     - potions: the player can collect potions to be invincible for a short period of time
@@ -118,11 +119,15 @@ timer, play through levels 1-5 automatically using the continue button), smart s
         colliding with an enemy or trap)
         - The player can collect potions: become invincible for a short period of time
         - The player can collect clocks: increase the timer by 30 seconds
+        - The player can collect multiple keys and has to at least possess half of the total amount
+        of keys on the map to open the exit (1st requirement for exit opening)
     - Enemies and Traps:
         - The player can kill enemies by colliding with them while pressing an arrow key and SPACE
         - The enemy animation is customized and matches the Henry Porter theme (Dementors)
         - Traps have different colors (red, blue, green, yellow) and are animated  -> texture are assigned
         randomly each time the level is loaded
+        - kill count is automatically displayed at the top -> at least one kill is required to open the exit
+        (2nd requirement for exit opening)
     - Player: The player attack animation is customized and matches the Henry Porter theme
     - EntryPoint: The entry point has its own texture and makes sense in the context of playing through the game -> go
     through the door to finish a level and then enter the next level via stairs

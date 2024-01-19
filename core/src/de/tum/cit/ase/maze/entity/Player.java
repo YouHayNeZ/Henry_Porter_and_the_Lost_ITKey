@@ -53,8 +53,10 @@ public class Player extends MovableEntity {
     private float immutableTime;
 
     private int collectedCoins;
+    private int totalKeys;
     private int collectedKeys;
-    private boolean hasAtLeastOneKey;
+    private boolean hasAtLeastHalfOfKeys;
+    private int killCount = 0;
     private GameScreen screen;
 
     public Player(MazeRunnerGame game) {
@@ -82,7 +84,8 @@ public class Player extends MovableEntity {
         health = DEFAULT_HEALTH;
         collectedCoins = 0;
         collectedKeys = 0;
-        hasAtLeastOneKey = false;
+        totalKeys = getGame().getLevelMap().findNumberOfKeys();
+        hasAtLeastHalfOfKeys = false;
     }
 
     // Override getter methods for animations
@@ -132,6 +135,7 @@ public class Player extends MovableEntity {
                 Enemy enemy = checkEnemyCollision();
                 if (enemy != null) {
                     getGame().getLevelMap().getEntities().removeValue(enemy, true);
+                    killCount++;
                     // Play spell sound
                     spellSound.play();
                 }
@@ -155,8 +159,8 @@ public class Player extends MovableEntity {
         Key key = checkKeyCollision();
         if (key != null) {
             collectedKeys++;
-            if (collectedKeys > 0) {
-                hasAtLeastOneKey = true;
+            if (collectedKeys >= 0.5 * totalKeys) {
+                hasAtLeastHalfOfKeys = true;
             }
             getGame().getLevelMap().getEntities().removeValue(key, true);
 
@@ -326,15 +330,23 @@ public class Player extends MovableEntity {
      * Return if player has key.
      * @return true if player has the key
      */
-    public boolean isHasAtLeastOneKey() {
-        return hasAtLeastOneKey;
+    public boolean isHasAtLeastHalfOfKeys() {
+        return hasAtLeastHalfOfKeys;
     }
 
     /**
      * Set player has key.
-     * @param hasAtLeastOneKey the has key
+     * @param hasAtLeastHalfOfKeys the has key
      */
-    public void setHasAtLeastOneKey(boolean hasAtLeastOneKey) {
-        this.hasAtLeastOneKey = hasAtLeastOneKey;
+    public void setHasAtLeastHalfOfKeys(boolean hasAtLeastHalfOfKeys) {
+        this.hasAtLeastHalfOfKeys = hasAtLeastHalfOfKeys;
+    }
+
+    /**
+     * Get kill count.
+     * @return the kill count.
+     */
+    public int getkillCount(){
+        return killCount;
     }
 }

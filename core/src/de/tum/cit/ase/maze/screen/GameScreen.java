@@ -164,7 +164,7 @@ public class GameScreen implements Screen {
                 if (entity instanceof Exit exit) {
                     if (exit.isOpen() && Intersector.overlaps(playerRectangle, exit.getExitRectangle())) {
                         game.goToEndGame(true);
-                    } else if (player.isHasAtLeastOneKey() && Intersector.overlaps(playerRectangle, exit.getActionRectangle())) {
+                    } else if (player.isHasAtLeastHalfOfKeys() && (player.getkillCount() > 0) && Intersector.overlaps(playerRectangle, exit.getActionRectangle())) {
                         exit.open();
                     }
                 }
@@ -250,6 +250,22 @@ public class GameScreen implements Screen {
             // Revert to the original scale
             magicalFont.getData().setScale(originalScaleX, originalScaleY);
         }
+
+        // Draw kill count if player has killed enemies
+        int killCount = player.getkillCount();
+        // Save the original scale
+        float originalScaleX = magicalFont.getData().scaleX;
+        float originalScaleY = magicalFont.getData().scaleY;
+
+        // Set the desired scale (adjust these values accordingly)
+        magicalFont.getData().setScale(0.3f, 0.3f);
+
+        magicalFont.draw(game.getSpriteBatch(), "Kills: " + killCount,
+                camera.position.x - camera.viewportWidth * camera.zoom / 2 + keys * CELL_WIDTH + 4 + CELL_WIDTH,
+                camera.position.y + camera.viewportHeight * camera.zoom / 2 - CELL_WIDTH - 4 + CELL_HEIGHT);
+
+        // Revert to the original scale
+        magicalFont.getData().setScale(originalScaleX, originalScaleY);
 
         // Draw timer
         drawTimer();
