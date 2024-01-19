@@ -54,7 +54,7 @@ public class MazeRunnerGame extends Game {
 
     // Sprite Batch for rendering
     private SpriteBatch spriteBatch;
-    private ShapeRenderer shapeRenderer; //only used for debugging boxes
+    private ShapeRenderer shapeRenderer; // only used for debugging boxes
 
     // UI Skin
     private Skin skin;
