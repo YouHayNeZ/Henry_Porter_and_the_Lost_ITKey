@@ -107,7 +107,7 @@ that are collectible and affect the status of the player, additional game logic 
 timer, play through levels 1-5 automatically using the continue button), smart screens
 that change depending on whether the user won or lost, smart camera that follows the player, etc.
 
-#### !!!IMPORTANT!!! ####
+#### !!!Important!!! ####
 Most of the bonus features are experienced the best way in the custom level map file "level-6.properties"
 that is in the "maps" folder. The user can choose this file in the choose level screen to play the map.
 This map contains all the collectibles, etc. and is created specifically to test all the bonus features.
