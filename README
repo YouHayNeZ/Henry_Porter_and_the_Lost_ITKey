@@ -1,7 +1,10 @@
 ###### Description of the Game "Henry Porter and the Lost ITKey" by V&P Designers ######
 
 
+
+
 ###### STRUCTURE ######
+
 
 ##### Assets #####
 - background: contains background images for the different screens if needed (all created
@@ -17,6 +20,7 @@
 - .png files: contain animations and images for in game objects
 
 - License.txt: contains our citations for the assets we used
+
 
 ##### Core #####
 - entity: contains the classes for the different entities in the game
@@ -38,8 +42,12 @@
 
  - MazeRunnerGame: core of the game containing all the textures, animations, etc.
 
+
 ##### Desktop #####
 - DesktopLauncher: configures the window and launches the game
+
+
+
 
 
 ###### HOW TO USE THE GAME/HOW THE GAME WORKS ######
@@ -89,13 +97,16 @@ next level OR restart level button depending on whether the player won or lost)
 - If the user wants to exit the game, he can press the exit button in the main menu
 
 
+
+
+
 ###### BONUS FEATURES ######
 IN A NUTSHELL: A LOT more UI elements than asked for, and they all match the Henry Porter theme, new items
 that are collectible and affect the status of the player, additional game logic features (countdown
 timer, play through levels 1-5 automatically using the continue button), smart screens
 that change depending on whether the user won or lost, smart camera that follows the player, etc.
 
-###!!!IMPORTANT!!!:###
+### !!!IMPORTANT!!! ###
 Most of the bonus features are experienced the best way in the custom level map file "level-6.properties"
 that is in the "maps" folder. The user can choose this file in the choose level screen to play the map.
 This map contains all the collectibles, etc. and is created specifically to test all the bonus features.
