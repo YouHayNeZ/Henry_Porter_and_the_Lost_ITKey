@@ -93,6 +93,13 @@ next level OR restart level button depending on whether the player won or lost)
 IN A NUTSHELL: A LOT more UI elements than asked for, and they all match the Henry Porter theme, new items
 that are collectible and affect the status of the player, additional game logic features (countdown
 timer, play through levels 1-5 automatically using the continue button), smart screens
+that change depending on whether the user won or lost, smart camera that follows the player, etc.
+
+###!!!IMPORTANT!!!:###
+Most of the bonus features are experienced the best way in the custom level map file "level-6.properties"
+that is in the "maps" folder. The user can choose this file in the choose level screen to play the map.
+This map contains all the collectibles, etc. and is created specifically to test all the bonus features.
+The rest of the maps are unedited as provided in the template and do not contain additional features.
 
 1. Menu Screen
     - The menu screen has a custom background image and a slow music that matches the vibe
