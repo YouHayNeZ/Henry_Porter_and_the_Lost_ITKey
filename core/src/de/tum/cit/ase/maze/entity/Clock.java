@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import de.tum.cit.ase.maze.MazeRunnerGame;
 
 /**
- * Coin class represents clock entity.
+ * Clock class represents clock entity.
  * It is a collectible game object, which increases the time left on the timer.
  */
 public class Clock extends UpdatableEntity {

@@ -12,13 +12,11 @@ import java.util.Random;
  */
 public class Trap extends UpdatableEntity {
 
-    private Animation<TextureRegion> flameAnimation;
+    private final Animation<TextureRegion> flameAnimation;
     private final Animation<TextureRegion> yellowFlameAnimation;
     private final Animation<TextureRegion> blueFlameAnimation;
     private final Animation<TextureRegion> redFlameAnimation;
     private final Animation<TextureRegion> greenFlameAnimation;
-
-    private final Random random;
 
     private boolean yellow = false;
     private boolean blue = false;
@@ -37,7 +35,7 @@ public class Trap extends UpdatableEntity {
         redFlameAnimation = game.getRedFlameAnimation();
         greenFlameAnimation = game.getGreenFlameAnimation();
 
-        random = new Random();
+        Random random = new Random();
 //        if (new Random(. {
 //            setTextureRegion(flameAnimation.getKeyFrames()[0]);
 //            blue = true;
@@ -55,7 +53,7 @@ public class Trap extends UpdatableEntity {
             case 3 -> { green = true; setTextureRegion(greenFlameAnimation.getKeyFrames()[0]);
             } // Green Flame
             default -> setTextureRegion(flameAnimation.getKeyFrames()[0]); // Fallback to the default animation
-        };
+        }
 
     }
 

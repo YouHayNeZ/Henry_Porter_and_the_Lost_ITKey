@@ -7,7 +7,7 @@ import de.tum.cit.ase.maze.MazeRunnerGame;
 
 /**
  * Heart class represents heart entity.
- * It is a collectible game object, which refills player's health.
+ * It is a collectible game object, which refills a player's health.
  */
 public class Heart extends UpdatableEntity {
     private final Animation<TextureRegion> heartAnimation;

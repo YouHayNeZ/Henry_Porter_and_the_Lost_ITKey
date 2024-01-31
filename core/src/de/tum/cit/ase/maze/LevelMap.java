@@ -49,7 +49,7 @@ public class LevelMap {
         }
 
         /**
-         * Get type by value.
+         * Get the type by value.
          * @param value type value
          * @return type
          */
@@ -98,9 +98,9 @@ public class LevelMap {
     }
 
     /**
-     * Load map from file that is in the LOCAL path.
+     * Load the map from the file that is in the LOCAL path.
      * @param path local path
-     * @throws IOException when we can't load map from this file
+     * @throws IOException when we can't load the map from this file
      */
     public void load(String path) throws IOException {
         load(Gdx.files.local(path));
@@ -108,14 +108,14 @@ public class LevelMap {
 
     /**
      * Load map from FileHandle.
-     * @param fileHandle fileHandle where we are going to load map
-     * @throws IOException when we can't load map from this fileHandle
+     * @param fileHandle fileHandle where we are going to load the map
+     * @throws IOException when we can't load the map from this fileHandle
      */
     public void load(FileHandle fileHandle) throws IOException {
         entities = new Array<>();
 
         // Read file content
-        ObjectMap<String, String> map = new ObjectMap<>(); // first String is coordinates, second is type
+        ObjectMap<String, String> map = new ObjectMap<>(); // first String is coordinates, second is the type
         PropertiesUtils.load(map, fileHandle.reader());
         map.forEach(entry -> {
             try {
@@ -124,6 +124,7 @@ public class LevelMap {
                 if (coords.length == 2) {
                     int typeValue = Integer.parseInt(entry.value); // get type value
                     Type type = Type.valueOf(typeValue); // get type
+                    assert type != null;
                     Entity entity = (Entity) type.getaClass().getConstructor(MazeRunnerGame.class)
                             .newInstance(game); // create new entity
                     int col = Integer.parseInt(coords[0]); // get column
@@ -206,7 +207,7 @@ public class LevelMap {
     }
 
     /**
-     * Check if cell exist in current col and row position and it is a wall.
+     * Check if cell exists in current col and row position and it is a wall.
      * @param map level map
      * @param col current column
      * @param row current row
@@ -214,18 +215,20 @@ public class LevelMap {
      */
     private boolean checkIfCellExistsAndItIsWall(ObjectMap<String, String> map, int col, int row) {
         try {
-            String value = map.get(String.format("%d,%d", col, row)); // get value from map with format "col,row"
-            return value != null && Integer.parseInt(value) == Type.WALL.getValue(); // check if value is not null and it is a wall
+            // Get value from the map with format "col,row"
+            String value = map.get(String.format("%d,%d", col, row));
+            // Check if the value isn't null and it's a wall
+            return value != null && Integer.parseInt(value) == Type.WALL.getValue();
         }
         catch (NumberFormatException e) {
-            // Ignore wrong file format
+            // Ignore the wrong file format
         }
         return false;
     }
 
     private boolean checkIfCellExistsAndItIsWater(ObjectMap<String, String> map, int col, int row) {
         try {
-            String value = map.get(String.format("%d,%d", col, row)); // get value from map with format "col,row"
+            String value = map.get(String.format("%d,%d", col, row)); // get value from the map with format "col,row"
             boolean hasOuterWalls = checkIfCellExistsAndItIsWall(map, col, row - 1) &&
                     checkIfCellExistsAndItIsWall(map, col, row + 1) &&
                     checkIfCellExistsAndItIsWall(map, col - 1, row) &&
@@ -234,10 +237,11 @@ public class LevelMap {
                     checkIfCellExistsAndItIsWall(map, col + 1, row - 1) &&
                     checkIfCellExistsAndItIsWall(map, col - 1, row + 1) &&
                     checkIfCellExistsAndItIsWall(map, col + 1, row + 1);
-            return value != null && Integer.parseInt(value) == Type.WALL.getValue() && hasOuterWalls; // check if value is not null and it is a wall
+            // Check if the value isn't null and it's a wall
+            return value != null && Integer.parseInt(value) == Type.WALL.getValue() && hasOuterWalls;
         }
         catch (NumberFormatException e) {
-            // Ignore wrong file format
+            // Ignore the wrong file format
         }
         return false;
     }

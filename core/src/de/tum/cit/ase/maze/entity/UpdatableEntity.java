@@ -4,7 +4,7 @@ import de.tum.cit.ase.maze.MazeRunnerGame;
 
 /**
  * UpdatableEntity class is the parent class of all game objects that can change over time.
- * Mainly used to display animations, but can also simply change internal parameters over time.
+ * Mainly used to display animations, but can also change internal parameters over time.
  */
 public class UpdatableEntity extends Entity {
 

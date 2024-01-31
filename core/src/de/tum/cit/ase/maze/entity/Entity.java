@@ -24,7 +24,7 @@ public class Entity {
 
     /**
      * Creates one entity.
-     * If we want to create entity by this way - we need to declare textureRegion and position for this entity.
+     * If we want to create an entity by this way, we need to declare textureRegion and position for this entity.
      * @param game the main game
      */
     public Entity(MazeRunnerGame game) {
@@ -34,7 +34,7 @@ public class Entity {
     /**
      * Draws entity on sprite batch.
      * Declare textureRegion before calling this method to draw something.
-     * @param batch the sprite batch, that used to draw
+     * @param batch the sprite batch, that is used to draw
      */
     public void draw(SpriteBatch batch) {
         if (textureRegion != null) {

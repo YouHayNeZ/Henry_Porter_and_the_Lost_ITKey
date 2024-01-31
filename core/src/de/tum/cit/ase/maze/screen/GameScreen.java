@@ -123,7 +123,7 @@ public class GameScreen implements Screen {
             if (timeLeft > 0) {
                 timeLeft -= delta; // Update timer
             } else {
-                game.goToEndGame(false); // Time is up and player loses
+                game.goToEndGame(false); // Time is up and the player loses
             }
 
             // Update camera destination position (only map bigger than viewport)
@@ -164,7 +164,7 @@ public class GameScreen implements Screen {
                 if (entity instanceof Exit exit) {
                     if (exit.isOpen() && Intersector.overlaps(playerRectangle, exit.getExitRectangle())) {
                         game.goToEndGame(true);
-                    } else if (player.isHasAtLeastHalfOfKeys() && (player.getkillCount() > 0) && Intersector.overlaps(playerRectangle, exit.getActionRectangle())) {
+                    } else if (player.isHasAtLeastHalfOfKeys() && (player.getKillCount() > 0) && Intersector.overlaps(playerRectangle, exit.getActionRectangle())) {
                         exit.open();
                     }
                 }
@@ -189,7 +189,7 @@ public class GameScreen implements Screen {
             entity.draw(game.getSpriteBatch());
         }
 
-        // Draw entities that upper or on same level as player
+        // Draw entities that upper or on the same level as player
         game.getSpriteBatch().setColor(1, 1, 1, 1);
         float playerLowerYPosition = player.getY() - CELL_HEIGHT;
         levelMap.getEntities().forEach(entity -> {
@@ -219,7 +219,7 @@ public class GameScreen implements Screen {
                     CELL_WIDTH * 2, CELL_WIDTH * 2);
         }
 
-        // Draw keys if player has them
+        // Draw keys if a player has them
         int keys = player.getCollectedKeys();
         for (int i = 0; i < keys; i++) {
             game.getSpriteBatch().draw(game.getKeyAnimation().getKeyFrames()[0],
@@ -228,7 +228,7 @@ public class GameScreen implements Screen {
                     CELL_WIDTH, CELL_HEIGHT);
         }
 
-        // Draw coins if player has them
+        // Draw coins if a player has them
         int coins = player.getCollectedCoins();
         if (coins > 0) {
             // Save the original scale
@@ -252,7 +252,7 @@ public class GameScreen implements Screen {
         }
 
         // Draw kill count if player has killed enemies
-        int killCount = player.getkillCount();
+        int killCount = player.getKillCount();
         // Save the original scale
         float originalScaleX = magicalFont.getData().scaleX;
         float originalScaleY = magicalFont.getData().scaleY;
@@ -273,6 +273,7 @@ public class GameScreen implements Screen {
         // Draw debug
         game.getSpriteBatch().end();
 
+        // Draw debug action rectangles for the player, enemies and exits, which represent hit boxes
         //drawDebugActionRectangles();
     }
 
@@ -316,7 +317,7 @@ public class GameScreen implements Screen {
     }
 
     /**
-     * Draws the debug collision rectangles for the player and exits (only needed if map bigger than camera viewport).
+     * Clamp camera destination position (only need if map bigger than camera viewport).
      */
     private void clampCameraDestPosition() {
         if (mapWidth > camera.viewportWidth / 2) {
@@ -396,11 +397,11 @@ public class GameScreen implements Screen {
         camera.viewportWidth = width;
         camera.viewportHeight = height;
 
-        //Set camera on center map
+        // Set camera on center map or player position
         cameraDestX = mapWidth < camera.viewportWidth * camera.zoom ? mapWidth / 2 : player.getX();
         cameraDestY = mapHeight < camera.viewportHeight * camera.zoom ? mapHeight / 2 : player.getY();
 
-        //Clamp camera position (only need if map bigger than camera viewport)
+        // Clamp camera position (only need if map bigger than camera viewport)
         clampCameraDestPosition();
 
         camera.position.set(cameraDestX, cameraDestY, 0);

@@ -117,7 +117,7 @@ public class MazeRunnerGame extends Game {
     Array<Sound> hurtSoundArray;
 
     // Music
-    Music menuMusic; //also used for EndGame and ChooseLevel screens
+    Music menuMusic; // also used for EndGame and ChooseLevel screens
     Music gameMusic;
 
     // Level map
@@ -304,7 +304,7 @@ public class MazeRunnerGame extends Game {
         gameScreen = new GameScreen(this);
         endGameScreen = new EndGameScreen(this);
 
-        // Go to menu
+        // Go to the menu
         goToMenu(); // Navigate to the menu screen
     }
 
@@ -362,7 +362,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Switches to the game screen with current level index.
+     * Switches to the game screen with the current level index.
      */
     public void goToCurrentLevelIndexGame() {
         try {
@@ -421,14 +421,14 @@ public class MazeRunnerGame extends Game {
 
     /**
      * Get game playing status
-     * @return true if game is playing
+     * @return true if the game is playing
      */
     public boolean isPlaying()  {
         return isPlaying;
     }
 
     /**
-     * Load texture region array of images from texture that stands in one row.
+     * Load the texture region array of images from texture that stands in one row.
      * @param texture the texture
      * @param frameWidth the frame width
      * @param frameHeight the frame height
@@ -443,7 +443,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Load texture region array from texture.
+     * Load the texture region array from texture.
      * @param texture the texture
      * @param frameWidth the frame width
      * @param frameHeight the frame height
@@ -474,7 +474,7 @@ public class MazeRunnerGame extends Game {
      * @param frameDuration the animation frame duration in milliseconds
      * @param x the start x position
      * @param y the start y position
-     * @return animation of texture region
+     * @return animation of a texture region
      */
     private Animation<TextureRegion> loadAnimation(Texture texture, int frameWidth, int frameHeight,
                                                    int cols, int rows, float frameDuration, int x, int y) {
@@ -483,7 +483,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Load animation from texture that stands in on row.
+     * Load animation from texture that stands in a row.
      * @param texture the texture
      * @param frameWidth the frame width
      * @param frameHeight the frame height
@@ -529,7 +529,7 @@ public class MazeRunnerGame extends Game {
         thingsTexture.dispose();
         keyTexture.dispose();
 
-        // Dispose hurt sound array
+        // Dispose the hurt sound array
         disposeArray(hurtSoundArray);
 
         // Dispose sounds
@@ -602,7 +602,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get health texture region array.
+     * Get the health texture region array.
      * @return the array of health texture region
      */
     public Array<TextureRegion> getHealthTextureRegionArray() {
@@ -618,7 +618,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get character right animation.
+     * Get the character right animation.
      * @return the animation of character right movement
      */
     public Animation<TextureRegion> getCharacterRightAnimation() {
@@ -723,7 +723,7 @@ public class MazeRunnerGame extends Game {
 
     /**
      * Get enemy left animation.
-     * @return the animation of enemy left movement
+     * @return the animation of the enemy left movement
      */
     public Animation<TextureRegion> getEnemyLeftAnimation() {
         return enemyLeftAnimation;
@@ -794,7 +794,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get hurt sound array.
+     * Get the hurt sound array.
      * @return the array of hurt sounds
      */
     public Array<Sound> getHurtSoundArray() {
@@ -866,7 +866,7 @@ public class MazeRunnerGame extends Game {
     }
 
     /**
-     * Get level map.
+     * Get the level map.
      * @return the level map
      */
     public LevelMap getLevelMap() {

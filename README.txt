@@ -1,11 +1,7 @@
 ###### Description of the Game "Henry Porter and the Lost ITKey" by V&P Designers ######
 
 
-
-
-
 ###### STRUCTURE ######
-
 
 ##### Assets #####
 - background: contains background images for the different screens if needed (all created
@@ -15,19 +11,18 @@
 
 - music: we have two tracks that match the vibe (slow menu music, mystical game music)
 
-- sound: we have sounds for each action that can occur during the game (e.g. collecting items,
+- sound: we have sounds for each action that can occur during the game (e.g., collecting items,
   killing enemies, getting hurt, opening doors, winning, losing)
 
 - .png files: contain animations and images for in game objects
 
 - License.txt: contains our citations for the assets we used
 
-
 ##### Core #####
 - entity: contains the classes for the different entities in the game
 -> Entity: our main class that all entities (game objects) inherit from
     - UpdatableEntity: class that all entities that need to be updated inherit from (Heart,
-    Key, Coin, Potion, Trap, Exit, Clock, Exit)
+    Key, Coin, Potion, Trap, Exit, Clock)
     - MovableEntity: abstract class that all entities that need to be moved inherit from (Player,
     Enemy)
             -> only Wall and EntryPoint are regular Entities
@@ -37,18 +32,14 @@
     - ChooseLevelScreen: the screen where the player can choose the level map file
     - GameScreen: the screen where the game is played
     - EndGameScreen: the screen where the player can choose to play again or go back to menu
-    when game ends
+    when the game ends
 
  - LevelMap: contains all methods used to load a map file
 
- - MazeRunnerGame: core of the game containing all the textures, animations, etc
-
+ - MazeRunnerGame: core of the game containing all the textures, animations, etc.
 
 ##### Desktop #####
 - DesktopLauncher: configures the window and launches the game
-
-
-
 
 
 ###### HOW TO USE THE GAME/HOW THE GAME WORKS ######
@@ -57,6 +48,14 @@
 one automatically
 - The user can also click on the choose level button to choose a level map file (either with
 the buttons for levels 1-5 or with the choose file button to choose another map, e.g. map 6)
+
+- In the game, at the top of the screen the HUD is displaying useful information:
+    - the number of hearts (lives) the player has left (starts at 5, which is the max; if the player
+    has lost a life then displays an empty container, that could be refilled by collecting a heart)
+    - the number of keys the player has collected (at least half of the total keys should be collected)
+    - the number of killed enemies (kill count) (at least one kill is required to exit)
+    - the number of coins the player has collected (each coin increases the speed by 20%, lost if hit)
+    - the timer (starts at 3 minutes and decreases by 1 every second; at 0 the player loses the level)
 
 - Once the game started, the user can move the player in all directions with the arrow keys
 - The user can collect entities by colliding with them:
@@ -78,11 +77,11 @@ the buttons for levels 1-5 or with the choose file button to choose another map,
 - If the player loses all lives or the timer reaches 0, he loses the level and can restart it if
 he wants to
 - If the user wants to pause the game, he can press ESC, to continue he can press the continue
- button or ENTER
+ button (which is not active before pressing start game button at least once) or press ENTER instead
 - The player can win the level by colliding with the exit while having at least one key
 
 - When the player wins or loses, the endgame screen with the appropriate buttons appears (menu button,
-next level OR restart level button depending on whether player won or lost)
+next level OR restart level button depending on whether the player won or lost)
     - if the next level button is pressed, the next level map is automatically loaded
     - alternatively, the user can go to the menu, hit the choose level button and choose a different
     level map file
@@ -90,11 +89,8 @@ next level OR restart level button depending on whether player won or lost)
 - If the user wants to exit the game, he can press the exit button in the main menu
 
 
-
-
-
 ###### BONUS FEATURES ######
-IN A NUTSHELL: A LOT more UI elements than asked for and they all match the Henry Porter theme, new items
+IN A NUTSHELL: A LOT more UI elements than asked for, and they all match the Henry Porter theme, new items
 that are collectible and affect the status of the player, additional game logic features (countdown
 timer, play through levels 1-5 automatically using the continue button), smart screens
 
@@ -124,15 +120,15 @@ timer, play through levels 1-5 automatically using the continue button), smart s
     - Enemies and Traps:
         - The player can kill enemies by colliding with them while pressing an arrow key and SPACE
         - The enemy animation is customized and matches the Henry Porter theme (Dementors)
-        - Traps have different colors (red, blue, green, yellow) and are animated  -> texture are assigned
-        randomly each time the level is loaded
+        - Traps have different colors (red, blue, green, yellow) and are animated  -> texture are
+        assigned randomly each time the level is loaded
         - kill count is automatically displayed at the top -> at least one kill is required to open the exit
-        (2nd requirement for exit opening)
-    - Player: The player attack animation is customized and matches the Henry Porter theme
-    - EntryPoint: The entry point has its own texture and makes sense in the context of playing through the game -> go
-    through the door to finish a level and then enter the next level via stairs
-    - Camera: The camera follows the player in a smart manner so that the game is more dynamic (when player
-    reaches the boundary of the view, the camera adjusts to have the player at the center)
+        (additional requirement for exit opening)
+    - Player: The player textures & attack animation is customized and matches the Henry Porter theme
+    - EntryPoint: The entry point has its own texture and makes sense in the context of playing the game
+    -> go through the door to finish a level and then enter the next level via stairs
+    - Camera: The camera follows the player in a smart manner so that the game is more dynamic
+    (when player reaches the boundary of the view, the camera adjusts to have the player at the center)
     - Walls:
         - The walls have different textures depending on their position (lower, upper, left, right wall)
         - Inner walls (walls with walls all around) are converted to water texture to make them stand out

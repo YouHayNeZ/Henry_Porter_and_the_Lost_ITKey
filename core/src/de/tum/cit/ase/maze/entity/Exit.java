@@ -42,7 +42,7 @@ public class Exit extends UpdatableEntity {
 
     /**
      * Get rectangle for action.
-     * Used when Player has a key and it near.
+     * Used when the Player has a key and is near.
      * Bigger than default entity rectangle.
      * @return Rectangle that represents action rectangle
      */
@@ -52,7 +52,7 @@ public class Exit extends UpdatableEntity {
 
     /**
      * Get rectangle for exit.
-     * Used when Player is near and exit is open.
+     * Used when the Player is near and exit is open.
      * Smaller than default entity rectangle.
      * @return Rectangle that represents exit rectangle
      */
@@ -71,7 +71,7 @@ public class Exit extends UpdatableEntity {
 
     /**
      * Open the door.
-     * Start an animation timer that's opening the door.
+     * Start an animation timer opening the door.
      */
     public void open() {
         isOpening = true;

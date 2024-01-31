@@ -11,7 +11,8 @@ import java.lang.reflect.Field;
 import java.util.function.Function;
 
 /**
- * MovableEntity class allows the entities to move in 4 directions, but it's needed to implement animation for each direction.
+ * MovableEntity class allows the entities to move in four directions,
+ * but it's needed to implement animation for each direction.
  */
 public abstract class MovableEntity extends UpdatableEntity {
 
@@ -32,7 +33,7 @@ public abstract class MovableEntity extends UpdatableEntity {
     }
 
     /**
-     * Move entity into UP direction.
+     * Move entity into the UP direction.
      * @param delta the delta time.
      * @return true if the object can move without obstacles in the given direction.
      */
@@ -43,7 +44,7 @@ public abstract class MovableEntity extends UpdatableEntity {
     }
 
     /**
-     * Move entity into DOWN direction.
+     * Move entity into the DOWN direction.
      * @param delta the delta time.
      * @return true if the object can move without obstacles in the given direction.
      */
@@ -54,7 +55,7 @@ public abstract class MovableEntity extends UpdatableEntity {
     }
 
     /**
-     * Move entity into LEFT direction.
+     * Move entity into the LEFT direction.
      * @param delta the delta time.
      * @return true if the object can move without obstacles in the given direction.
      */
@@ -65,7 +66,7 @@ public abstract class MovableEntity extends UpdatableEntity {
     }
 
     /**
-     * Move entity into RIGHT direction.
+     * Move entity into the RIGHT direction.
      * @param delta the delta time.
      * @return true if the object can move without obstacles in the given direction.
      */
@@ -76,37 +77,37 @@ public abstract class MovableEntity extends UpdatableEntity {
     }
 
     /**
-     * Get animation of move into UP direction.
+     * Get animation of move into the UP direction.
      * @return Animation<TextureRegion> class that contains animation.
      */
     public abstract Animation<TextureRegion> getUpAnimation();
 
     /**
-     * Get animation of move into DOWN direction.
+     * Get animation of move into the DOWN direction.
      * @return Animation<TextureRegion> class that contains animation.
      */
     public abstract Animation<TextureRegion> getDownAnimation();
 
     /**
-     * Get animation of move into LEFT direction.
+     * Get animation of move into the LEFT direction.
      * @return Animation<TextureRegion> class that contains animation.
      */
     public abstract Animation<TextureRegion> getLeftAnimation();
 
     /**
-     * Get animation of move into RIGHT direction.
+     * Get animation of move into the RIGHT direction.
      * @return Animation<TextureRegion> class that contains animation.
      */
     public abstract Animation<TextureRegion> getRightAnimation();
 
     /**
-     * Check current entity with borders, wall and exit collision.
+     * Check the current entity with borders, wall and exit collision.
      * @return true if collision occurred.
      */
     private boolean checkBordersWallAndExitCollision() {
         Rectangle rectangle = getEntityRectangle();
 
-        LevelMap levelMap = getGame().getLevelMap(); // get level map
+        LevelMap levelMap = getGame().getLevelMap(); // get the level map
         if (rectangle.x < 0 || rectangle.x + rectangle.width > levelMap.getMapWidth() ||
                 rectangle.y < 0 || rectangle.y + rectangle.height > levelMap.getMapHeight()) { // check borders
             return true;
@@ -153,14 +154,6 @@ public abstract class MovableEntity extends UpdatableEntity {
             throw new RuntimeException("Cant set float value in movable entity: " + this, exception);
         }
         return true;
-    }
-
-    /**
-     * Get speed property.
-     * @return the speed property.
-     */
-    public float getSpeed() {
-        return speed;
     }
 
     /**

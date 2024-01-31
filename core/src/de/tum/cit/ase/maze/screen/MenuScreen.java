@@ -53,7 +53,7 @@ public class MenuScreen implements Screen {
         goToGameButton.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
-                game.goToCurrentLevelIndexGame(); // Change to the game screen when button is pressed
+                game.goToCurrentLevelIndexGame(); // Change to the game screen when the button is pressed
             }
         });
         table.add(goToGameButton).width(400).height(80).row(); // Add the button to the table
@@ -64,7 +64,7 @@ public class MenuScreen implements Screen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 if (game.isPlaying()) {
-                    game.goToGame(); // Continue to the game screen when button is pressed
+                    game.goToGame(); // Continue to the game screen when the button is pressed
                 }
             }
         });
@@ -141,7 +141,7 @@ public class MenuScreen implements Screen {
      */
     @Override
     public void dispose() {
-        // Dispose of the stage when screen is disposed
+        // Dispose of the stage when the screen is disposed
         stage.dispose();
     }
 

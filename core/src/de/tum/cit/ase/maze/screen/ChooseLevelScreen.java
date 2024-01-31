@@ -143,7 +143,7 @@ public class ChooseLevelScreen implements Screen {
                     }
 
                     /**
-                     * Called when the user has cancelled the file selection.
+                     * Called when the user has canceled the file selection.
                      */
                     @Override
                     public void onCancellation() {
@@ -190,7 +190,7 @@ public class ChooseLevelScreen implements Screen {
      */
     @Override
     public void dispose() {
-        // Dispose of the stage when screen is disposed
+        // Dispose of the stage when the screen is disposed
         stage.dispose();
     }
 

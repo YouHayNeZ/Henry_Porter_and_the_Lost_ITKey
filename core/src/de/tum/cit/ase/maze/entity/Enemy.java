@@ -45,7 +45,7 @@ public class Enemy extends MovableEntity {
         resetDestPosition(); // set destination position to actual position
 
         setTextureRegion(downAnimation.getKeyFrames()[0]); // set default texture region
-        setSpeed(DEFAULT_SPEED); // set default speed (same speed as player)
+        setSpeed(DEFAULT_SPEED); // set the default speed (same speed as player)
     }
 
     /**
@@ -71,7 +71,7 @@ public class Enemy extends MovableEntity {
         }
 
         boolean moveResult = true;
-        // move enemy in direction of destination position
+        // move enemy in the direction of destination position
         if (destX < getX()) {
             moveResult = moveLeft(delta);
         } else if (destX > getX()) {

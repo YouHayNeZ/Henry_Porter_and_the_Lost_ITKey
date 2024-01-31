@@ -16,7 +16,8 @@ import de.tum.cit.ase.maze.screen.GameScreen;
 /**
  * Player class represents player entity, which is movable and updatable.
  * It has health and can be damaged by traps and enemies.
- * Can also attack enemies. Its movement controlled by the user.
+ * Can also attack enemies.
+ * The user controls the movement of the player entity.
  */
 public class Player extends MovableEntity {
 
@@ -25,7 +26,7 @@ public class Player extends MovableEntity {
     // World cell height size
     private static final int CELL_HEIGHT = 16;
 
-    //Player default health count
+    // Player default health count
     public static final float DEFAULT_HEALTH = 5f;
 
     private static final float DEFAULT_DAMAGE = 1f;
@@ -53,11 +54,10 @@ public class Player extends MovableEntity {
     private float immutableTime;
 
     private int collectedCoins;
-    private int totalKeys;
+    private final int totalKeys;
     private int collectedKeys;
     private boolean hasAtLeastHalfOfKeys;
     private int killCount = 0;
-    private GameScreen screen;
 
     public Player(MazeRunnerGame game) {
         super(game);
@@ -192,7 +192,7 @@ public class Player extends MovableEntity {
         Clock clock = checkClockCollision();
         if (clock != null) {
             //add 30 seconds to the timer
-            screen = (GameScreen) getGame().getScreen();
+            GameScreen screen = (GameScreen) getGame().getScreen();
             screen.setTimeLeft(screen.getTimeLeft() + 30);
 
             getGame().getLevelMap().getEntities().removeValue(clock, true);
@@ -295,22 +295,6 @@ public class Player extends MovableEntity {
     }
 
     /**
-     * Set player health.
-     * @param health the player health
-     */
-    public void setHealth(float health) {
-        this.health = health;
-    }
-
-    /**
-     * Get immutable time left.
-     * @return the immutable time
-     */
-    public float getImmutableTime() {
-        return immutableTime;
-    }
-
-    /**
      * Get collected coins.
      * @return the collected coins
      */
@@ -335,18 +319,10 @@ public class Player extends MovableEntity {
     }
 
     /**
-     * Set player has key.
-     * @param hasAtLeastHalfOfKeys the has key
-     */
-    public void setHasAtLeastHalfOfKeys(boolean hasAtLeastHalfOfKeys) {
-        this.hasAtLeastHalfOfKeys = hasAtLeastHalfOfKeys;
-    }
-
-    /**
      * Get kill count.
      * @return the kill count.
      */
-    public int getkillCount(){
+    public int getKillCount(){
         return killCount;
     }
 }
